@@ -11,4 +11,7 @@
 
     <artifactId>logstorm-contrib</artifactId>
     <packaging>pom</packaging>
+    <modules>
+        <module>logstash-filter-siddhi</module>
+    </modules>
 </project>
