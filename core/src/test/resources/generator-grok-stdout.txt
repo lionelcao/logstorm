@@ -1,0 +1,29 @@
+input {
+	generator {
+		type = "one_stream"
+		lines => [
+			"GET /user 0.98",
+			"GET /user 1.98",
+			"GET /user 2.98"
+		]
+		# Emit all lines 3 times.
+		count => 3
+	}
+}
+
+/**
+filter{
+	grok{
+		pattern => "%{method} %{path} %{time}"
+	}
+	cep{
+		query = "from one_stream where time > 1.0 insert another_stream"
+	}
+}
+*/
+
+output {
+  stdout {
+    codec => rubydebug
+  }
+}

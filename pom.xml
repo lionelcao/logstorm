@@ -4,13 +4,31 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <groupId>com.ebay</groupId>
-    <artifactId>logstorm</artifactId>
+    <groupId>com.ebay.logstorm</groupId>
+    <artifactId>logstorm-parent</artifactId>
     <packaging>pom</packaging>
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>core</module>
+        <module>examples</module>
     </modules>
 
+    <properties>
+        <!-- General Properties -->
+        <java.version>1.7</java.version>
+        <scala.version>2.10</scala.version>
+        <scala-lang.version>2.10.4</scala-lang.version>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+
+        <!-- Maven Plugins Versions -->
+        <maven.version>3.3.3</maven.version>
+        <maven-model.version>4.0.0</maven-model.version>
+        <maven-release.version>2.5.1</maven-release.version>
+        <maven-assembly.version>2.5.5</maven-assembly.version>
+        <maven-source.version>2.2</maven-source.version>
+        <maven-compiler.version>2.0.2</maven-compiler.version>
+        <logstash.version>2.2.2</logstash.version>
+    </properties>
 
 </project>
