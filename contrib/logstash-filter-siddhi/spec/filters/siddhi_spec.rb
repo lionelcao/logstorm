@@ -15,9 +15,10 @@ describe LogStash::Filters::Siddhi do
     CONFIG
     end
 
-    sample("symbol" => "ebay","price" => 80,"volumn" => 12.1,"_type" => "StockExchangeStream") do
+    sample("symbol" => "ebay","price" => 80,"volumn" => 12.1,"type" => "StockExchangeStream") do
       expect(subject).to include("symbol")
       expect(subject["symbol"]).to eq("ebay")
+      expect(subject["type"]).to eq("StockQuote")
     end
   end
 end
