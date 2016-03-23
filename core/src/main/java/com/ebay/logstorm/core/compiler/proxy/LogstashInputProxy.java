@@ -23,10 +23,6 @@ import org.jruby.runtime.builtin.IRubyObject;
  * limitations under the License.
  */
 public class LogStashInputProxy extends LogStashPluginProxyBase implements LogStashInput {
-    private transient IRubyObject rubyObject;
-    private LogStashContext context;
-    private int index;
-
     public LogStashInputProxy(IRubyObject rubyObject, int index, LogStashContext context){
         super(rubyObject);
         this.setIndex(index);

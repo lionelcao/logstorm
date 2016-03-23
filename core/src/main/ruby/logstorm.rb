@@ -8,8 +8,6 @@
 
 $:.unshift "#{ENV["LOGSTASH_HOME"]}/lib"
 
-puts "LOAD_PATH: #{$LOAD_PATH}"
-puts "GEM_HOME: #{ENV["GEM_HOME"]}"
 
 require "rubygems"
 require "bootstrap/rubygems"
@@ -23,10 +21,12 @@ require "logstash/filters/base"
 require "logstash/inputs/base"
 require "logstash/outputs/base"
 
-class LogStashPipelineProxy
+class LogStashPipelineRubyProxy
   def initialize(logstash_config)
     @logstash_config = logstash_config
-    @logger = Cabin::Channel.get(LogStash)
+    @logger = Java::OrgSlf4j::LoggerFactory.getLogger "LogStashPipelineRubyProxy"
+    @logger.info("LOAD_PATH: #{$LOAD_PATH}")
+    @logger.info("GEM_HOME: #{ENV["GEM_HOME"]}")
     eval_logstash_config
   end
 
@@ -40,19 +40,18 @@ class LogStashPipelineProxy
   def eval_logstash_config
     # LogStash::Bundler.setup!({:without => [:build, :development]})
     grammar = LogStashConfigParser.new
-    @logger.info("Parsing logstash config: #{@logstash_config}")
+    @logger.isDebugEnabled && @logger.debug("Parsing logstash config: #{@logstash_config}")
     @configure = grammar.parse(@logstash_config)
     if @configure.nil?
       raise LogStash::ConfigurationError, grammar.failure_reason
     end
-
     # This will compile the config to ruby and evaluate the resulting code.
     # The code will initialize all the plugins and define the
     # filter and output methods.
     @code = @configure.compile
     # The config code is hard to represent as a log message...
     # So just print it.
-    @logger.debug? && @logger.debug("Compiled pipeline code:\n#{@code}")
+    @logger.isDebugEnabled && @logger.debug("Compiled pipeline code:\n#{@code}")
     begin
       eval(@code)
     rescue => e

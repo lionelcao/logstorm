@@ -30,6 +30,16 @@
         <maven-assembly.version>2.5.5</maven-assembly.version>
         <maven-source.version>2.2</maven-source.version>
         <maven-compiler.version>2.0.2</maven-compiler.version>
-        <logstash.version>2.2.2</logstash.version>
+
+        <common-lang3.version>3.4</common-lang3.version>
+        <common-io.version>2.4</common-io.version>
+
+        <slf4j-api.version>1.7.19</slf4j-api.version>
+        <slf4j-log4j12.version>1.7.19</slf4j-log4j12.version>
+
+        <junit.version>4.11</junit.version>
+        <jruby-complete.version>9.0.5.0</jruby-complete.version>
+
+        <rubygem-maven-tools.version>1.0.0</rubygem-maven-tools.version>
     </properties>
 </project>

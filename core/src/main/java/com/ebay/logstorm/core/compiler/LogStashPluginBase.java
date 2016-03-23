@@ -23,7 +23,7 @@ public abstract class LogStashPluginBase implements LogStashPlugin {
     private String name;
     private String configName;
     private LogStashContext context;
-    private String configContent;
+    private String configStr;
     private String debugInfo;
 
     public String getConfigName() {
@@ -60,12 +60,12 @@ public abstract class LogStashPluginBase implements LogStashPlugin {
         this.context = context;
     }
 
-    public String getConfig() {
-        return configContent;
+    public String getConfigStr() {
+        return configStr;
     }
 
-    public void getConfig(String configContent) {
-        this.configContent = configContent;
+    public void setConfigStr(String configStr) {
+        this.configStr = configStr;
     }
 
     @Override
