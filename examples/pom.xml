@@ -6,13 +6,15 @@
         <artifactId>logstorm-parent</artifactId>
         <groupId>com.ebay.logstorm</groupId>
         <version>1.0-SNAPSHOT</version>
+        <relativePath>../pom.xml</relativePath>
     </parent>
     <modelVersion>4.0.0</modelVersion>
-    <artifactId>logstorm-examples</artifactId>
+    <artifactId>logstorm-examples-parent</artifactId>
     <packaging>pom</packaging>
 
     <modules>
         <module>jruby-examples</module>
+        <module>logstorm-examples</module>
     </modules>
 
     <dependencies>

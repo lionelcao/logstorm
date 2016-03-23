@@ -10,10 +10,9 @@
     <version>1.0-SNAPSHOT</version>
     <modules>
         <module>core</module>
+        <module>server</module>
+        <module>contrib</module>
         <module>examples</module>
-        <module>service</module>
-        <module>web</module>
-        <module>plugins</module>
     </modules>
 
     <properties>
@@ -33,5 +32,4 @@
         <maven-compiler.version>2.0.2</maven-compiler.version>
         <logstash.version>2.2.2</logstash.version>
     </properties>
-
 </project>
