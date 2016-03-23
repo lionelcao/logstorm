@@ -1,21 +1,23 @@
 # encoding: utf-8
 require 'spec_helper'
-require "logstash/filters/example"
+require "logstash/filters/siddhi"
 
-describe LogStash::Filters::Example do
-  describe "Set to Hello World" do
+describe LogStash::Filters::Siddhi do
+  describe "Test siddhi filter query" do
     let(:config) do <<-CONFIG
       filter {
-        example {
-          message => "Hello World"
+        siddhi {
+          query =>
+            "define stream StockExchangeStream (symbol string, price int, volume float );
+              from StockExchangeStream[price >= 20 and price < 100] select symbol,volume insert into StockQuote;"
         }
       }
     CONFIG
     end
 
-    sample("message" => "some text") do
-      expect(subject).to include("message")
-      expect(subject['message']).to eq('Hello World')
+    sample("symbol" => "ebay","price" => 80,"volumn" => 12.1,"_type" => "StockExchangeStream") do
+      expect(subject).to include("symbol")
+      expect(subject["symbol"]).to eq("ebay")
     end
   end
 end
