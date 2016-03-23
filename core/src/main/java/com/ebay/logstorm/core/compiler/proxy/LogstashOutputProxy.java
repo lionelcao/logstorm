@@ -1,7 +1,7 @@
 package com.ebay.logstorm.core.compiler.proxy;
 
 import com.ebay.logstorm.core.LogstashContext;
-import com.ebay.logstorm.core.compiler.LogstashOutput;
+import com.ebay.logstorm.core.compiler.LogStashOutput;
 import com.ebay.logstorm.core.event.Event;
 import org.jruby.runtime.builtin.IRubyObject;
 
@@ -23,13 +23,13 @@ import java.util.List;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class LogstashOutputProxy implements LogstashOutput {
+public class LogStashOutputProxy implements LogStashOutput {
 
     private transient IRubyObject rubyProxy;
     private final LogstashContext context;
     private int outputId;
 
-    public LogstashOutputProxy(IRubyObject rubyProxy, int outputId, LogstashContext context){
+    public LogStashOutputProxy(IRubyObject rubyProxy, int outputId, LogstashContext context){
         this.rubyProxy = rubyProxy;
         this.outputId = outputId;
         this.context = context;

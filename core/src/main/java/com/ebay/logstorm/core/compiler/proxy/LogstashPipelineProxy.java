@@ -18,9 +18,9 @@
 package com.ebay.logstorm.core.compiler.proxy;
 
 import com.ebay.logstorm.core.LogstashContext;
-import com.ebay.logstorm.core.compiler.LogstashFilter;
-import com.ebay.logstorm.core.compiler.LogstashInput;
-import com.ebay.logstorm.core.compiler.LogstashOutput;
+import com.ebay.logstorm.core.compiler.LogStashFilter;
+import com.ebay.logstorm.core.compiler.LogStashInput;
+import com.ebay.logstorm.core.compiler.LogStashOutput;
 import com.ebay.logstorm.core.compiler.LogstashPipeline;
 import org.jruby.Ruby;
 import org.jruby.RubyModule;
@@ -38,9 +38,9 @@ public class LogstashPipelineProxy implements LogstashPipeline {
     private final LogstashContext context;
     private Ruby runtime;
     private IRubyObject rubyPipeline;
-    private List<LogstashInput> inputs;
-    private List<LogstashFilter> filters;
-    private List<LogstashOutput> outputs;
+    private List<LogStashInput> inputs;
+    private List<LogStashFilter> filters;
+    private List<LogStashOutput> outputs;
     private final static String LOGSTASH_HOME = "/Users/hchen9/Downloads/logstash-2.2.0";
     private final static String JRUBY_VERSION = "1.9";
 
@@ -66,17 +66,17 @@ public class LogstashPipelineProxy implements LogstashPipeline {
     }
 
     @Override
-    public List<LogstashInput> getInputs(){
+    public List<LogStashInput> getInputs(){
         return inputs;
     }
 
     @Override
-    public List<LogstashFilter> getFilters(){
+    public List<LogStashFilter> getFilters(){
         return null;
     }
 
     @Override
-    public List<LogstashOutput> getOutputs(){
+    public List<LogStashOutput> getOutputs(){
         return null;
     }
 }

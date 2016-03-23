@@ -20,7 +20,7 @@ import com.ebay.logstorm.core.event.Event;
 
 import java.util.List;
 
-public interface LogstashOutput extends LogstashPlugin {
+public interface LogStashOutput extends LogStashPlugin {
     void receive(Event event);
     void receive(List<Event> events);
 }

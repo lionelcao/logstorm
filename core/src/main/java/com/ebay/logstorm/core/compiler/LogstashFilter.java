@@ -1,6 +1,5 @@
 package com.ebay.logstorm.core.compiler;
 
-import com.ebay.logstorm.core.LogstashContext;
 import com.ebay.logstorm.core.event.Event;
 import com.ebay.logstorm.core.event.Collector;
 import com.ebay.logstorm.core.event.EventProcessor;
@@ -23,7 +22,7 @@ import java.util.List;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public interface LogstashFilter extends LogstashPlugin, EventProcessor {
+public interface LogStashFilter extends LogStashPlugin, EventProcessor {
     void filter(Event event, Collector collector);
 
     /**

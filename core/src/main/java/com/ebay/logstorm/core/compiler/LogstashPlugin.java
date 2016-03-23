@@ -18,7 +18,7 @@ import java.io.Serializable;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public interface LogstashPlugin extends Serializable {
+public interface LogStashPlugin extends Serializable {
 
     /**
      * unique_name()

@@ -1,10 +1,6 @@
 package com.ebay.logstorm.core.compiler;
 
 import com.ebay.logstorm.core.event.Collector;
-import com.ebay.logstorm.core.event.EventProducer;
-
-import java.awt.*;
-import java.util.Queue;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -22,7 +18,7 @@ import java.util.Queue;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public interface LogstashInput extends LogstashPlugin {
+public interface LogStashInput extends LogStashPlugin {
     /**
      * run(queue)
      *

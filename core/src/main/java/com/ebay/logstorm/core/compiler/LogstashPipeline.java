@@ -1,7 +1,5 @@
 package com.ebay.logstorm.core.compiler;
 
-import com.ebay.logstorm.core.LogstashContext;
-
 import java.util.List;
 
 /**
@@ -25,17 +23,17 @@ public interface LogstashPipeline {
      *
      * @return
      */
-    List<LogstashInput> getInputs();
+    List<LogStashInput> getInputs();
 
     /**
      *
      * @return
      */
-    List<LogstashFilter> getFilters();
+    List<LogStashFilter> getFilters();
 
     /**
      *
      * @return
      */
-    List<LogstashOutput> getOutputs();
+    List<LogStashOutput> getOutputs();
 }
