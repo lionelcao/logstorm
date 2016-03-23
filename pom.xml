@@ -11,6 +11,9 @@
     <modules>
         <module>core</module>
         <module>examples</module>
+        <module>service</module>
+        <module>web</module>
+        <module>plugins</module>
     </modules>
 
     <properties>
