@@ -23,15 +23,12 @@ import com.ebay.logstorm.core.compiler.LogstashInput;
 import com.ebay.logstorm.core.compiler.LogstashOutput;
 import com.ebay.logstorm.core.compiler.LogstashPipeline;
 import org.jruby.Ruby;
-import org.jruby.RubyHash;
 import org.jruby.RubyModule;
 import org.jruby.javasupport.JavaUtil;
 import org.jruby.runtime.Helpers;
 import org.jruby.runtime.builtin.IRubyObject;
 
-import java.util.HashMap;
 import java.util.List;
-
 
 public class LogstashPipelineProxy implements LogstashPipeline {
 

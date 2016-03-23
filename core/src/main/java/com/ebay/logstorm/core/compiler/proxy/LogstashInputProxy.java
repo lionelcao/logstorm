@@ -33,7 +33,12 @@ public class LogstashInputProxy implements LogstashInput {
     }
 
     @Override
-    public void prepare() {
+    public String name() {
+        return null;
+    }
+
+    @Override
+    public void initialize() {
 
     }
 
@@ -43,12 +48,12 @@ public class LogstashInputProxy implements LogstashInput {
     }
 
     @Override
-    public void teardown() {
+    public void close() {
 
     }
 
     @Override
-    public void nextEvent(Collector collector) {
+    public void run(Collector collector) {
 
     }
 }

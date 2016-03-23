@@ -4,8 +4,9 @@ import com.ebay.logstorm.core.LogstashContext;
 import com.ebay.logstorm.core.compiler.LogstashFilter;
 import com.ebay.logstorm.core.event.Collector;
 import com.ebay.logstorm.core.event.Event;
-import org.jruby.management.Runtime;
 import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.List;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -35,7 +36,12 @@ public class LogstashFilterProxy implements LogstashFilter {
     }
 
     @Override
-    public void prepare() {
+    public String name() {
+        return null;
+    }
+
+    @Override
+    public void initialize() {
         throw new RuntimeException("not implement yet, should recreate ruby proxy here");
     }
 
@@ -45,12 +51,22 @@ public class LogstashFilterProxy implements LogstashFilter {
     }
 
     @Override
-    public void teardown() {
+    public void close() {
 
     }
 
     @Override
     public void nextEvent(Event event, Collector collector) {
+
+    }
+
+    @Override
+    public void filter(Event event, Collector collector) {
+
+    }
+
+    @Override
+    public void filter(List<Event> events, Collector collector) {
 
     }
 }

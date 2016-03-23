@@ -19,10 +19,20 @@ import java.io.Serializable;
  * limitations under the License.
  */
 public interface LogstashPlugin extends Serializable {
+
     /**
+     * unique_name()
+     *
+     * @return
+     */
+    String name();
+
+    /**
+     * LogStash::Plugin#initialize()
+     *
      * Prepare object deserialization, resource, connection and so on.
      */
-    void prepare();
+    void initialize();
 
     /**
      * Register plugin, and start to run
@@ -32,5 +42,5 @@ public interface LogstashPlugin extends Serializable {
     /**
      * Shutdown plugin
      */
-    void teardown();
+    void close();
 }

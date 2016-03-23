@@ -5,6 +5,8 @@ import com.ebay.logstorm.core.event.Event;
 import com.ebay.logstorm.core.event.Collector;
 import com.ebay.logstorm.core.event.EventProcessor;
 
+import java.util.List;
+
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -22,4 +24,12 @@ import com.ebay.logstorm.core.event.EventProcessor;
  * limitations under the License.
  */
 public interface LogstashFilter extends LogstashPlugin, EventProcessor {
+    void filter(Event event, Collector collector);
+
+    /**
+     * LogStash::Filters::Base#multi_fiter(events)
+     * @param events
+     * @param collector
+     */
+    void filter(List<Event> events, Collector collector);
 }

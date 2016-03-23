@@ -16,8 +16,11 @@
  */
 package com.ebay.logstorm.core.compiler;
 
-import com.ebay.logstorm.core.event.EventProcessor;
+import com.ebay.logstorm.core.event.Event;
 
-public interface LogstashOutput extends LogstashPlugin,EventProcessor {
+import java.util.List;
 
+public interface LogstashOutput extends LogstashPlugin {
+    void receive(Event event);
+    void receive(List<Event> events);
 }

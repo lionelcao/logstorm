@@ -2,9 +2,10 @@ package com.ebay.logstorm.core.compiler.proxy;
 
 import com.ebay.logstorm.core.LogstashContext;
 import com.ebay.logstorm.core.compiler.LogstashOutput;
-import com.ebay.logstorm.core.event.Collector;
 import com.ebay.logstorm.core.event.Event;
 import org.jruby.runtime.builtin.IRubyObject;
+
+import java.util.List;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -35,7 +36,12 @@ public class LogstashOutputProxy implements LogstashOutput {
     }
 
     @Override
-    public void prepare() {
+    public String name() {
+        return null;
+    }
+
+    @Override
+    public void initialize() {
 
     }
 
@@ -45,12 +51,17 @@ public class LogstashOutputProxy implements LogstashOutput {
     }
 
     @Override
-    public void teardown() {
+    public void close() {
 
     }
 
     @Override
-    public void nextEvent(Event event, Collector collector) {
+    public void receive(Event event) {
+
+    }
+
+    @Override
+    public void receive(List<Event> events) {
 
     }
 }
