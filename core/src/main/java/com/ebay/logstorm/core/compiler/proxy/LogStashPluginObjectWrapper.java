@@ -1,9 +1,8 @@
 package com.ebay.logstorm.core.compiler.proxy;
 
-import com.ebay.logstorm.core.LogStashContext;
-import com.ebay.logstorm.core.compiler.LogStashInput;
-import com.ebay.logstorm.core.compiler.LogStashPluginBase;
-import com.ebay.logstorm.core.event.Collector;
+import org.jruby.Ruby;
+import org.jruby.javasupport.JavaUtil;
+import org.jruby.runtime.Helpers;
 import org.jruby.runtime.builtin.IRubyObject;
 
 /**
@@ -22,37 +21,24 @@ import org.jruby.runtime.builtin.IRubyObject;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class LogStashInputProxy extends LogStashPluginProxyBase implements LogStashInput {
-    private transient IRubyObject rubyObject;
-    private LogStashContext context;
-    private int index;
+public class LogStashPluginObjectWrapper {
+    private final IRubyObject rubyObject;
+    Ruby ruby = RubyRuntimeFactory.getSingletonRuntime();
 
-    public LogStashInputProxy(IRubyObject rubyObject, int index, LogStashContext context){
-        super(rubyObject);
-        this.setIndex(index);
-        this.setContext(context);
+    public LogStashPluginObjectWrapper(IRubyObject rubyObject){
+        this.rubyObject = rubyObject;
+    }
+    public String getDebugInfo(){
+        return (String) JavaUtil.convertRubyToJava(Helpers.invoke(ruby.getCurrentContext(),this.rubyObject,"debug_info"),String.class);
     }
 
-    @Deprecated
-    public LogStashInputProxy(){}
-
-    @Override
-    public void initialize() {
-
+    public String getConfigName(){
+        return null;
+//        (String) JavaUtil.convertRubyToJava(Helpers.invoke(ruby.getCurrentContext(),rubyObject,"config_name"),String.class);
     }
 
-    @Override
-    public void register() {
-
-    }
-
-    @Override
-    public void close() {
-
-    }
-
-    @Override
-    public void run(Collector collector) {
-
+    public String getUniqueName(){
+        return null;
+//        (String) JavaUtil.convertRubyToJava(Helpers.invoke(ruby.getCurrentContext(),rubyObject,"plugin_unique_name"),String.class);
     }
 }

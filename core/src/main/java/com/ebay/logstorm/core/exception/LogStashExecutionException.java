@@ -1,8 +1,4 @@
-package com.ebay.logstorm.core.compiler;
-
-import com.ebay.logstorm.core.LogStashContext;
-
-import java.io.Serializable;
+package com.ebay.logstorm.core.exception;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -20,25 +16,6 @@ import java.io.Serializable;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public interface LogStashPlugin extends Serializable {
-    int getIndex();
-    String getConfigName();
-    String getUniqueName();
-    String getDebugInfo();
-    /**
-     * LogStash::Plugin#initialize()
-     *
-     * Prepare object deserialization, resource, connection and so on.
-     */
-    void initialize();
+public class LogStashExecutionException extends Exception {
 
-    /**
-     * Register plugin, and start to run
-     */
-    void register();
-
-    /**
-     * Shutdown plugin
-     */
-    void close();
 }

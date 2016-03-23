@@ -1,4 +1,4 @@
-package com.ebay.logstorm.core.compiler;
+package com.ebay.logstorm.core.exception;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -16,6 +16,8 @@ package com.ebay.logstorm.core.compiler;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class LogStashException extends Exception{
-    
+public class LogStashCompileException extends Exception{
+    public LogStashCompileException(String msg, Throwable throwable){
+        super(msg,throwable);
+    }
 }

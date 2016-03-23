@@ -1,9 +1,6 @@
 package com.ebay.logstorm.core.compiler.proxy;
 
-import com.ebay.logstorm.core.LogStashContext;
-import com.ebay.logstorm.core.compiler.LogStashInput;
 import com.ebay.logstorm.core.compiler.LogStashPluginBase;
-import com.ebay.logstorm.core.event.Collector;
 import org.jruby.runtime.builtin.IRubyObject;
 
 /**
@@ -22,37 +19,22 @@ import org.jruby.runtime.builtin.IRubyObject;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class LogStashInputProxy extends LogStashPluginProxyBase implements LogStashInput {
+public abstract class LogStashPluginProxyBase extends LogStashPluginBase {
     private transient IRubyObject rubyObject;
-    private LogStashContext context;
-    private int index;
-
-    public LogStashInputProxy(IRubyObject rubyObject, int index, LogStashContext context){
-        super(rubyObject);
-        this.setIndex(index);
-        this.setContext(context);
+    public LogStashPluginProxyBase(IRubyObject rubyObject){
+        this.rubyObject = rubyObject;
+        LogStashPluginObjectWrapper proxy = new LogStashPluginObjectWrapper(rubyObject);
+        this.setConfigName(proxy.getConfigName());
+        this.setDebugInfo(proxy.getDebugInfo());
+        this.setName(proxy.getUniqueName());
     }
 
-    @Deprecated
-    public LogStashInputProxy(){}
+    public LogStashPluginProxyBase(){}
 
-    @Override
-    public void initialize() {
-
+    protected IRubyObject getRubyObject(){
+        return rubyObject;
     }
-
-    @Override
-    public void register() {
-
-    }
-
-    @Override
-    public void close() {
-
-    }
-
-    @Override
-    public void run(Collector collector) {
-
+    protected void setRubyObject(IRubyObject rubyObject){
+        this.rubyObject = rubyObject;
     }
 }

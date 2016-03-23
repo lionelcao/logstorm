@@ -1,12 +1,5 @@
 package com.ebay.logstorm.core.compiler.proxy;
 
-import com.ebay.logstorm.core.LogStashContext;
-import com.ebay.logstorm.core.compiler.LogStashOutput;
-import com.ebay.logstorm.core.event.Event;
-import org.jruby.runtime.builtin.IRubyObject;
-
-import java.util.List;
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -23,39 +16,9 @@ import java.util.List;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class LogStashOutputProxy extends LogStashPluginProxyBase implements LogStashOutput {
-
-    public LogStashOutputProxy(IRubyObject rubyObject, int index, LogStashContext context){
-        super(rubyObject);
-        this.setIndex(index);
-        this.setContext(context);
-    }
-
-    @Deprecated
-    public LogStashOutputProxy(){}
-
-    @Override
-    public void initialize() {
-
-    }
-
-    @Override
-    public void register() {
-
-    }
-
-    @Override
-    public void close() {
-
-    }
-
-    @Override
-    public void receive(Event event) {
-
-    }
-
-    @Override
-    public void receive(List<Event> events) {
-
-    }
+public class LogStashProxyConstants {
+    public final static String LOGSTASH_HOME = "/Users/hchen9/Downloads/logstash-2.2.0";
+    public final static String JRUBY_VERSION = "1.9";
+    public final static String LOGSTORM_RUBY_FILE="logstorm.rb";
+    public final static String LOGSTASH_PIPELINE_RUBY_CLASS="LogStashPipelineProxy";
 }

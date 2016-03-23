@@ -17,6 +17,6 @@ pipeline_conf = %Q(
   }
 )
 
-pipeline = LogstashPipeline.new(pipeline_conf)
+pipeline = LogStashPipelineProxy.new(pipeline_conf)
 puts pipeline
 puts pipeline.get_compiled_code

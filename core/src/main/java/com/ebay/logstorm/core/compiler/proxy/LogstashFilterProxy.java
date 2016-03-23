@@ -24,21 +24,14 @@ import java.util.List;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class LogStashFilterProxy implements LogStashFilter {
-    private final LogStashContext context;
-    private transient IRubyObject rubyProxy;
-    private int filterId;
-
-    public LogStashFilterProxy(IRubyObject rubyProxy, int filterId, LogStashContext context){
-        this.rubyProxy = rubyProxy;
-        this.filterId = filterId;
-        this.context = context;
+public class LogStashFilterProxy extends LogStashPluginProxyBase implements LogStashFilter {
+    public LogStashFilterProxy(IRubyObject rubyObject, int index, LogStashContext context){
+        super(rubyObject);
+        this.setContext(context);
+        this.setIndex(index);
     }
 
-    @Override
-    public String name() {
-        return null;
-    }
+    public LogStashFilterProxy(){}
 
     @Override
     public void initialize() {

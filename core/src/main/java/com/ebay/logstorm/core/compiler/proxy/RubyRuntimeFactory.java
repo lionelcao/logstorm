@@ -1,11 +1,7 @@
 package com.ebay.logstorm.core.compiler.proxy;
 
-import com.ebay.logstorm.core.LogStashContext;
-import com.ebay.logstorm.core.compiler.LogStashOutput;
-import com.ebay.logstorm.core.event.Event;
-import org.jruby.runtime.builtin.IRubyObject;
-
-import java.util.List;
+import org.jruby.Ruby;
+import static com.ebay.logstorm.core.compiler.proxy.LogStashProxyConstants.*;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -23,39 +19,19 @@ import java.util.List;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class LogStashOutputProxy extends LogStashPluginProxyBase implements LogStashOutput {
+public class RubyRuntimeFactory {
+    private static Ruby runtime;
 
-    public LogStashOutputProxy(IRubyObject rubyObject, int index, LogStashContext context){
-        super(rubyObject);
-        this.setIndex(index);
-        this.setContext(context);
-    }
-
-    @Deprecated
-    public LogStashOutputProxy(){}
-
-    @Override
-    public void initialize() {
-
-    }
-
-    @Override
-    public void register() {
-
-    }
-
-    @Override
-    public void close() {
-
-    }
-
-    @Override
-    public void receive(Event event) {
-
-    }
-
-    @Override
-    public void receive(List<Event> events) {
-
+    public static Ruby getSingletonRuntime(){
+        if(runtime == null) {
+            runtime = Ruby.getGlobalRuntime();
+            String rubyGemHome = String.format("%s/vendor/bundle/jruby/%s", LOGSTASH_HOME, JRUBY_VERSION);
+            String bootstrap = "";
+            bootstrap += String.format("ENV[\"%s\"] = \"%s\";\n", "LOGSTASH_HOME", LOGSTASH_HOME);
+            bootstrap += String.format("ENV[\"%s\"] = \"%s\";\n", "GEM_HOME", rubyGemHome);
+            bootstrap += "require '" + LOGSTORM_RUBY_FILE + "';\n";
+            runtime.evalScriptlet(bootstrap);
+        }
+        return runtime;
     }
 }

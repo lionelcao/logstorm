@@ -23,7 +23,7 @@ require "logstash/filters/base"
 require "logstash/inputs/base"
 require "logstash/outputs/base"
 
-class LogstashPipeline
+class LogStashPipelineProxy
   def initialize(logstash_config)
     @logstash_config = logstash_config
     @logger = Cabin::Channel.get(LogStash)

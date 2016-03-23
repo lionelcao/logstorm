@@ -18,21 +18,22 @@ package com.ebay.logstorm.core.compiler;
 
 import com.ebay.logstorm.core.LogStashContext;
 import com.ebay.logstorm.core.compiler.proxy.LogStashPipelineProxy;
+import com.ebay.logstorm.core.exception.LogStashCompileException;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 
-public class LogStashConfigParser {
-    public static LogStashPipeline compile(String logStashConfigStr){
+public class LogStashConfigCompiler {
+    public static LogStashPipeline compile(String logStashConfigStr) throws LogStashCompileException {
         return new LogStashPipelineProxy(logStashConfigStr,new LogStashContext(System.getProperties()));
     }
 
-    public static LogStashPipeline compile(File file) throws IOException {
+    public static LogStashPipeline compile(File file) throws IOException, LogStashCompileException {
         return compile(FileUtils.readFileToString(file));
     }
 
-    public static LogStashPipeline compileResource(String resource) throws IOException {
-        return compile(FileUtils.readFileToString(new File(LogStashConfigParser.class.getResource(resource).getPath())));
+    public static LogStashPipeline compileResource(String resource) throws IOException, LogStashCompileException {
+        return compile(FileUtils.readFileToString(new File(LogStashConfigCompiler.class.getResource(resource).getPath())));
     }
 }
