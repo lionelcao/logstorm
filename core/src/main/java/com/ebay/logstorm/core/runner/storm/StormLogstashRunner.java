@@ -1,7 +1,7 @@
 package com.ebay.logstorm.core.runner.storm;
 
-import com.ebay.logstorm.core.runner.LogstashRunner;
-import com.ebay.logstorm.core.compiler.LogstashPipeline;
+import com.ebay.logstorm.core.runner.LogStashRunner;
+import com.ebay.logstorm.core.compiler.LogStashPipeline;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -19,8 +19,8 @@ import com.ebay.logstorm.core.compiler.LogstashPipeline;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class StormLogstashRunner implements LogstashRunner {
-    public void run(LogstashPipeline pipeline) {
+public class StormLogStashRunner implements LogStashRunner {
+    public void run(LogStashPipeline pipeline) {
 
     }
 }

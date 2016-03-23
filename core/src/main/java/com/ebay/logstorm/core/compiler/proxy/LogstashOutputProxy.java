@@ -1,6 +1,6 @@
 package com.ebay.logstorm.core.compiler.proxy;
 
-import com.ebay.logstorm.core.LogstashContext;
+import com.ebay.logstorm.core.LogStashContext;
 import com.ebay.logstorm.core.compiler.LogStashOutput;
 import com.ebay.logstorm.core.event.Event;
 import org.jruby.runtime.builtin.IRubyObject;
@@ -26,10 +26,10 @@ import java.util.List;
 public class LogStashOutputProxy implements LogStashOutput {
 
     private transient IRubyObject rubyProxy;
-    private final LogstashContext context;
+    private final LogStashContext context;
     private int outputId;
 
-    public LogStashOutputProxy(IRubyObject rubyProxy, int outputId, LogstashContext context){
+    public LogStashOutputProxy(IRubyObject rubyProxy, int outputId, LogStashContext context){
         this.rubyProxy = rubyProxy;
         this.outputId = outputId;
         this.context = context;

@@ -16,8 +16,8 @@
  */
 package com.ebay.logstorm.core.runner;
 
-import com.ebay.logstorm.core.compiler.LogstashPipeline;
+import com.ebay.logstorm.core.compiler.LogStashPipeline;
 
-public interface LogstashRunner {
-    void run(LogstashPipeline pipeline);
+public interface LogStashRunner {
+    void run(LogStashPipeline pipeline);
 }

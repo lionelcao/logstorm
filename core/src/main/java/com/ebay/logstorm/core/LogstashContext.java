@@ -1,8 +1,3 @@
-package com.ebay.logstorm.core;
-
-import java.io.Serializable;
-import java.util.Properties;
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -19,20 +14,22 @@ import java.util.Properties;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class LogstashContext implements Serializable{
-    private final String pipelineConfigure;
-    private final Properties environmentProperties;
 
-    public LogstashContext(String pipelineConfigure, Properties properties){
-        this.pipelineConfigure = pipelineConfigure;
+package com.ebay.logstorm.core;
+
+import java.io.Serializable;
+import java.util.Properties;
+
+/**
+ *
+ */
+public class LogStashContext implements Serializable{
+    private final Properties environmentProperties;
+    public LogStashContext(Properties properties){
         this.environmentProperties = properties;
     }
 
     public Properties getEnvironmentProperties() {
         return environmentProperties;
-    }
-
-    public String getPipelineConfigure() {
-        return pipelineConfigure;
     }
 }

@@ -16,27 +16,23 @@ package com.ebay.logstorm.core.compiler;
  * limitations under the License.
  */
 
-import com.ebay.logstorm.core.LogstashContext;
-import com.ebay.logstorm.core.compiler.proxy.LogstashPipelineProxy;
+import com.ebay.logstorm.core.LogStashContext;
+import com.ebay.logstorm.core.compiler.proxy.LogStashPipelineProxy;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 
-public class LogStashCompiler {
-    public static LogstashPipeline compile(LogstashContext context){
-        return new LogstashPipelineProxy(context);
+public class LogStashConfigParser {
+    public static LogStashPipeline compile(String logStashConfigStr){
+        return new LogStashPipelineProxy(logStashConfigStr,new LogStashContext(System.getProperties()));
     }
 
-    public static LogstashPipeline compile(String logstashPipeline){
-        return new LogstashPipelineProxy(new LogstashContext(logstashPipeline,System.getProperties()));
-    }
-
-    public static LogstashPipeline compile(File file) throws IOException {
+    public static LogStashPipeline compile(File file) throws IOException {
         return compile(FileUtils.readFileToString(file));
     }
 
-    public static LogstashPipeline compileResource(String resource) throws IOException {
-        return compile(FileUtils.readFileToString(new File(LogStashCompiler.class.getResource(resource).getPath())));
+    public static LogStashPipeline compileResource(String resource) throws IOException {
+        return compile(FileUtils.readFileToString(new File(LogStashConfigParser.class.getResource(resource).getPath())));
     }
 }

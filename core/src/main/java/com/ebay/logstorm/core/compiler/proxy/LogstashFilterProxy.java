@@ -1,6 +1,6 @@
 package com.ebay.logstorm.core.compiler.proxy;
 
-import com.ebay.logstorm.core.LogstashContext;
+import com.ebay.logstorm.core.LogStashContext;
 import com.ebay.logstorm.core.compiler.LogStashFilter;
 import com.ebay.logstorm.core.event.Collector;
 import com.ebay.logstorm.core.event.Event;
@@ -25,11 +25,11 @@ import java.util.List;
  * limitations under the License.
  */
 public class LogStashFilterProxy implements LogStashFilter {
-    private final LogstashContext context;
+    private final LogStashContext context;
     private transient IRubyObject rubyProxy;
     private int filterId;
 
-    public LogStashFilterProxy(IRubyObject rubyProxy, int filterId, LogstashContext context){
+    public LogStashFilterProxy(IRubyObject rubyProxy, int filterId, LogStashContext context){
         this.rubyProxy = rubyProxy;
         this.filterId = filterId;
         this.context = context;

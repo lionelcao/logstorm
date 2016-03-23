@@ -1,6 +1,6 @@
 package com.ebay.logstorm.core.compiler.proxy;
 
-import com.ebay.logstorm.core.LogstashContext;
+import com.ebay.logstorm.core.LogStashContext;
 import com.ebay.logstorm.core.compiler.LogStashInput;
 import com.ebay.logstorm.core.event.Collector;
 import org.jruby.runtime.builtin.IRubyObject;
@@ -23,10 +23,10 @@ import org.jruby.runtime.builtin.IRubyObject;
  */
 public class LogStashInputProxy implements LogStashInput {
     private transient IRubyObject rubyProxy;
-    private final LogstashContext context;
+    private final LogStashContext context;
     private int inputId;
 
-    public LogStashInputProxy(IRubyObject rubyProxy, int inputId, LogstashContext context){
+    public LogStashInputProxy(IRubyObject rubyProxy, int inputId, LogStashContext context){
         this.rubyProxy = rubyProxy;
         this.inputId = inputId;
         this.context = context;

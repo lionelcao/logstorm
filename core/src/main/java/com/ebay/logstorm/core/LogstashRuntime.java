@@ -1,9 +1,3 @@
-package com.ebay.logstorm.core;
-
-import com.ebay.logstorm.core.compiler.LogStashCompiler;
-import com.ebay.logstorm.core.compiler.LogstashPipeline;
-import com.ebay.logstorm.core.runner.LogstashRunner;
-import com.ebay.logstorm.core.runner.local.LocalLogstashRunner;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -21,29 +15,25 @@ import com.ebay.logstorm.core.runner.local.LocalLogstashRunner;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class LogstashRuntime {
-    LogstashContext context;
-    LogstashPipeline pipeline;
 
-    public LogstashRuntime(String logstashConfigure){
-        this(new LogstashContext(logstashConfigure,System.getProperties()));
-    }
+package com.ebay.logstorm.core;
 
-    public LogstashRuntime(LogstashContext context){
+import com.ebay.logstorm.core.compiler.LogStashConfigParser;
+import com.ebay.logstorm.core.compiler.LogStashPipeline;
+import com.ebay.logstorm.core.runner.LogStashRunner;
+import com.ebay.logstorm.core.runner.local.LocalLogStashRunner;
+
+public class LogStashRuntime {
+    private LogStashContext context;
+
+    public LogStashRuntime(LogStashContext context){
         this.context = context;
     }
-
-    public LogstashPipeline compile(){
-        pipeline =  LogStashCompiler.compile(context);
-        return pipeline;
-    }
-
-    public void run(LogstashRunner runner){
-        if(pipeline == null) compile();
+    public void run(LogStashRunner runner, String logStashConfigStr){
+        LogStashPipeline pipeline =  LogStashConfigParser.compile(logStashConfigStr);
         runner.run(pipeline);
     }
-
-    public void run(){
-        run(new LocalLogstashRunner());
+    public void run(String logStashConfigStr){
+        run(new LocalLogStashRunner(),logStashConfigStr);
     }
 }

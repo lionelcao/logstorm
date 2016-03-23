@@ -17,11 +17,11 @@
 
 package com.ebay.logstorm.core.compiler.proxy;
 
-import com.ebay.logstorm.core.LogstashContext;
+import com.ebay.logstorm.core.LogStashContext;
 import com.ebay.logstorm.core.compiler.LogStashFilter;
 import com.ebay.logstorm.core.compiler.LogStashInput;
 import com.ebay.logstorm.core.compiler.LogStashOutput;
-import com.ebay.logstorm.core.compiler.LogstashPipeline;
+import com.ebay.logstorm.core.compiler.LogStashPipeline;
 import org.jruby.Ruby;
 import org.jruby.RubyModule;
 import org.jruby.javasupport.JavaUtil;
@@ -30,12 +30,13 @@ import org.jruby.runtime.builtin.IRubyObject;
 
 import java.util.List;
 
-public class LogstashPipelineProxy implements LogstashPipeline {
+public class LogStashPipelineProxy implements LogStashPipeline {
 
     public final static String LOGSTORM_RUBY_FILE="logstorm";
     public final static String LOGSTASH_PIPELINE_RUBY_CLASS="LogstashPipeline";
 
-    private final LogstashContext context;
+    private final LogStashContext context;
+    private final String logStashConfigStr;
     private Ruby runtime;
     private IRubyObject rubyPipeline;
     private List<LogStashInput> inputs;
@@ -44,8 +45,9 @@ public class LogstashPipelineProxy implements LogstashPipeline {
     private final static String LOGSTASH_HOME = "/Users/hchen9/Downloads/logstash-2.2.0";
     private final static String JRUBY_VERSION = "1.9";
 
-    public LogstashPipelineProxy(LogstashContext context){
+    public LogStashPipelineProxy(String logStashConfigStr,LogStashContext context){
         this.context = context;
+        this.logStashConfigStr = logStashConfigStr;
         runtime = Ruby.getGlobalRuntime();
         bootstrap();
         evaluate();
@@ -62,7 +64,7 @@ public class LogstashPipelineProxy implements LogstashPipeline {
 
     private void evaluate(){
         RubyModule rubyModule = runtime.getClassFromPath(LOGSTASH_PIPELINE_RUBY_CLASS);
-        this.rubyPipeline = Helpers.invoke(runtime.getCurrentContext(),rubyModule,"new", JavaUtil.convertJavaToRuby(runtime,context.getPipelineConfigure()));
+        this.rubyPipeline = Helpers.invoke(runtime.getCurrentContext(),rubyModule,"new", JavaUtil.convertJavaToRuby(runtime,logStashConfigStr));
     }
 
     @Override
