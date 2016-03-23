@@ -16,6 +16,6 @@ package com.ebay.logstorm.core.compiler;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class LogstashException extends Exception{
+public class LogStashException extends Exception{
     
 }

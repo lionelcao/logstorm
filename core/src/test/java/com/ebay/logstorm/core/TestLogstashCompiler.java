@@ -1,8 +1,7 @@
 package com.ebay.logstorm.core;
 
-import com.ebay.logstorm.core.compiler.LogstashCompiler;
+import com.ebay.logstorm.core.compiler.LogStashCompiler;
 import com.ebay.logstorm.core.compiler.LogstashPipeline;
-import org.jruby.RubyProcess;
 import org.junit.Assert;
 import org.junit.Test;
 
@@ -27,7 +26,7 @@ import java.io.IOException;
 public class TestLogstashCompiler {
     @Test
     public void testSimpleConfigureCompile() throws IOException {
-        LogstashPipeline pipeline = LogstashCompiler.compileResource("/simple-generator-stdout.txt");
+        LogstashPipeline pipeline = LogStashCompiler.compileResource("/simple-generator-stdout.txt");
         Assert.assertNotNull(pipeline);
     }
 }

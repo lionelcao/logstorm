@@ -23,7 +23,7 @@ import org.apache.commons.io.FileUtils;
 import java.io.File;
 import java.io.IOException;
 
-public class LogstashCompiler {
+public class LogStashCompiler {
     public static LogstashPipeline compile(LogstashContext context){
         return new LogstashPipelineProxy(context);
     }
@@ -37,6 +37,6 @@ public class LogstashCompiler {
     }
 
     public static LogstashPipeline compileResource(String resource) throws IOException {
-        return compile(FileUtils.readFileToString(new File(LogstashCompiler.class.getResource(resource).getPath())));
+        return compile(FileUtils.readFileToString(new File(LogStashCompiler.class.getResource(resource).getPath())));
     }
 }

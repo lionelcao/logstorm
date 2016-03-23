@@ -1,6 +1,6 @@
 package com.ebay.logstorm.core;
 
-import com.ebay.logstorm.core.compiler.LogstashCompiler;
+import com.ebay.logstorm.core.compiler.LogStashCompiler;
 import com.ebay.logstorm.core.compiler.LogstashPipeline;
 import com.ebay.logstorm.core.runner.LogstashRunner;
 import com.ebay.logstorm.core.runner.local.LocalLogstashRunner;
@@ -34,7 +34,7 @@ public class LogstashRuntime {
     }
 
     public LogstashPipeline compile(){
-        pipeline =  LogstashCompiler.compile(context);
+        pipeline =  LogStashCompiler.compile(context);
         return pipeline;
     }
 
