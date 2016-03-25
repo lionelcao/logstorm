@@ -1,6 +1,6 @@
 package com.ebay.logstorm.core.compiler;
 
-import com.ebay.logstorm.core.LogStormConfig;
+import com.ebay.logstorm.core.PipelineConfig;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -21,12 +21,13 @@ import com.ebay.logstorm.core.LogStormConfig;
 public abstract class LogStashPluginBase implements LogStashPlugin {
     private int index;
     private String config_name;
-    private LogStormConfig context;
+    private PipelineConfig context;
     private String configStr;
     private String debugInfo;
     private String inspect;
     private String to_s;
     private String plugin_type;
+    private long parallelism = 1;
 
     @Override
     public String getUniqueName() {
@@ -52,11 +53,11 @@ public abstract class LogStashPluginBase implements LogStashPlugin {
         this.index = index;
     }
 
-    public LogStormConfig getContext() {
+    public PipelineConfig getContext() {
         return context;
     }
 
-    public void setContext(LogStormConfig context) {
+    public void setContext(PipelineConfig context) {
         this.context = context;
     }
 
@@ -112,5 +113,13 @@ public abstract class LogStashPluginBase implements LogStashPlugin {
 
     public void setPluginType(String plugin_type) {
         this.plugin_type = plugin_type;
+    }
+
+    public long getParallelism() {
+        return parallelism;
+    }
+
+    public void setParallelism(long parallelism) {
+        this.parallelism = parallelism;
     }
 }

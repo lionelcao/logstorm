@@ -16,6 +16,7 @@
  */
 package com.ebay.logstorm.core;
 
+import com.ebay.logstorm.core.runner.PipelineRunner;
 import com.ebay.logstorm.core.serializer.JavaObjectSnappySerializer;
 import com.ebay.logstorm.core.serializer.Serializer;
 import com.typesafe.config.Config;
@@ -27,15 +28,15 @@ import java.util.Properties;
 /**
  *
  */
-public class LogStormConfig implements Serializable{
+public class PipelineConfig implements Serializable{
     private final Config config;
 
-    public LogStormConfig(Properties properties){
+    public PipelineConfig(Properties properties){
         this.config = ConfigFactory.parseProperties(properties);
     }
 
-    public LogStormConfig(){
-        this.config = ConfigFactory.load();
+    public PipelineConfig(Config config){
+        this.config = config;
     }
 
     public Serializer getSerializer(){
@@ -52,11 +53,15 @@ public class LogStormConfig implements Serializable{
         return 50;
     }
 
-    public String getPipelineName(){
-        return "defaultPipeline";
+    public int getFilterParallesm(){
+        return 1;
     }
 
-    public Config getConfig() {
+    public Config getOriginalConfig() {
         return config;
+    }
+
+    public String getPipelineName() {
+        return null;
     }
 }

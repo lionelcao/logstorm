@@ -1,5 +1,8 @@
 package com.ebay.logstorm.core.compiler;
 
+
+import com.ebay.logstorm.core.PipelineConfig;
+
 import java.util.List;
 
 /**
@@ -36,4 +39,10 @@ public interface LogStashPipeline {
      * @return
      */
     List<LogStashOutput> getOutputs();
+
+    /**
+     *
+     * @return
+     */
+    PipelineConfig getContext();
 }

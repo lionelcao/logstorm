@@ -26,6 +26,8 @@ public interface LogStashPlugin extends Serializable {
     String getConfigStr();
     String getPluginType();
 
+    long getParallelism();
+
     /**
      * LogStash::Plugin#initialize()
      *

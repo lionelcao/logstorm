@@ -5,7 +5,7 @@ import backtype.storm.LocalCluster;
 import backtype.storm.topology.BoltDeclarer;
 import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.tuple.Fields;
-import com.ebay.logstorm.core.LogStormConfig;
+import com.ebay.logstorm.core.PipelineConfig;
 import com.ebay.logstorm.core.compiler.LogStashFilter;
 import com.ebay.logstorm.core.compiler.LogStashInput;
 import com.ebay.logstorm.core.compiler.LogStashOutput;
@@ -33,7 +33,8 @@ import java.util.List;
  * limitations under the License.
  */
 public class StormPipelineRunner implements PipelineRunner {
-    public void run(LogStashPipeline pipeline, LogStormConfig config) {
+    public void run(LogStashPipeline pipeline) {
+        PipelineConfig context = pipeline.getContext();
         List<LogStashInput> inputs = pipeline.getInputs();
         List<LogStashFilter> filters = pipeline.getFilters();
         List<LogStashOutput> outputs = pipeline.getOutputs();
@@ -48,25 +49,25 @@ public class StormPipelineRunner implements PipelineRunner {
         Preconditions.checkState(inputs.size()>0,"Inputs number is less then 0");
 
         for(LogStashInput input:inputs){
-            LogStashInputSpout  inputSpout = new LogStashInputSpout(input,config);
-            builder.setSpout(input.getUniqueName(),inputSpout);
+            LogStashInputSpout  inputSpout = new LogStashInputSpout(input,context);
+            builder.setSpout(input.getUniqueName(),inputSpout,input.getParallelism());
             inputSpouts.add(inputSpout);
         }
 
         // TODO: Avoid create filter bolt if having no filters, even created, it will do nothing but just pass through the events
-        filtersBolt = new LogStashFiltersBolt(filters,config);
-        BoltDeclarer declarer = builder.setBolt(Constants.STORM_FILTER_BOLT_NAME,filtersBolt);
+        filtersBolt = new LogStashFiltersBolt(filters,context);
+        BoltDeclarer declarer = builder.setBolt(Constants.STORM_FILTER_BOLT_NAME,filtersBolt, context.getFilterParallesm());
         for(LogStashInput input:inputs) {
             declarer.fieldsGrouping(input.getUniqueName(),new Fields(Constants.EVENT_KEY_FIELD));
         }
 
         for(LogStashOutput output: outputs){
-            LogStashOutputBolt outputBolt = new LogStashOutputBolt(output,config);
+            LogStashOutputBolt outputBolt = new LogStashOutputBolt(output,context);
             outputBolts.add(outputBolt);
-            builder.setBolt(output.getUniqueName(),outputBolt).fieldsGrouping(Constants.STORM_FILTER_BOLT_NAME, new Fields(Constants.EVENT_KEY_FIELD));
+            builder.setBolt(output.getUniqueName(),outputBolt,output.getParallelism()).fieldsGrouping(Constants.STORM_FILTER_BOLT_NAME, new Fields(Constants.EVENT_KEY_FIELD));
         }
 
         LocalCluster cluster = new LocalCluster();
-        cluster.submitTopology(config.getPipelineName(), stormConfig, builder.createTopology());
+        cluster.submitTopology(context.getPipelineName(), stormConfig, builder.createTopology());
     }
 }

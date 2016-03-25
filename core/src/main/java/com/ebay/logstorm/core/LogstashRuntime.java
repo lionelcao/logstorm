@@ -22,22 +22,18 @@ import com.ebay.logstorm.core.exception.LogStashCompileException;
 import com.ebay.logstorm.core.compiler.LogStashConfigCompiler;
 import com.ebay.logstorm.core.compiler.LogStashPipeline;
 import com.ebay.logstorm.core.runner.PipelineRunner;
-import com.ebay.logstorm.core.runner.local.LocalLogStashRunner;
+import com.typesafe.config.Config;
 
 public class LogStashRuntime {
 
-    private final LogStormConfig baseConfig;
+    private final Config baseConfig;
 
-    public LogStashRuntime(LogStormConfig baseConfig){
+    public LogStashRuntime(Config baseConfig){
         this.baseConfig = baseConfig;
     }
 
-    public void run(String logStashConfigStr,PipelineRunner runner,LogStormConfig config) throws LogStashCompileException {
+    public void run(String logStashConfigStr, PipelineConfig config, PipelineRunner runner) throws LogStashCompileException {
         LogStashPipeline pipeline =  LogStashConfigCompiler.compile(logStashConfigStr,config);
-        runner.run(pipeline,config);
-    }
-
-    public void run(String logStashConfigStr,LogStormConfig config) throws LogStashCompileException {
-        run(logStashConfigStr,new LocalLogStashRunner(),config);
+        runner.run(pipeline);
     }
 }

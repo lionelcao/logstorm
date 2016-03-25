@@ -1,6 +1,5 @@
 package com.ebay.logstorm.core.runner.local;
 
-import com.ebay.logstorm.core.LogStormConfig;
 import com.ebay.logstorm.core.runner.PipelineRunner;
 import com.ebay.logstorm.core.compiler.LogStashPipeline;
 
@@ -23,8 +22,7 @@ import com.ebay.logstorm.core.compiler.LogStashPipeline;
 public class LocalLogStashRunner implements PipelineRunner {
 
     @Override
-    public void run(LogStashPipeline pipeline, LogStormConfig context) {
-
+    public void run(LogStashPipeline pipeline) {
         throw new RuntimeException("not implemented yet");
     }
 }

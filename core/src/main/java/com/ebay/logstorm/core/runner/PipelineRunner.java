@@ -16,9 +16,10 @@
  */
 package com.ebay.logstorm.core.runner;
 
-import com.ebay.logstorm.core.LogStormConfig;
 import com.ebay.logstorm.core.compiler.LogStashPipeline;
 
-public interface PipelineRunner {
-    void run(LogStashPipeline pipeline, LogStormConfig context);
+import java.io.Serializable;
+
+public interface PipelineRunner extends Serializable{
+    void run(LogStashPipeline pipeline);
 }

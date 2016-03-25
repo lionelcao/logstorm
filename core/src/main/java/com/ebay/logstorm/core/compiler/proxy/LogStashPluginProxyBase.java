@@ -29,6 +29,7 @@ public abstract class LogStashPluginProxyBase extends LogStashPluginBase {
         this.setInspect(rubyProxy.getInspect());
         this.setString(rubyProxy.toString());
         this.setPluginType(rubyProxy.getPluginType());
+        this.setParallelism(rubyProxy.getThreads());
     }
 
     public LogStashPluginProxyBase(){}

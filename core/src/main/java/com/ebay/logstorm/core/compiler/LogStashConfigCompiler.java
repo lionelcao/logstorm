@@ -16,7 +16,7 @@ package com.ebay.logstorm.core.compiler;
  * limitations under the License.
  */
 
-import com.ebay.logstorm.core.LogStormConfig;
+import com.ebay.logstorm.core.PipelineConfig;
 import com.ebay.logstorm.core.compiler.proxy.LogStashPipelineProxy;
 import com.ebay.logstorm.core.exception.LogStashCompileException;
 import org.apache.commons.io.FileUtils;
@@ -25,12 +25,12 @@ import java.io.File;
 import java.io.IOException;
 
 public class LogStashConfigCompiler {
-    public static LogStashPipeline compile(String logStashConfigStr, LogStormConfig config) throws LogStashCompileException {
+    public static LogStashPipeline compile(String logStashConfigStr, PipelineConfig config) throws LogStashCompileException {
         return new LogStashPipelineProxy(logStashConfigStr,config);
     }
 
     public static LogStashPipeline compile(String logStashConfigStr) throws LogStashCompileException {
-        return new LogStashPipelineProxy(logStashConfigStr,new LogStormConfig());
+        return new LogStashPipelineProxy(logStashConfigStr,new PipelineConfig());
     }
 
     public static LogStashPipeline compile(File file) throws IOException, LogStashCompileException {

@@ -17,7 +17,7 @@
 
 package com.ebay.logstorm.core.compiler.proxy;
 
-import com.ebay.logstorm.core.LogStormConfig;
+import com.ebay.logstorm.core.PipelineConfig;
 import com.ebay.logstorm.core.compiler.*;
 import com.ebay.logstorm.core.exception.LogStashCompileException;
 import org.apache.commons.lang3.time.StopWatch;
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LogStashPipelineProxy implements LogStashPipeline {
-    private final LogStormConfig context;
+    private final PipelineConfig context;
     private final String logStashConfigStr;
     private Ruby rubyRuntime;
     private IRubyObject pipelineProxy;
@@ -46,7 +46,7 @@ public class LogStashPipelineProxy implements LogStashPipeline {
     private RubyArray inputsProxy;
     private RubyArray filtersProxy;
 
-    public LogStashPipelineProxy(String logStashConfigStr,LogStormConfig context) throws LogStashCompileException {
+    public LogStashPipelineProxy(String logStashConfigStr,PipelineConfig context) throws LogStashCompileException {
         this.context = context;
         this.logStashConfigStr = logStashConfigStr;
         try {
@@ -149,5 +149,10 @@ public class LogStashPipelineProxy implements LogStashPipeline {
     @Override
     public List<LogStashOutput> getOutputs(){
         return outputs;
+    }
+
+    @Override
+    public PipelineConfig getContext() {
+        return this.context;
     }
 }
