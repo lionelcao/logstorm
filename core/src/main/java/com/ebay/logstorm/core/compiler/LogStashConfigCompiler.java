@@ -30,7 +30,7 @@ public class LogStashConfigCompiler {
     }
 
     public static LogStashPipeline compile(String logStashConfigStr) throws LogStashCompileException {
-        return new LogStashPipelineProxy(logStashConfigStr,new LogStormConfig(System.getProperties()));
+        return new LogStashPipelineProxy(logStashConfigStr,new LogStormConfig());
     }
 
     public static LogStashPipeline compile(File file) throws IOException, LogStashCompileException {

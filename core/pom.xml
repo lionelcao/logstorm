@@ -11,7 +11,6 @@
     <artifactId>logstorm-core</artifactId>
     <packaging>jar</packaging>
     <dependencies>
-
         <dependency>
             <groupId>org.jruby</groupId>
             <artifactId>jruby-complete</artifactId>
@@ -50,6 +49,14 @@
             <version>${rubygem-maven-tools.version}</version>
             <type>gem</type>
         </dependency>
+        <dependency>
+            <groupId>com.typesafe</groupId>
+            <artifactId>config</artifactId>
+        </dependency>
+        <dependency>
+            <groupId>org.xerial.snappy</groupId>
+            <artifactId>snappy-java</artifactId>
+        </dependency>
     </dependencies>
     <build>
         <resources>
@@ -81,7 +88,6 @@
                     </execution>
                 </executions>
             </plugin>
-
             <plugin>
                 <groupId>org.codehaus.mojo</groupId>
                 <artifactId>build-helper-maven-plugin</artifactId>

@@ -18,6 +18,8 @@ package com.ebay.logstorm.core;
 
 import com.ebay.logstorm.core.serializer.JavaObjectSnappySerializer;
 import com.ebay.logstorm.core.serializer.Serializer;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
 
 import java.io.Serializable;
 import java.util.Properties;
@@ -26,13 +28,14 @@ import java.util.Properties;
  *
  */
 public class LogStormConfig implements Serializable{
-    private final Properties environmentProperties;
+    private final Config config;
+
     public LogStormConfig(Properties properties){
-        this.environmentProperties = properties;
+        this.config = ConfigFactory.parseProperties(properties);
     }
 
-    public Properties getEnvironmentProperties() {
-        return environmentProperties;
+    public LogStormConfig(){
+        this.config = ConfigFactory.load();
     }
 
     public Serializer getSerializer(){
@@ -51,5 +54,9 @@ public class LogStormConfig implements Serializable{
 
     public String getPipelineName(){
         return "defaultPipeline";
+    }
+
+    public Config getConfig() {
+        return config;
     }
 }
