@@ -20,18 +20,27 @@ import com.ebay.logstorm.core.LogStashContext;
  */
 public abstract class LogStashPluginBase implements LogStashPlugin {
     private int index;
-    private String name;
-    private String configName;
+    private String config_name;
     private LogStashContext context;
     private String configStr;
     private String debugInfo;
+    private String inspect;
+    private String to_s;
+    private String plugin_type;
+
+    @Override
+    public String getUniqueName() {
+        return this.getPluginType()+"_"+this.getConfigName()+"_"+this.getIndex();
+    }
+
+    private transient Boolean initialized = false;
 
     public String getConfigName() {
-        return configName;
+        return config_name;
     }
 
     public void setConfigName(String type) {
-        this.configName = type;
+        this.config_name = type;
     }
 
     @Override
@@ -41,15 +50,6 @@ public abstract class LogStashPluginBase implements LogStashPlugin {
 
     public void setIndex(int index) {
         this.index = index;
-    }
-
-    @Override
-    public String getUniqueName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
     }
 
     public LogStashContext getContext() {
@@ -75,5 +75,42 @@ public abstract class LogStashPluginBase implements LogStashPlugin {
 
     public void setDebugInfo(String debugInfo) {
         this.debugInfo = debugInfo;
+    }
+
+    public String getInspect() {
+        return inspect;
+    }
+
+    public void setInspect(String inspect) {
+        this.inspect = inspect;
+    }
+
+    public String getString() {
+        return to_s;
+    }
+
+    public void setString(String to_s) {
+        this.to_s = to_s;
+    }
+
+    @Override
+    public String toString() {
+        return this.getString();
+    }
+
+    public boolean isInitialized() {
+        return initialized;
+    }
+
+    public void setInitialized(boolean initialized) {
+        this.initialized = initialized;
+    }
+
+    public String getPluginType() {
+        return plugin_type;
+    }
+
+    public void setPluginType(String plugin_type) {
+        this.plugin_type = plugin_type;
     }
 }

@@ -20,21 +20,25 @@ import org.jruby.runtime.builtin.IRubyObject;
  * limitations under the License.
  */
 public abstract class LogStashPluginProxyBase extends LogStashPluginBase {
-    private transient IRubyObject rubyObject;
-    public LogStashPluginProxyBase(IRubyObject rubyObject){
-        this.rubyObject = rubyObject;
-        LogStashPluginObjectWrapper proxy = new LogStashPluginObjectWrapper(rubyObject);
-        this.setConfigName(proxy.getConfigName());
-        this.setDebugInfo(proxy.getDebugInfo());
-        this.setName(proxy.getUniqueName());
+    private transient LogStashPluginObjectProxy rubyProxy;
+
+    protected void setRubyProxy(IRubyObject rubyObject){
+        this.rubyProxy = new LogStashPluginObjectProxy(rubyObject);
+        this.setConfigName(rubyProxy.getConfigName());
+        this.setDebugInfo(rubyProxy.getDebugInfo());
+        this.setInspect(rubyProxy.getInspect());
+        this.setString(rubyProxy.toString());
+        this.setPluginType(rubyProxy.getPluginType());
     }
 
     public LogStashPluginProxyBase(){}
 
-    protected IRubyObject getRubyObject(){
-        return rubyObject;
+    public LogStashPluginObjectProxy getProxy(){
+        return rubyProxy;
     }
-    protected void setRubyObject(IRubyObject rubyObject){
-        this.rubyObject = rubyObject;
+
+    @Override
+    public String toString() {
+        return this.getString();
     }
 }

@@ -25,13 +25,6 @@ import java.util.List;
  * limitations under the License.
  */
 public class LogStashFilterProxy extends LogStashPluginProxyBase implements LogStashFilter {
-    public LogStashFilterProxy(IRubyObject rubyObject, int index, LogStashContext context){
-        super(rubyObject);
-        this.setContext(context);
-        this.setIndex(index);
-    }
-
-    public LogStashFilterProxy(){}
 
     @Override
     public void initialize() {
@@ -45,11 +38,6 @@ public class LogStashFilterProxy extends LogStashPluginProxyBase implements LogS
 
     @Override
     public void close() {
-
-    }
-
-    @Override
-    public void nextEvent(Event event, Collector collector) {
 
     }
 

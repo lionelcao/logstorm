@@ -1,13 +1,6 @@
 # encoding: utf-8
 
-# $:.unshift '/Users/hchen9/Workspace/logstash/build/logstash-3.0.0.dev/lib'
-# ENV["GEM_HOME"]="uri:classloader:/gems"
-
-# ENV["LOGSTASH_HOME"]="/Users/hchen9/Downloads/logstash-2.2.0"
-# ENV["GEM_HOME"]="#{ENV["LOGSTASH_HOME"]}/vendor/bundle/jruby/1.9/"
-
 $:.unshift "#{ENV["LOGSTASH_HOME"]}/lib"
-
 
 require "rubygems"
 require "bootstrap/rubygems"
@@ -24,9 +17,13 @@ require "logstash/outputs/base"
 class LogStashPipelineRubyProxy
   def initialize(logstash_config)
     @logstash_config = logstash_config
-    @logger = Java::OrgSlf4j::LoggerFactory.getLogger "LogStashPipelineRubyProxy"
-    @logger.info("LOAD_PATH: #{$LOAD_PATH}")
-    @logger.info("GEM_HOME: #{ENV["GEM_HOME"]}")
+    @logger = @logger = Cabin::Channel.get(LogStash)
+
+    puts "========================================"
+    puts "LOAD_PATH: #{$LOAD_PATH}"
+    puts "GEM_HOME: #{ENV["GEM_HOME"]}"
+    puts "========================================"
+
     eval_logstash_config
   end
 
@@ -40,7 +37,7 @@ class LogStashPipelineRubyProxy
   def eval_logstash_config
     # LogStash::Bundler.setup!({:without => [:build, :development]})
     grammar = LogStashConfigParser.new
-    @logger.isDebugEnabled && @logger.debug("Parsing logstash config: #{@logstash_config}")
+    @logger.debug? && @logger.debug("Parsing logstash config: #{@logstash_config}")
     @configure = grammar.parse(@logstash_config)
     if @configure.nil?
       raise LogStash::ConfigurationError, grammar.failure_reason
@@ -51,7 +48,7 @@ class LogStashPipelineRubyProxy
     @code = @configure.compile
     # The config code is hard to represent as a log message...
     # So just print it.
-    @logger.isDebugEnabled && @logger.debug("Compiled pipeline code:\n#{@code}")
+    @logger.debug? && @logger.debug("Compiled pipeline code:\n#{@code}")
     begin
       eval(@code)
     rescue => e
@@ -83,4 +80,3 @@ class LogStashPipelineRubyProxy
     @outputs
   end
 end
-

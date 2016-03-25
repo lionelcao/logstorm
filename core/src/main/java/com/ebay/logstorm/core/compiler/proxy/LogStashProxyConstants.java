@@ -19,6 +19,8 @@ package com.ebay.logstorm.core.compiler.proxy;
 public class LogStashProxyConstants {
     public final static String LOGSTASH_HOME = "/Users/hchen9/Downloads/logstash-2.2.0";
     public final static String JRUBY_VERSION = "1.9";
+
     public final static String LOGSTORM_RUBY_FILE="logstorm.rb";
     public final static String LOGSTASH_PIPELINE_RUBY_CLASS="LogStashPipelineRubyProxy";
+    public final static String LOGSTASH_PLUGIN_RUBY_CLASS ="LogStash::Plugin";
 }

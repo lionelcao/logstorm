@@ -1,7 +1,5 @@
 package com.ebay.logstorm.core.compiler;
 
-import com.ebay.logstorm.core.LogStashContext;
-
 import java.io.Serializable;
 
 /**
@@ -26,6 +24,7 @@ public interface LogStashPlugin extends Serializable {
     String getUniqueName();
     String getDebugInfo();
     String getConfigStr();
+    String getPluginType();
 
     /**
      * LogStash::Plugin#initialize()

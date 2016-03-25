@@ -37,11 +37,14 @@ public class LogStashPipelineProxy implements LogStashPipeline {
     private final LogStashContext context;
     private final String logStashConfigStr;
     private Ruby rubyRuntime;
-    private IRubyObject rubyPipeline;
+    private IRubyObject pipelineProxy;
     private List<LogStashInput> inputs;
     private List<LogStashFilter> filters;
     private List<LogStashOutput> outputs;
     private Logger LOG = LoggerFactory.getLogger(LogStashPipelineProxy.class);
+    private RubyArray outputsProxy;
+    private RubyArray inputsProxy;
+    private RubyArray filtersProxy;
 
     public LogStashPipelineProxy(String logStashConfigStr,LogStashContext context) throws LogStashCompileException {
         this.context = context;
@@ -67,22 +70,38 @@ public class LogStashPipelineProxy implements LogStashPipeline {
         }
     }
 
+    public RubyArray getOutputsProxy(){
+        return this.outputsProxy;
+    }
+    public RubyArray getInputsProxy(){
+        return this.inputsProxy;
+    }
+    public RubyArray getFiltersProxy(){
+        return this.filtersProxy;
+    }
+    public IRubyObject getPipelineProxy(){
+        return this.pipelineProxy;
+    }
+
     private void evaluate(){
-        RubyModule rubyModule = RubyRuntimeFactory.getSingletonRuntime().getClassFromPath(LogStashProxyConstants.LOGSTASH_PIPELINE_RUBY_CLASS);;
-        this.rubyPipeline = Helpers.invoke(rubyRuntime.getCurrentContext(),rubyModule,"new", JavaUtil.convertJavaToRuby(rubyRuntime,logStashConfigStr));
-        RubyArray inputs = (RubyArray) Helpers.invoke(rubyRuntime.getCurrentContext(),this.rubyPipeline,"get_input_plugins");
-        RubyArray filters = (RubyArray) Helpers.invoke(rubyRuntime.getCurrentContext(),this.rubyPipeline,"get_filter_plugins");
-        RubyArray outputs = (RubyArray) Helpers.invoke(rubyRuntime.getCurrentContext(),this.rubyPipeline,"get_output_plugins");
-        setInputs(inputs);
-        setFilters(filters);
-        setOutputs(outputs);
+        RubyModule rubyModule = RubyRuntimeFactory.getSingletonRuntime().getClassFromPath(LogStashProxyConstants.LOGSTASH_PIPELINE_RUBY_CLASS);
+        this.pipelineProxy = Helpers.invoke(rubyRuntime.getCurrentContext(),rubyModule,"new", JavaUtil.convertJavaToRuby(rubyRuntime,logStashConfigStr));
+        this.inputsProxy = (RubyArray) Helpers.invoke(rubyRuntime.getCurrentContext(),this.pipelineProxy,"get_input_plugins");
+        this.filtersProxy = (RubyArray) Helpers.invoke(rubyRuntime.getCurrentContext(),this.pipelineProxy,"get_filter_plugins");
+        this.outputsProxy = (RubyArray) Helpers.invoke(rubyRuntime.getCurrentContext(),this.pipelineProxy,"get_output_plugins");
+        setInputs(inputsProxy);
+        setFilters(filtersProxy);
+        setOutputs(outputsProxy);
     }
 
     private void setInputs(RubyArray inputs){
         if(inputs != null) {
             this.inputs = new ArrayList<LogStashInput>(inputs.size());
             for (int i = 0; i < inputs.size(); i++) {
-                LogStashInputProxy inputProxy = new LogStashInputProxy((IRubyObject) inputs.get(i), i, this.context);
+                LogStashInputProxy inputProxy = new LogStashInputProxy();
+                inputProxy.setRubyProxy((IRubyObject) inputs.get(i));
+                inputProxy.setIndex(i);
+                inputProxy.setContext(this.context);
                 inputProxy.setConfigStr(this.logStashConfigStr);
                 this.inputs.add(inputProxy);
             }
@@ -93,9 +112,11 @@ public class LogStashPipelineProxy implements LogStashPipeline {
         if(outputs != null) {
             this.outputs = new ArrayList<LogStashOutput>(outputs.size());
             for (int i = 0; i < outputs.size(); i++) {
-                LogStashOutputProxy outputProxy = new LogStashOutputProxy((IRubyObject) outputs.get(i), i, this.context);
+                LogStashOutputProxy outputProxy = new LogStashOutputProxy();
+                outputProxy.setRubyProxy((IRubyObject) outputs.get(i));
+                outputProxy.setIndex(i);
+                outputProxy.setContext(this.context);
                 outputProxy.setConfigStr(this.logStashConfigStr);
-
                 this.outputs.add(outputProxy);
             }
         }
@@ -105,7 +126,10 @@ public class LogStashPipelineProxy implements LogStashPipeline {
         if(filters != null) {
             this.filters = new ArrayList<LogStashFilter>(filters.size());
             for (int i = 0; i < filters.size(); i++) {
-                LogStashFilterProxy filterProxy = new LogStashFilterProxy((IRubyObject) filters.get(i), i, this.context);
+                LogStashFilterProxy filterProxy = new LogStashFilterProxy();
+                filterProxy.setRubyProxy((IRubyObject) filters.get(i));
+                filterProxy.setIndex(i);
+                filterProxy.setContext(this.context);
                 filterProxy.setConfigStr(this.logStashConfigStr);
                 this.filters.add(filterProxy);
             }

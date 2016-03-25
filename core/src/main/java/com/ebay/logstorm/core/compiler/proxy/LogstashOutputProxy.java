@@ -25,15 +25,6 @@ import java.util.List;
  */
 public class LogStashOutputProxy extends LogStashPluginProxyBase implements LogStashOutput {
 
-    public LogStashOutputProxy(IRubyObject rubyObject, int index, LogStashContext context){
-        super(rubyObject);
-        this.setIndex(index);
-        this.setContext(context);
-    }
-
-    @Deprecated
-    public LogStashOutputProxy(){}
-
     @Override
     public void initialize() {
 

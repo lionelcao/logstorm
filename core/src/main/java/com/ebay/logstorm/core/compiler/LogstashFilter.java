@@ -22,7 +22,7 @@ import java.util.List;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public interface LogStashFilter extends LogStashPlugin, EventProcessor {
+public interface LogStashFilter extends LogStashPlugin {
     void filter(Event event, Collector collector);
 
     /**

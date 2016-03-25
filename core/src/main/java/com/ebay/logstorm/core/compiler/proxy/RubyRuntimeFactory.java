@@ -35,7 +35,7 @@ public class RubyRuntimeFactory {
             bootstrap += String.format("ENV[\"%s\"] = \"%s\";\n", "LOGSTASH_HOME", LOGSTASH_HOME);
             bootstrap += String.format("ENV[\"%s\"] = \"%s\";\n", "GEM_HOME", rubyGemHome);
             bootstrap += "require '" + LOGSTORM_RUBY_FILE + "';\n";
-            if(LOG.isDebugEnabled()) LOG.debug("Bootstrapping ruby runtime with scriptlet:\n\n"+bootstrap);
+            if(LOG.isDebugEnabled()) LOG.debug("Bootstrapping with initial scriptlet");
             runtime.evalScriptlet(bootstrap);
             Runtime.getRuntime().addShutdownHook(new Thread(){
                 @Override
