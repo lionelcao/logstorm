@@ -1,5 +1,8 @@
 package com.ebay.logstorm.core.event;
 
+import java.io.Serializable;
+import java.util.Map;
+
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -16,6 +19,24 @@ package com.ebay.logstorm.core.event;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public interface EventProducer {
-    void nextEvent(Collector collector);
+public class RawEvent implements Serializable {
+    private String streamId = "default";
+
+    private Map<String,Object> variables;
+
+    public String getStreamId() {
+        return streamId;
+    }
+
+    public void setStreamId(String streamId) {
+        this.streamId = streamId;
+    }
+
+    public Map<String, Object> getVariables() {
+        return variables;
+    }
+
+    public void setVariables(Map<String, Object> variables) {
+        this.variables = variables;
+    }
 }

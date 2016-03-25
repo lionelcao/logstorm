@@ -1,4 +1,4 @@
-package com.ebay.logstorm.core.event;
+package com.ebay.logstorm.runner.storm;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -16,6 +16,8 @@ package com.ebay.logstorm.core.event;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public interface EventProcessor {
-    void nextEvent(Event event, Collector collector);
+class Constants {
+    public static final String EVENT_KEY_FIELD = "partitionKey";
+    public static final String EVENT_VALUE_FIELD = "value";
+    public static final String STORM_AUTHOR_TUPLE ="storm_author_tuple";
 }

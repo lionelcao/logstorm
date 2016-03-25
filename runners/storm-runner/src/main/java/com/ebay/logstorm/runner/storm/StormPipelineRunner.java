@@ -1,3 +1,11 @@
+package com.ebay.logstorm.runner.storm;
+
+import com.ebay.logstorm.core.compiler.LogStashInput;
+import com.ebay.logstorm.core.compiler.LogStashPipeline;
+import com.ebay.logstorm.core.runner.PipelineRunner;
+
+import java.util.List;
+
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -14,10 +22,13 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-package com.ebay.logstorm.core.runner;
+public class StormPipelineRunner implements PipelineRunner {
+    public void run(LogStashPipeline pipeline) {
+        List<LogStashInput> inputs = pipeline.getInputs();
+        List<LogStashInput> filters = pipeline.getInputs();
+        List<LogStashInput> outputs = pipeline.getInputs();
 
-import com.ebay.logstorm.core.compiler.LogStashPipeline;
 
-public interface LogStashRunner {
-    void run(LogStashPipeline pipeline);
+
+    }
 }

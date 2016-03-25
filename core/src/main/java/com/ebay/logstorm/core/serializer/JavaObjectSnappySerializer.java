@@ -1,7 +1,7 @@
-package com.ebay.logstorm.core.runner.storm;
+package com.ebay.logstorm.core.serializer;
 
-import com.ebay.logstorm.core.runner.LogStashRunner;
-import com.ebay.logstorm.core.compiler.LogStashPipeline;
+import com.ebay.logstorm.core.event.RawEvent;
+import com.ebay.logstorm.core.utils.SerializableUtils;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -19,8 +19,14 @@ import com.ebay.logstorm.core.compiler.LogStashPipeline;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class StormLogStashRunner implements LogStashRunner {
-    public void run(LogStashPipeline pipeline) {
+public class JavaObjectSnappySerializer implements Serializer {
+    @Override
+    public byte[] serialize(RawEvent obj) {
+        return SerializableUtils.serializeToByteArray(obj);
+    }
 
+    @Override
+    public RawEvent deserialize(byte[] bytes) {
+        return (RawEvent) SerializableUtils.deserializeFromByteArray(bytes,"Deserialize event object from binary array");
     }
 }

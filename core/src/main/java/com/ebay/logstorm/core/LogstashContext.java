@@ -14,8 +14,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 package com.ebay.logstorm.core;
+
+import com.ebay.logstorm.core.serializer.JavaObjectSnappySerializer;
+import com.ebay.logstorm.core.serializer.Serializer;
 
 import java.io.Serializable;
 import java.util.Properties;
@@ -31,5 +33,19 @@ public class LogStashContext implements Serializable{
 
     public Properties getEnvironmentProperties() {
         return environmentProperties;
+    }
+
+    public Serializer getSerializer(){
+        return DEFAULT_SERIALIZER;
+    }
+
+    private static final Serializer DEFAULT_SERIALIZER = new JavaObjectSnappySerializer();
+
+    public int getInputQueueCapacity(){
+        return 10000;
+    }
+
+    public int getInputBatchSize(){
+        return 50;
     }
 }

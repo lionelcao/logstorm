@@ -13,6 +13,7 @@
         <module>server</module>
         <module>contrib</module>
         <module>examples</module>
+        <module>runners</module>
     </modules>
 
     <properties>
@@ -41,5 +42,21 @@
         <jruby-complete.version>9.0.5.0</jruby-complete.version>
 
         <rubygem-maven-tools.version>1.0.0</rubygem-maven-tools.version>
+        <guava.version>19.0</guava.version>
+        <snappy.version>1.1.2.1</snappy.version>
     </properties>
+
+    <dependencies>
+        <dependency>
+            <groupId>com.google.guava</groupId>
+            <artifactId>guava</artifactId>
+            <version>${guava.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>org.xerial.snappy</groupId>
+            <artifactId>snappy-java</artifactId>
+            <version>${snappy.version}</version>
+        </dependency>
+
+    </dependencies>
 </project>

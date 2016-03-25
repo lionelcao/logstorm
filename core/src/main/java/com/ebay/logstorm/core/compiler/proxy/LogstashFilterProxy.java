@@ -1,10 +1,8 @@
 package com.ebay.logstorm.core.compiler.proxy;
 
-import com.ebay.logstorm.core.LogStashContext;
 import com.ebay.logstorm.core.compiler.LogStashFilter;
 import com.ebay.logstorm.core.event.Collector;
 import com.ebay.logstorm.core.event.Event;
-import org.jruby.runtime.builtin.IRubyObject;
 
 import java.util.List;
 
@@ -42,12 +40,7 @@ public class LogStashFilterProxy extends LogStashPluginProxyBase implements LogS
     }
 
     @Override
-    public void filter(Event event, Collector collector) {
-
-    }
-
-    @Override
-    public void filter(List<Event> events, Collector collector) {
+    public void filter(Event event) {
 
     }
 }

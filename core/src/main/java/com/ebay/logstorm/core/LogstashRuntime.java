@@ -21,7 +21,7 @@ package com.ebay.logstorm.core;
 import com.ebay.logstorm.core.exception.LogStashCompileException;
 import com.ebay.logstorm.core.compiler.LogStashConfigCompiler;
 import com.ebay.logstorm.core.compiler.LogStashPipeline;
-import com.ebay.logstorm.core.runner.LogStashRunner;
+import com.ebay.logstorm.core.runner.PipelineRunner;
 import com.ebay.logstorm.core.runner.local.LocalLogStashRunner;
 
 public class LogStashRuntime {
@@ -30,7 +30,7 @@ public class LogStashRuntime {
     public LogStashRuntime(LogStashContext context){
         this.context = context;
     }
-    public void run(LogStashRunner runner, String logStashConfigStr) throws LogStashCompileException {
+    public void run(PipelineRunner runner, String logStashConfigStr) throws LogStashCompileException {
         LogStashPipeline pipeline =  LogStashConfigCompiler.compile(logStashConfigStr);
         runner.run(pipeline);
     }

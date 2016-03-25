@@ -1,9 +1,12 @@
-package com.ebay.logstorm.core.compiler.proxy;
+package com.ebay.logstorm.runner.storm;
 
-import com.ebay.logstorm.core.compiler.LogStashOutput;
+import backtype.storm.task.OutputCollector;
+import backtype.storm.tuple.Tuple;
+import com.ebay.logstorm.core.event.Collector;
 import com.ebay.logstorm.core.event.Event;
+import com.ebay.logstorm.core.serializer.Serializer;
 
-import java.util.List;
+import java.util.Arrays;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -21,30 +24,19 @@ import java.util.List;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class LogStashOutputProxy extends LogStashPluginProxyBase implements LogStashOutput {
+public class StormEventCollector implements Collector{
+    private final OutputCollector collector;
+    private final Serializer serializer;
 
-    @Override
-    public void initialize() {
-
+    public StormEventCollector(OutputCollector collector, Serializer serializer){
+        this.collector = collector;
+        this.serializer = serializer;
     }
 
-    @Override
-    public void register() {
-
-    }
-
-    @Override
-    public void close() {
-
-    }
-
-    @Override
-    public void receive(Event event) {
-
-    }
-
-    @Override
-    public void receive(List<Event> events) {
-
+    public void collect(Event event) {
+        collector.emit(
+                event.getRawEvent().getStreamId(),
+                (Tuple) event.getContext().get(Constants.STORM_AUTHOR_TUPLE),
+                Arrays.<Object>asList(event.getPartitionKey(), this.serializer.serialize(event.getRawEvent())));
     }
 }

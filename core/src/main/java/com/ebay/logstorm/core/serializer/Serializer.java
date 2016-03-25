@@ -1,4 +1,6 @@
-package com.ebay.logstorm.core.event;
+package com.ebay.logstorm.core.serializer;
+
+import com.ebay.logstorm.core.event.RawEvent;
 
 import java.io.Serializable;
 
@@ -18,7 +20,7 @@ import java.io.Serializable;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public interface Serializer<T> extends Serializable {
-    byte[] serialize(T obj);
-    T deserialize(byte[] bytes);
+public interface Serializer extends Serializable {
+    byte[] serialize(RawEvent obj);
+    RawEvent deserialize(byte[] bytes);
 }

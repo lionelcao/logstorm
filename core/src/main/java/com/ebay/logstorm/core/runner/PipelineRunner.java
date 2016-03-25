@@ -1,7 +1,3 @@
-package com.ebay.logstorm.core.event;
-
-import java.io.Serializable;
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -18,14 +14,10 @@ import java.io.Serializable;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class TextSerializer implements Serializer {
-    @Override
-    public byte[] serialize(Object obj) {
-        return new byte[0];
-    }
+package com.ebay.logstorm.core.runner;
 
-    @Override
-    public Object deserialize(byte[] bytes) {
-        return null;
-    }
+import com.ebay.logstorm.core.compiler.LogStashPipeline;
+
+public interface PipelineRunner {
+    void run(LogStashPipeline pipeline);
 }
