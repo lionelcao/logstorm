@@ -6,7 +6,7 @@ import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.base.BaseRichBolt;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
-import com.ebay.logstorm.core.LogStashContext;
+import com.ebay.logstorm.core.LogStormConfig;
 import com.ebay.logstorm.core.compiler.LogStashFilter;
 import com.ebay.logstorm.core.event.Event;
 import com.ebay.logstorm.core.event.RawEvent;
@@ -35,14 +35,16 @@ public class LogStashFiltersBolt extends BaseRichBolt {
     private final List<LogStashFilter> logStashPlugins;
     private final Serializer serializer;
     private StormEventCollector collector;
+    private OutputCollector outputCollector;
 
-    public LogStashFiltersBolt(List<LogStashFilter> logStashPlugins, LogStashContext context){
+    public LogStashFiltersBolt(List<LogStashFilter> logStashPlugins, LogStormConfig context){
         this.logStashPlugins = logStashPlugins;
         this.serializer = context.getSerializer();
     }
 
     public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
         this.collector = new StormEventCollector(collector,this.serializer);
+        this.outputCollector = collector;
         for(LogStashFilter filterPlugin: this.logStashPlugins) {
             filterPlugin.initialize();
             filterPlugin.register();
@@ -53,12 +55,15 @@ public class LogStashFiltersBolt extends BaseRichBolt {
         byte[] eventBytes = input.getBinaryByField(Constants.EVENT_VALUE_FIELD);
         RawEvent rawEvent = this.serializer.deserialize(eventBytes);
         Event event = new Event(rawEvent);
-        event.addContext(Constants.STORM_AUTHOR_TUPLE,input);
-        for(LogStashFilter filter:this.logStashPlugins){
+        event.addContext(Constants.STORM_AUTHOR_TUPLE, input);
+        for (LogStashFilter filter : this.logStashPlugins) {
             filter.filter(event);
-            if(event.isCancelled()) return;
+            if (event.isCancelled()) {
+                return;
+            }
         }
         this.collector.collect(event);
+        this.outputCollector.ack(input);
     }
 
     public void declareOutputFields(OutputFieldsDeclarer declarer) {

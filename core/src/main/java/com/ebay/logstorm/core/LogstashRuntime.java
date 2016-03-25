@@ -25,16 +25,19 @@ import com.ebay.logstorm.core.runner.PipelineRunner;
 import com.ebay.logstorm.core.runner.local.LocalLogStashRunner;
 
 public class LogStashRuntime {
-    private LogStashContext context;
 
-    public LogStashRuntime(LogStashContext context){
-        this.context = context;
+    private final LogStormConfig baseConfig;
+
+    public LogStashRuntime(LogStormConfig baseConfig){
+        this.baseConfig = baseConfig;
     }
-    public void run(PipelineRunner runner, String logStashConfigStr) throws LogStashCompileException {
-        LogStashPipeline pipeline =  LogStashConfigCompiler.compile(logStashConfigStr);
-        runner.run(pipeline);
+
+    public void run(String logStashConfigStr,PipelineRunner runner,LogStormConfig config) throws LogStashCompileException {
+        LogStashPipeline pipeline =  LogStashConfigCompiler.compile(logStashConfigStr,config);
+        runner.run(pipeline,config);
     }
-    public void run(String logStashConfigStr) throws LogStashCompileException {
-        run(new LocalLogStashRunner(),logStashConfigStr);
+
+    public void run(String logStashConfigStr,LogStormConfig config) throws LogStashCompileException {
+        run(logStashConfigStr,new LocalLogStashRunner(),config);
     }
 }

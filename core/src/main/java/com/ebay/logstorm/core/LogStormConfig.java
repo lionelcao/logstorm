@@ -25,9 +25,9 @@ import java.util.Properties;
 /**
  *
  */
-public class LogStashContext implements Serializable{
+public class LogStormConfig implements Serializable{
     private final Properties environmentProperties;
-    public LogStashContext(Properties properties){
+    public LogStormConfig(Properties properties){
         this.environmentProperties = properties;
     }
 
@@ -47,5 +47,9 @@ public class LogStashContext implements Serializable{
 
     public int getInputBatchSize(){
         return 50;
+    }
+
+    public String getPipelineName(){
+        return "defaultPipeline";
     }
 }

@@ -5,7 +5,7 @@ import backtype.storm.task.TopologyContext;
 import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.base.BaseRichSpout;
 import backtype.storm.tuple.Fields;
-import com.ebay.logstorm.core.LogStashContext;
+import com.ebay.logstorm.core.LogStormConfig;
 import com.ebay.logstorm.core.compiler.LogStashInput;
 import com.ebay.logstorm.core.serializer.Serializer;
 
@@ -35,11 +35,11 @@ public class LogStashInputSpout extends BaseRichSpout {
     private final int batchSize;
     private StormSourceCollector collector;
 
-    public LogStashInputSpout(LogStashInput logStashPlugin, LogStashContext context){
+    public LogStashInputSpout(LogStashInput logStashPlugin, LogStormConfig config){
         this.logStashPlugin = logStashPlugin;
-        this.serializer = context.getSerializer();
-        this.memoryQueueCapacity = context.getInputQueueCapacity();
-        this.batchSize = context.getInputBatchSize();
+        this.serializer = config.getSerializer();
+        this.memoryQueueCapacity = config.getInputQueueCapacity();
+        this.batchSize = config.getInputBatchSize();
     }
 
     public void declareOutputFields(OutputFieldsDeclarer declarer) {

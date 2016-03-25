@@ -20,4 +20,5 @@ class Constants {
     public static final String EVENT_KEY_FIELD = "partitionKey";
     public static final String EVENT_VALUE_FIELD = "value";
     public static final String STORM_AUTHOR_TUPLE ="storm_author_tuple";
+    public static final String STORM_FILTER_BOLT_NAME = "filter";
 }

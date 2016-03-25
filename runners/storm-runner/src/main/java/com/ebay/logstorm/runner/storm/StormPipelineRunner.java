@@ -1,9 +1,19 @@
 package com.ebay.logstorm.runner.storm;
 
+import backtype.storm.Config;
+import backtype.storm.LocalCluster;
+import backtype.storm.topology.BoltDeclarer;
+import backtype.storm.topology.TopologyBuilder;
+import backtype.storm.tuple.Fields;
+import com.ebay.logstorm.core.LogStormConfig;
+import com.ebay.logstorm.core.compiler.LogStashFilter;
 import com.ebay.logstorm.core.compiler.LogStashInput;
+import com.ebay.logstorm.core.compiler.LogStashOutput;
 import com.ebay.logstorm.core.compiler.LogStashPipeline;
 import com.ebay.logstorm.core.runner.PipelineRunner;
+import com.google.common.base.Preconditions;
 
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -23,12 +33,40 @@ import java.util.List;
  * limitations under the License.
  */
 public class StormPipelineRunner implements PipelineRunner {
-    public void run(LogStashPipeline pipeline) {
+    public void run(LogStashPipeline pipeline, LogStormConfig config) {
         List<LogStashInput> inputs = pipeline.getInputs();
-        List<LogStashInput> filters = pipeline.getInputs();
-        List<LogStashInput> outputs = pipeline.getInputs();
+        List<LogStashFilter> filters = pipeline.getFilters();
+        List<LogStashOutput> outputs = pipeline.getOutputs();
 
+        Config stormConfig = new Config();
+        TopologyBuilder builder = new TopologyBuilder();
 
+        List<LogStashInputSpout> inputSpouts = new ArrayList<LogStashInputSpout>(inputs.size());
+        LogStashFiltersBolt filtersBolt;
+        List<LogStashOutputBolt> outputBolts = new ArrayList<LogStashOutputBolt>(inputs.size());
 
+        Preconditions.checkState(inputs.size()>0,"Inputs number is less then 0");
+
+        for(LogStashInput input:inputs){
+            LogStashInputSpout  inputSpout = new LogStashInputSpout(input,config);
+            builder.setSpout(input.getUniqueName(),inputSpout);
+            inputSpouts.add(inputSpout);
+        }
+
+        // TODO: Avoid create filter bolt if having no filters, even created, it will do nothing but just pass through the events
+        filtersBolt = new LogStashFiltersBolt(filters,config);
+        BoltDeclarer declarer = builder.setBolt(Constants.STORM_FILTER_BOLT_NAME,filtersBolt);
+        for(LogStashInput input:inputs) {
+            declarer.fieldsGrouping(input.getUniqueName(),new Fields(Constants.EVENT_KEY_FIELD));
+        }
+
+        for(LogStashOutput output: outputs){
+            LogStashOutputBolt outputBolt = new LogStashOutputBolt(output,config);
+            outputBolts.add(outputBolt);
+            builder.setBolt(output.getUniqueName(),outputBolt).fieldsGrouping(Constants.STORM_FILTER_BOLT_NAME, new Fields(Constants.EVENT_KEY_FIELD));
+        }
+
+        LocalCluster cluster = new LocalCluster();
+        cluster.submitTopology(config.getPipelineName(), stormConfig, builder.createTopology());
     }
 }

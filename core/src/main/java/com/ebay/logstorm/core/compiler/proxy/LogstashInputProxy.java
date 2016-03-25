@@ -1,10 +1,7 @@
 package com.ebay.logstorm.core.compiler.proxy;
 
-import com.ebay.logstorm.core.LogStashContext;
 import com.ebay.logstorm.core.compiler.LogStashInput;
-import com.ebay.logstorm.core.compiler.LogStashPluginBase;
 import com.ebay.logstorm.core.event.Collector;
-import org.jruby.runtime.builtin.IRubyObject;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
