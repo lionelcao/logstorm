@@ -31,3 +31,5 @@ doc/
 # For Intelij Idea
 **/*.idea
 **/*.iml
+
+vendor

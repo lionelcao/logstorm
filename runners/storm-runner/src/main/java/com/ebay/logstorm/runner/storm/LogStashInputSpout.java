@@ -56,4 +56,10 @@ public class LogStashInputSpout extends BaseRichSpout {
     public void nextTuple() {
         this.collector.flush();
     }
+
+    @Override
+    public void close() {
+        this.logStashPlugin.close();
+        super.close();
+    }
 }

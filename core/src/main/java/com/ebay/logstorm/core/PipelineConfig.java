@@ -16,29 +16,30 @@
  */
 package com.ebay.logstorm.core;
 
-import com.ebay.logstorm.core.runner.PipelineRunner;
 import com.ebay.logstorm.core.serializer.JavaObjectSnappySerializer;
 import com.ebay.logstorm.core.serializer.Serializer;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
 import java.io.Serializable;
-import java.util.Properties;
 
 /**
  *
  */
 public class PipelineConfig implements Serializable{
-    private final Config config;
+    private final Config original;
 
-    public PipelineConfig(Properties properties){
-        this.config = ConfigFactory.parseProperties(properties);
+    /**
+     * Pipeline Config
+     */
+    private String config;
+
+    public PipelineConfig(Config context){
+        this.original = context;
     }
-
-    public PipelineConfig(Config config){
-        this.config = config;
+    public PipelineConfig(String context){
+        this.original = ConfigFactory.parseString(context);
     }
-
     public Serializer getSerializer(){
         return DEFAULT_SERIALIZER;
     }
@@ -57,11 +58,19 @@ public class PipelineConfig implements Serializable{
         return 1;
     }
 
-    public Config getOriginalConfig() {
-        return config;
+    public Config getOriginal() {
+        return original;
     }
 
     public String getPipelineName() {
         return null;
+    }
+
+    public String getConfig() {
+        return config;
+    }
+
+    public void setConfig(String config) {
+        this.config = config;
     }
 }

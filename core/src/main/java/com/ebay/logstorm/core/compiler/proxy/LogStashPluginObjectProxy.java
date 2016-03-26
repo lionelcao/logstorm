@@ -110,10 +110,6 @@ public class LogStashPluginObjectProxy {
         return this.getMetaInstanceVariable("@config",String.class);
     }
 
-//    public String getId(){
-//        return this.getMetaInstanceVariable("@id",String.class);
-//    }
-
     public RubyHash getParams(){
         return (RubyHash) this.getVariable("@params").getValue();
     }
@@ -121,6 +117,10 @@ public class LogStashPluginObjectProxy {
         return (RubyHash) this.getVariable("@original_params").getValue();
     }
     public Long getThreads(){
-        return (Long) this.getParams().get("threads");
+        if(this.getParams().containsKey("threads")) {
+            return (Long) this.getParams().get("threads");
+        } else {
+            return 1l;
+        }
     }
 }

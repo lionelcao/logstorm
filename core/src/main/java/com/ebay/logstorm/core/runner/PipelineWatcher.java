@@ -1,3 +1,6 @@
+package com.ebay.logstorm.core.runner;
+
+import java.util.Map;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -15,25 +18,6 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
-package com.ebay.logstorm.core;
-
-import com.ebay.logstorm.core.exception.LogStashCompileException;
-import com.ebay.logstorm.core.compiler.LogStashConfigCompiler;
-import com.ebay.logstorm.core.compiler.LogStashPipeline;
-import com.ebay.logstorm.core.runner.PipelineRunner;
-import com.typesafe.config.Config;
-
-public class LogStashRuntime {
-
-    private final Config baseConfig;
-
-    public LogStashRuntime(Config baseConfig){
-        this.baseConfig = baseConfig;
-    }
-
-    public void run(String logStashConfigStr, PipelineConfig config, PipelineRunner runner) throws LogStashCompileException {
-        LogStashPipeline pipeline =  LogStashConfigCompiler.compile(logStashConfigStr,config);
-        runner.run(pipeline);
-    }
+public interface PipelineWatcher {
+    void onEvent(int eventType,Map<String,Object> eventContext);
 }

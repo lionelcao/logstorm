@@ -1,4 +1,3 @@
-package com.ebay.logstorm.core.compiler.proxy;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -16,10 +15,26 @@ package com.ebay.logstorm.core.compiler.proxy;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class LogStashProxyConstants {
-    public final static String LOGSTASH_HOME = "uri:classloader:/META-INF/logstash.home";
-    public final static String JRUBY_VERSION = "1.9";
-    public final static String LOGSTORM_RUBY_FILE="logstorm.rb";
-    public final static String LOGSTASH_PIPELINE_RUBY_CLASS="LogStashPipelineRubyProxy";
-    public final static String LOGSTASH_PLUGIN_RUBY_CLASS ="LogStash::Plugin";
+
+package com.ebay.logstorm.core;
+
+import com.ebay.logstorm.core.exception.LogStashCompileException;
+import com.ebay.logstorm.core.compiler.LogStashConfigCompiler;
+import com.ebay.logstorm.core.compiler.LogStashPipeline;
+import com.ebay.logstorm.core.runner.PipelineRunner;
+import com.typesafe.config.Config;
+
+public class PipelineRuntime {
+
+    private final Config baseConfig;
+
+    public PipelineRuntime(Config baseConfig){
+        this.baseConfig = baseConfig;
+    }
+
+    public void run(String logStashConfigStr, PipelineConfig config, PipelineRunner runner) throws LogStashCompileException {
+        config.setConfig(logStashConfigStr);
+        LogStashPipeline pipeline =  LogStashConfigCompiler.compile(logStashConfigStr,config);
+        runner.run(pipeline);
+    }
 }

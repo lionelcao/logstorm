@@ -19,6 +19,7 @@ package com.ebay.logstorm.core.compiler;
 import com.ebay.logstorm.core.PipelineConfig;
 import com.ebay.logstorm.core.compiler.proxy.LogStashPipelineProxy;
 import com.ebay.logstorm.core.exception.LogStashCompileException;
+import com.typesafe.config.ConfigFactory;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
@@ -30,7 +31,7 @@ public class LogStashConfigCompiler {
     }
 
     public static LogStashPipeline compile(String logStashConfigStr) throws LogStashCompileException {
-        return new LogStashPipelineProxy(logStashConfigStr,new PipelineConfig());
+        return new LogStashPipelineProxy(logStashConfigStr,new PipelineConfig(ConfigFactory.load()));
     }
 
     public static LogStashPipeline compile(File file) throws IOException, LogStashCompileException {
