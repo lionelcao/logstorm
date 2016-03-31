@@ -18,17 +18,17 @@ echo "[INFO] -------------------------------------------------------------------
 echo "[INFO] Installing Logstash (version: ${logstash_version})"
 echo "[INFO] ------------------------------------------------------------------------"
 
-cd $(dirname $0)/../
+cd $(dirname $0)/../build
 
-if [ ! -e build ];then
-	echo "[INFO] Create directory 'build'"
-	mkdir -p build
+if [ ! -e vendor ];then
+	echo "[INFO] Create directory 'build/vendor'"
+	mkdir -p vendor
 fi
 
-cd build
+cd vendor
 
 if [ -e ${logstash_dir} ];then
-	echo "[INFO] build/${logstash_dir} already exists"
+	echo "[INFO] build/vendor/${logstash_dir} already exists"
 	exit 0
 fi
 
@@ -41,16 +41,16 @@ if [ "$?" != "0" ];then
 fi
 
 if [ ! -e ${logstash_package} ];then
-    echo "[INFO] Installing ${logstash_download_link} into build/${logstash_dir}"
+    echo "[INFO] Installing ${logstash_download_link} into build/vendor/${logstash_dir}"
 	wget ${logstash_download_link}
 fi
 
 tar xzvf ${logstash_package}
 
 if [ -e ${logstash_dir} ];then
-    echo "[INFO] Successfully installed logstash into build/${logstash_dir}"
+    echo "[INFO] Successfully installed logstash into build/vendor/${logstash_dir}"
     exit 0
 else
-    echo "[ERROR] Failed to install logstash, because build/${logstash_dir} not exist"
+    echo "[ERROR] Failed to install logstash, because build/vendor/${logstash_dir} not exist"
     exit 1
 fi

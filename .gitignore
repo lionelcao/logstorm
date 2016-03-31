@@ -32,4 +32,5 @@ doc/
 **/*.idea
 **/*.iml
 
-build/
+build/vendor
+build/target
