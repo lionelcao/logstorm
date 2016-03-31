@@ -95,7 +95,7 @@
                         <configuration>
                             <executable>bash</executable>
                             <arguments>
-                                <argument>${project.basedir}/../dev-supports/install-deps.sh</argument>
+                                <argument>${project.basedir}/../build/install-deps.sh</argument>
                                 <argument>${logstash.version}</argument>
                             </arguments>
                         </configuration>
@@ -107,7 +107,7 @@
                 <version>2.5</version>
                 <executions>
                     <execution>
-                        <id>copy-resources</id>
+                        <id>package-logstash</id>
                         <phase>validate</phase>
                         <goals>
                             <goal>copy-resources</goal>
@@ -116,7 +116,7 @@
                             <outputDirectory>${project.build.directory}/classes/META-INF/logstash.home</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${project.basedir}/../vendor/logstash-${logstash.version}/</directory>
+                                    <directory>${project.basedir}/../build/vendor/logstash-${logstash.version}/</directory>
                                 </resource>
                             </resources>
                         </configuration>
