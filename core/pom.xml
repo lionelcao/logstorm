@@ -107,7 +107,7 @@
                 <version>2.5</version>
                 <executions>
                     <execution>
-                        <id>copy-resources</id>
+                        <id>package-logstash</id>
                         <phase>validate</phase>
                         <goals>
                             <goal>copy-resources</goal>
@@ -116,7 +116,7 @@
                             <outputDirectory>${project.build.directory}/classes/META-INF/logstash.home</outputDirectory>
                             <resources>
                                 <resource>
-                                    <directory>${project.basedir}/../vendor/logstash-${logstash.version}/</directory>
+                                    <directory>${project.basedir}/../build/logstash-${logstash.version}/</directory>
                                 </resource>
                             </resources>
                         </configuration>
