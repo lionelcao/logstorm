@@ -4,9 +4,9 @@
 ## REST API Design
 
 ### Authentication
->- Basic Authentication: https://en.wikipedia.org/wiki/Basic_access_authentication
+> Basic Authentication: https://en.wikipedia.org/wiki/Basic_access_authentication
 	
-	    Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l
+	Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l
         	
 ### Request/Response Structure
 * Request:
