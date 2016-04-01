@@ -6,11 +6,12 @@ import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.base.BaseRichBolt;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
-import com.ebay.logstorm.core.PipelineConfig;
+import com.ebay.logstorm.core.PipelineContext;
 import com.ebay.logstorm.core.compiler.LogStashFilter;
-import com.ebay.logstorm.core.event.EventContext;
-import com.ebay.logstorm.core.event.RawEvent;
+import com.ebay.logstorm.core.event.Event;
 import com.ebay.logstorm.core.serializer.Serializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -36,8 +37,9 @@ public class LogStashFiltersBolt extends BaseRichBolt {
     private final Serializer serializer;
     private StormEventCollector collector;
     private OutputCollector outputCollector;
+    private final static Logger LOG = LoggerFactory.getLogger(LogStashFiltersBolt.class);
 
-    public LogStashFiltersBolt(List<LogStashFilter> logStashPlugins, PipelineConfig context){
+    public LogStashFiltersBolt(List<LogStashFilter> logStashPlugins, PipelineContext context){
         this.logStashPlugins = logStashPlugins;
         this.serializer = context.getSerializer();
     }
@@ -46,21 +48,22 @@ public class LogStashFiltersBolt extends BaseRichBolt {
         this.collector = new StormEventCollector(collector,this.serializer);
         this.outputCollector = collector;
         for(LogStashFilter filterPlugin: this.logStashPlugins) {
-            filterPlugin.initialize();
-            filterPlugin.register();
+            try {
+                filterPlugin.initialize();
+                filterPlugin.register();
+            } catch (Exception e) {
+                LOG.error("Failed to register '{}'",filterPlugin.getUniqueName(),e);
+                throw new RuntimeException(e);
+            }
         }
     }
 
     public void execute(Tuple input) {
         byte[] eventBytes = input.getBinaryByField(Constants.EVENT_VALUE_FIELD);
-        RawEvent rawEvent = this.serializer.deserialize(eventBytes);
-        EventContext event = new EventContext(rawEvent);
+        Event event = this.serializer.deserialize(eventBytes);
         event.setContext(Constants.STORM_AUTHOR_TUPLE, input);
         for (LogStashFilter filter : this.logStashPlugins) {
             filter.filter(event);
-            if (event.isCancelled()) {
-                return;
-            }
         }
         this.collector.collect(event);
         this.outputCollector.ack(input);
@@ -73,7 +76,11 @@ public class LogStashFiltersBolt extends BaseRichBolt {
     @Override
     public void cleanup() {
         for(LogStashFilter filterPlugin: this.logStashPlugins) {
-            filterPlugin.close();
+            try {
+                filterPlugin.close();
+            } catch (Exception e) {
+                LOG.warn("Failed to close '{}'",filterPlugin.getUniqueName(),e);
+            }
         }
         super.cleanup();
     }

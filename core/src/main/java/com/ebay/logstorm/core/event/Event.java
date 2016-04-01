@@ -1,5 +1,7 @@
 package com.ebay.logstorm.core.event;
 
+import com.ebay.logstorm.core.compiler.proxy.LogStashEventProxy;
+import org.jruby.RubyHash;
 import org.jruby.RubyObject;
 
 import java.util.HashMap;
@@ -21,8 +23,8 @@ import java.util.Map;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class EventContext {
-    private final RubyObject event;
+public class Event extends LogStashEventProxy {
+
     private String  streamId = "default";
     private int partitionKey;
 
@@ -31,8 +33,12 @@ public class EventContext {
      */
     private Map<String,Object> context;
 
-    public EventContext(RubyObject event){
-        this.event = event;
+    public Event(RubyObject internal){
+        super(internal);
+    }
+
+    public Event(RubyHash hash){
+        super(hash);
     }
 
     public Map<String, Object> getContext() {
@@ -60,10 +66,6 @@ public class EventContext {
 
     public void setPartitionKey(int partitionKey) {
         this.partitionKey = partitionKey;
-    }
-
-    public RubyObject getEvent() {
-        return event;
     }
 
     public String getStreamId() {

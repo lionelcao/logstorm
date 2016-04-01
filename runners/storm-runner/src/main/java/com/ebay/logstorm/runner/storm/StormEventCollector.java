@@ -3,7 +3,7 @@ package com.ebay.logstorm.runner.storm;
 import backtype.storm.task.OutputCollector;
 import backtype.storm.tuple.Tuple;
 import com.ebay.logstorm.core.event.Collector;
-import com.ebay.logstorm.core.event.EventContext;
+import com.ebay.logstorm.core.event.Event;
 import com.ebay.logstorm.core.serializer.Serializer;
 
 import java.util.Arrays;
@@ -33,7 +33,7 @@ public class StormEventCollector implements Collector{
         this.serializer = serializer;
     }
 
-    public void collect(EventContext event) {
+    public void collect(Event event) {
         collector.emit(
                 event.getStreamId(),
                 (Tuple) event.getContext().get(Constants.STORM_AUTHOR_TUPLE),

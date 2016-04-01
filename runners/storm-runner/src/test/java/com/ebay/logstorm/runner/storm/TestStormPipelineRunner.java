@@ -1,9 +1,13 @@
-package com.ebay.logstorm.core.compiler.proxy;
+package com.ebay.logstorm.runner.storm;
 
-import com.ebay.logstorm.core.compiler.LogStashOutput;
-import com.ebay.logstorm.core.event.Event;
+import backtype.storm.utils.Utils;
+import com.ebay.logstorm.core.PipelineManager;
+import com.ebay.logstorm.core.compiler.LogStashConfigCompiler;
+import com.ebay.logstorm.core.compiler.LogStashPipeline;
+import com.ebay.logstorm.core.exception.LogStashCompileException;
+import org.junit.Test;
 
-import java.util.List;
+import java.io.IOException;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -21,14 +25,14 @@ import java.util.List;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class LogStashOutputProxy extends LogStashPluginProxyBase implements LogStashOutput {
-    @Override
-    public void receive(Event event) {
-        this.getProxy().invokeReceive(event.getInternal());
-    }
+public class TestStormPipelineRunner {
 
-    @Override
-    public void receive(List<Event> events) {
-        this.getProxy().invokeReceive(events);
+    private StormPipelineRunner runner = new StormPipelineRunner();
+
+    @Test
+    public void testStormPipelineTopologyBuilder() throws IOException, LogStashCompileException {
+        LogStashPipeline pipeline = LogStashConfigCompiler.compileResource("/simple-generator-stdout.txt");
+        PipelineManager.getInstance().submit(pipeline,runner);
+        Utils.sleep(5000);
     }
 }

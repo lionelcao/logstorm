@@ -1,3 +1,11 @@
+package com.ebay.logstorm.core.compiler.proxy;
+
+import org.jruby.Ruby;
+import org.jruby.RubyHash;
+import org.jruby.javasupport.JavaEmbedUtils;
+import org.jruby.runtime.Helpers;
+
+import static com.ebay.logstorm.core.compiler.proxy.RubyRuntimeFactory.getSingletonRuntime;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -15,26 +23,10 @@
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+public class LogStashJsonProxy {
+    private final static Ruby ruby = getSingletonRuntime();
 
-package com.ebay.logstorm.core;
-
-import com.ebay.logstorm.core.exception.LogStashCompileException;
-import com.ebay.logstorm.core.compiler.LogStashConfigCompiler;
-import com.ebay.logstorm.core.compiler.LogStashPipeline;
-import com.ebay.logstorm.core.runner.PipelineRunner;
-import com.typesafe.config.Config;
-
-public class PipelineRuntime {
-
-    private final Config baseConfig;
-
-    public PipelineRuntime(Config baseConfig){
-        this.baseConfig = baseConfig;
-    }
-
-    public void run(String logStashConfigStr, PipelineConfig config, PipelineRunner runner) throws LogStashCompileException {
-        config.setConfig(logStashConfigStr);
-        LogStashPipeline pipeline =  LogStashConfigCompiler.compile(logStashConfigStr,config);
-        runner.run(pipeline);
+    public static RubyHash loadJson(String json){
+        return (RubyHash) Helpers.invoke(ruby.getCurrentContext(),LogStashProxyConstants.LOGSTASH_JSON_RUBY_CLASS,"load", JavaEmbedUtils.javaToRuby(ruby,json));
     }
 }

@@ -20,9 +20,9 @@ import java.util.LinkedList;
 import java.util.List;
 
 public class MemoryCollector implements Collector {
-    private LinkedList<EventContext> cache = new LinkedList<>();
+    private LinkedList<Event> cache = new LinkedList<>();
     @Override
-    public void collect(EventContext event) {
+    public void collect(Event event) {
         this.cache.add(event);
     }
 
@@ -35,7 +35,7 @@ public class MemoryCollector implements Collector {
         return this.cache.size();
     }
 
-    public List<EventContext> getEvents(){
+    public List<Event> getEvents(){
         return cache;
     }
 }

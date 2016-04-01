@@ -51,7 +51,7 @@ public abstract class LogStashPluginProxyBase extends LogStashPluginBase {
     @Override
     public void initialize() throws Exception {
         if(this.rubyProxy == null) {
-            LogStashPipelineProxy pipelineProxy = new LogStashPipelineProxy(this.getConfigStr(), this.getContext());
+            LogStashPipelineProxy pipelineProxy = new LogStashPipelineProxy(this.getContext());
             if (PipelineConstants.PluginType.isInputPlugin(this)) {
                 this.rubyProxy = new LogStashPluginObjectProxy((IRubyObject) pipelineProxy.getInputsProxy().get(this.getIndex()));
             } else if (PipelineConstants.PluginType.isFilterPlugin(this)) {

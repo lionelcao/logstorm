@@ -17,7 +17,7 @@
 
 package com.ebay.logstorm.core.compiler.proxy;
 
-import com.ebay.logstorm.core.PipelineConfig;
+import com.ebay.logstorm.core.PipelineContext;
 import com.ebay.logstorm.core.compiler.*;
 import com.ebay.logstorm.core.exception.LogStashCompileException;
 import org.apache.commons.lang3.time.StopWatch;
@@ -34,7 +34,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class LogStashPipelineProxy implements LogStashPipeline {
-    private final PipelineConfig context;
+    private final PipelineContext context;
     private final String logStashConfigStr;
     private Ruby rubyRuntime;
     private IRubyObject pipelineProxy;
@@ -46,9 +46,13 @@ public class LogStashPipelineProxy implements LogStashPipeline {
     private RubyArray inputsProxy;
     private RubyArray filtersProxy;
 
-    public LogStashPipelineProxy(String logStashConfigStr,PipelineConfig context) throws LogStashCompileException {
+    public LogStashPipelineProxy(String pipelineConfigStr) throws LogStashCompileException {
+        this(new PipelineContext(pipelineConfigStr));
+    }
+
+    public LogStashPipelineProxy(PipelineContext context) throws LogStashCompileException {
         this.context = context;
-        this.logStashConfigStr = logStashConfigStr;
+        this.logStashConfigStr = this.context.getConfigString();
         try {
             rubyRuntime = RubyRuntimeFactory.getSingletonRuntime();
         }catch (Exception ex){
@@ -84,8 +88,7 @@ public class LogStashPipelineProxy implements LogStashPipeline {
     }
 
     private void evaluate(){
-        RubyModule rubyModule = RubyRuntimeFactory.getSingletonRuntime().getClassFromPath(LogStashProxyConstants.LOGSTASH_PIPELINE_RUBY_CLASS);
-        this.pipelineProxy = Helpers.invoke(rubyRuntime.getCurrentContext(),rubyModule,"new", JavaUtil.convertJavaToRuby(rubyRuntime,logStashConfigStr));
+        this.pipelineProxy = Helpers.invoke(rubyRuntime.getCurrentContext(),LogStashProxyConstants.LOGSTASH_PIPELINE_RUBY_CLASS,"new", JavaUtil.convertJavaToRuby(rubyRuntime,logStashConfigStr));
         this.inputsProxy = (RubyArray) Helpers.invoke(rubyRuntime.getCurrentContext(),this.pipelineProxy,"get_input_plugins");
         this.filtersProxy = (RubyArray) Helpers.invoke(rubyRuntime.getCurrentContext(),this.pipelineProxy,"get_filter_plugins");
         this.outputsProxy = (RubyArray) Helpers.invoke(rubyRuntime.getCurrentContext(),this.pipelineProxy,"get_output_plugins");
@@ -152,7 +155,7 @@ public class LogStashPipelineProxy implements LogStashPipeline {
     }
 
     @Override
-    public PipelineConfig getContext() {
+    public PipelineContext getContext() {
         return this.context;
     }
 }

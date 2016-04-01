@@ -1,12 +1,9 @@
 package com.ebay.logstorm.core.compiler.proxy;
 
 import com.ebay.logstorm.core.event.Collector;
-import com.ebay.logstorm.core.event.EventContext;
 import com.ebay.logstorm.core.event.RubyEventCollector;
 import org.jruby.Ruby;
-import org.jruby.RubyHash;
 import org.jruby.RubyModule;
-import org.jruby.RubyObject;
 import org.jruby.javasupport.JavaUtil;
 import org.jruby.runtime.Helpers;
 import org.jruby.runtime.builtin.IRubyObject;
@@ -60,7 +57,7 @@ public class RubyRuntimeFactory {
     }
 
     public static IRubyObject createRubyEventCollector(Collector collector){
-        RubyModule rubyModule = getSingletonRuntime().getClassFromPath(LogStashProxyConstants.LOGSTASH_COLLECTOR_RUBY_CLASS);
+        RubyModule rubyModule = getSingletonRuntime().getClassFromPath(LogStashProxyConstants.LOGSTASH_COLLECTOR_RUBY_CLASS_NAME);
         return Helpers.invoke(getSingletonRuntime().getCurrentContext(),rubyModule,"new", JavaUtil.convertJavaToRuby(getSingletonRuntime(),new RubyEventCollector(collector)));
     }
 }

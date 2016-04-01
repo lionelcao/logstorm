@@ -17,6 +17,6 @@ package com.ebay.logstorm.core.event;
  * limitations under the License.
  */
 public interface Collector {
-    void collect(EventContext event);
+    void collect(Event event);
     void flush();
 }

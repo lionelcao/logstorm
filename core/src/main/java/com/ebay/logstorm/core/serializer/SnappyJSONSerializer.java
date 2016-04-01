@@ -1,8 +1,9 @@
 package com.ebay.logstorm.core.serializer;
 
-import com.ebay.logstorm.core.event.EventContext;
+import com.ebay.logstorm.core.compiler.proxy.LogStashJsonProxy;
+import com.ebay.logstorm.core.event.Event;
 import com.ebay.logstorm.core.utils.SerializableUtils;
-import org.jruby.RubyObject;
+import org.jruby.RubyHash;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -20,14 +21,16 @@ import org.jruby.RubyObject;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class JavaObjectSnappySerializer implements Serializer {
+public class SnappyJSONSerializer implements Serializer {
     @Override
-    public byte[] serialize(EventContext obj) {
-        return SerializableUtils.serializeToByteArray(obj.getEvent());
+    public byte[] serialize(Event event) {
+        return SerializableUtils.serializeToByteArray(event.getJson());
     }
 
     @Override
-    public EventContext deserialize(byte[] bytes) {
-        return new EventContext((RubyObject) SerializableUtils.deserializeFromByteArray(bytes,"Deserialize event object from binary array"));
+    public Event deserialize(byte[] bytes) {
+        String json = (String) SerializableUtils.deserializeFromByteArray(bytes,"Deserialize event object from binary array");
+        RubyHash hash = LogStashJsonProxy.loadJson(json);
+        return new Event(hash);
     }
 }

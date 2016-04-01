@@ -1,7 +1,7 @@
 package com.ebay.logstorm.core.compiler.proxy;
 
 import com.ebay.logstorm.core.compiler.LogStashFilter;
-import com.ebay.logstorm.core.event.EventContext;
+import com.ebay.logstorm.core.event.Event;
 
 import java.util.List;
 
@@ -24,13 +24,13 @@ import java.util.List;
 public class LogStashFilterProxy extends LogStashPluginProxyBase implements LogStashFilter {
 
     @Override
-    public void filter(EventContext event) {
-        this.getProxy().invokeFilter(event.getEvent());
+    public void filter(Event event) {
+        this.getProxy().invokeFilter(event.getInternal());
     }
 
     @Override
-    public void filter(List<EventContext> events) {
-        for(EventContext event:events){
+    public void filter(List<Event> events) {
+        for(Event event:events){
             filter(event);
         }
     }

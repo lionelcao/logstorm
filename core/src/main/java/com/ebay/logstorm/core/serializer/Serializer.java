@@ -1,6 +1,6 @@
 package com.ebay.logstorm.core.serializer;
 
-import com.ebay.logstorm.core.event.EventContext;
+import com.ebay.logstorm.core.event.Event;
 
 import java.io.Serializable;
 
@@ -21,6 +21,6 @@ import java.io.Serializable;
  * limitations under the License.
  */
 public interface Serializer extends Serializable {
-    byte[] serialize(EventContext obj);
-    EventContext deserialize(byte[] bytes);
+    byte[] serialize(Event obj);
+    Event deserialize(byte[] bytes);
 }

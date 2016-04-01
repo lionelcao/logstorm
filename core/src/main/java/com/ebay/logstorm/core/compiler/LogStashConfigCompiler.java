@@ -16,7 +16,7 @@ package com.ebay.logstorm.core.compiler;
  * limitations under the License.
  */
 
-import com.ebay.logstorm.core.PipelineConfig;
+import com.ebay.logstorm.core.PipelineContext;
 import com.ebay.logstorm.core.compiler.proxy.LogStashPipelineProxy;
 import com.ebay.logstorm.core.exception.LogStashCompileException;
 import com.typesafe.config.ConfigFactory;
@@ -24,21 +24,27 @@ import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
+import java.net.URL;
 
 public class LogStashConfigCompiler {
-    public static LogStashPipeline compile(String logStashConfigStr, PipelineConfig config) throws LogStashCompileException {
-        return new LogStashPipelineProxy(logStashConfigStr,config);
-    }
-
-    public static LogStashPipeline compile(String logStashConfigStr) throws LogStashCompileException {
-        return new LogStashPipelineProxy(logStashConfigStr,new PipelineConfig(ConfigFactory.load()));
+    public static LogStashPipeline compile(PipelineContext config) throws LogStashCompileException {
+        return new LogStashPipelineProxy(config);
     }
 
     public static LogStashPipeline compile(File file) throws IOException, LogStashCompileException {
-        return compile(FileUtils.readFileToString(file));
+        return compileConfigString(FileUtils.readFileToString(file));
     }
 
     public static LogStashPipeline compileResource(String resource) throws IOException, LogStashCompileException {
-        return compile(FileUtils.readFileToString(new File(LogStashConfigCompiler.class.getResource(resource).getPath())));
+        URL resourceUrl = LogStashConfigCompiler.class.getResource(resource);
+        if(resourceUrl == null) {
+            throw new IOException("Resource "+resource+" not found");
+        }else{
+            return compileConfigString(FileUtils.readFileToString(new File(resourceUrl.getPath())));
+        }
+    }
+
+    public static LogStashPipeline compileConfigString(String configStr) throws LogStashCompileException {
+        return new LogStashPipelineProxy(new PipelineContext(configStr));
     }
 }

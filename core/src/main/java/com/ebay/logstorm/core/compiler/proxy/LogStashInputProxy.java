@@ -28,7 +28,7 @@ public class LogStashInputProxy extends LogStashPluginProxyBase implements LogSt
     @Override
     public void run(Collector collector) {
         this.collector = collector;
-        this.getProxy().invokeWithArguments(LogStashProxyConstants.LOGSTASH_INPUT_PLUGIN_RUN_METHOD,RubyRuntimeFactory.createRubyEventCollector(collector));
+        this.getProxy().invokeWithArguments(LogStashProxyConstants.LOGSTASH_INPUT_PLUGIN_RUN_METHOD_NAME,RubyRuntimeFactory.createRubyEventCollector(collector));
     }
 
     @Override

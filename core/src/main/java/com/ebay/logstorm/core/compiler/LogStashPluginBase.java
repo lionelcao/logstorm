@@ -1,6 +1,6 @@
 package com.ebay.logstorm.core.compiler;
 
-import com.ebay.logstorm.core.PipelineConfig;
+import com.ebay.logstorm.core.PipelineContext;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -21,7 +21,7 @@ import com.ebay.logstorm.core.PipelineConfig;
 public abstract class LogStashPluginBase implements LogStashPlugin {
     private int index;
     private String config_name;
-    private PipelineConfig context;
+    private PipelineContext context;
     private String configStr;
     private String debugInfo;
     private String inspect;
@@ -51,11 +51,11 @@ public abstract class LogStashPluginBase implements LogStashPlugin {
         this.index = index;
     }
 
-    public PipelineConfig getContext() {
+    public PipelineContext getContext() {
         return context;
     }
 
-    public void setContext(PipelineConfig context) {
+    public void setContext(PipelineContext context) {
         this.context = context;
     }
 

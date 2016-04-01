@@ -4,7 +4,7 @@ import com.ebay.logstorm.core.compiler.LogStashFilter;
 import com.ebay.logstorm.core.compiler.LogStashInput;
 import com.ebay.logstorm.core.compiler.LogStashOutput;
 import com.ebay.logstorm.core.compiler.proxy.LogStashPipelineProxy;
-import com.ebay.logstorm.core.event.EventContext;
+import com.ebay.logstorm.core.event.Event;
 import com.ebay.logstorm.core.event.MemoryCollector;
 import com.ebay.logstorm.core.exception.LogStashCompileException;
 import com.ebay.logstorm.core.utils.SerializableUtils;
@@ -41,7 +41,7 @@ public class TestLogStashPipelineProxy {
 
     @Before
     public void setUp() throws LogStashCompileException {
-        proxy = new LogStashPipelineProxy(configStr,null);
+        proxy = new LogStashPipelineProxy(configStr);
     }
 
     @Test
@@ -61,12 +61,12 @@ public class TestLogStashPipelineProxy {
         input.register();
         input.run(collector);
         Assert.assertEquals(9,collector.memorySize());
-        List<EventContext> events = new ArrayList<>(collector.getEvents());
+        List<Event> events = new ArrayList<>(collector.getEvents());
         input.close();
         Assert.assertEquals(0,collector.memorySize());
 
         try {
-            SerializableUtils.ensureSerializable(events.get(0).getEvent());
+            SerializableUtils.ensureSerializable(events.get(0).getInternal());
             Assert.fail("Raw ruby event should not be fully serializable");
         }catch (IllegalArgumentException ex){
             Assert.assertTrue(ex.getCause() instanceof NotSerializableException);

@@ -16,35 +16,41 @@
  */
 package com.ebay.logstorm.core;
 
-import com.ebay.logstorm.core.serializer.JavaObjectSnappySerializer;
+import com.ebay.logstorm.core.serializer.SnappyJSONSerializer;
 import com.ebay.logstorm.core.serializer.Serializer;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 
 import java.io.Serializable;
+import java.util.UUID;
 
 /**
  *
  */
-public class PipelineConfig implements Serializable{
-    private final Config original;
+public class PipelineContext implements Serializable{
+    private final Config config;
 
     /**
      * Pipeline Config
      */
-    private String config;
+    private String configString;
+    private String pipelineName = "LOGSTORM_APP_"+ UUID.randomUUID();
 
-    public PipelineConfig(Config context){
-        this.original = context;
+    public PipelineContext(String configString,Config context){
+        this.setConfigString(configString);
+        this.config = context;
     }
-    public PipelineConfig(String context){
-        this.original = ConfigFactory.parseString(context);
+
+    public PipelineContext(String configString){
+        this.setConfigString(configString);
+        this.config = ConfigFactory.load();
     }
+
     public Serializer getSerializer(){
         return DEFAULT_SERIALIZER;
     }
 
-    private static final Serializer DEFAULT_SERIALIZER = new JavaObjectSnappySerializer();
+    private static final Serializer DEFAULT_SERIALIZER = new SnappyJSONSerializer();
 
     public int getInputQueueCapacity(){
         return 10000;
@@ -58,19 +64,23 @@ public class PipelineConfig implements Serializable{
         return 1;
     }
 
-    public Config getOriginal() {
-        return original;
-    }
-
-    public String getPipelineName() {
-        return null;
-    }
-
-    public String getConfig() {
+    public Config getConfig() {
         return config;
     }
 
-    public void setConfig(String config) {
-        this.config = config;
+    public String getPipelineName() {
+        return this.pipelineName;
+    }
+
+    public String getConfigString() {
+        return configString;
+    }
+
+    public void setConfigString(String config) {
+        this.configString = config;
+    }
+
+    public void setPipelineName(String pipelineName) {
+        this.pipelineName = pipelineName;
     }
 }

@@ -35,7 +35,7 @@ public class TestLogStashPluginObjectProxy {
     @Test
     public void testRubyObjectProxy() throws LogStashCompileException {
         String configStr = "input { generator { threads => 10 lines => [ \"GET /user 0.98\",\"GET /user 1.98\",\"GET /user 2.98\"] count => 3}}";
-        LogStashPipelineProxy proxy = new LogStashPipelineProxy(configStr,null);
+        LogStashPipelineProxy proxy = new LogStashPipelineProxy(configStr);
 
         RubyObject rubyObject = (RubyObject) proxy.getInputsProxy().get(0);
 

@@ -1,5 +1,6 @@
 package com.ebay.logstorm.core.event;
 
+import org.jruby.RubyHash;
 import org.jruby.RubyObject;
 import org.jruby.javasupport.JavaUtil;
 import org.slf4j.Logger;
@@ -29,8 +30,8 @@ public class RubyEventCollector {
         this.collector = collector;
     }
 
-    public void collect(RubyObject rubyEvent){
-        if(LOG.isDebugEnabled()) LOG.debug("{}: {}", JavaUtil.convertRubyToJava(rubyEvent.to_s()), rubyEvent.toString());
-        this.collector.collect(new EventContext(rubyEvent));
+    public void collect(RubyObject event){
+        if(LOG.isDebugEnabled()) LOG.debug("{}: {}", JavaUtil.convertRubyToJava(event.to_s()), event.toString());
+        this.collector.collect(new Event(event));
     }
 }

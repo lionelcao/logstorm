@@ -19,10 +19,12 @@ class LogStashPipelineRubyProxy
     @logstash_config = logstash_config
     @logger = @logger = Cabin::Channel.get(LogStash)
 
+    puts ""
     puts "========================================"
     puts "LOAD_PATH: #{$LOAD_PATH}"
     puts "GEM_HOME: #{ENV["GEM_HOME"]}"
     puts "========================================"
+    puts ""
 
     eval_logstash_config
   end

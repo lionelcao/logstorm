@@ -1,9 +1,9 @@
-package com.ebay.logstorm.core.compiler.proxy;
+package com.ebay.logstorm.core;
 
-import com.ebay.logstorm.core.compiler.LogStashOutput;
-import com.ebay.logstorm.core.event.Event;
-
-import java.util.List;
+import com.ebay.logstorm.core.compiler.proxy.LogStashJsonProxy;
+import org.jruby.RubyHash;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -21,14 +21,10 @@ import java.util.List;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class LogStashOutputProxy extends LogStashPluginProxyBase implements LogStashOutput {
-    @Override
-    public void receive(Event event) {
-        this.getProxy().invokeReceive(event.getInternal());
-    }
-
-    @Override
-    public void receive(List<Event> events) {
-        this.getProxy().invokeReceive(events);
+public class TestLogStashJsonProxy {
+    @Test
+    public void testLogStashJsonProxy(){
+        RubyHash hash = LogStashJsonProxy.loadJson("{\"value\":0.230}");
+        Assert.assertNotNull(hash);
     }
 }

@@ -5,13 +5,16 @@ import backtype.storm.LocalCluster;
 import backtype.storm.topology.BoltDeclarer;
 import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.tuple.Fields;
-import com.ebay.logstorm.core.PipelineConfig;
+import backtype.storm.utils.Utils;
+import com.ebay.logstorm.core.PipelineContext;
 import com.ebay.logstorm.core.compiler.LogStashFilter;
 import com.ebay.logstorm.core.compiler.LogStashInput;
 import com.ebay.logstorm.core.compiler.LogStashOutput;
 import com.ebay.logstorm.core.compiler.LogStashPipeline;
 import com.ebay.logstorm.core.runner.PipelineRunner;
 import com.google.common.base.Preconditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -33,8 +36,9 @@ import java.util.List;
  * limitations under the License.
  */
 public class StormPipelineRunner implements PipelineRunner {
+    private final static Logger LOG = LoggerFactory.getLogger(StormPipelineRunner.class);
     public void run(LogStashPipeline pipeline) {
-        PipelineConfig context = pipeline.getContext();
+        PipelineContext context = pipeline.getContext();
         List<LogStashInput> inputs = pipeline.getInputs();
         List<LogStashFilter> filters = pipeline.getFilters();
         List<LogStashOutput> outputs = pipeline.getOutputs();
@@ -66,6 +70,8 @@ public class StormPipelineRunner implements PipelineRunner {
             outputBolts.add(outputBolt);
             builder.setBolt(output.getUniqueName(),outputBolt,output.getParallelism()).fieldsGrouping(Constants.STORM_FILTER_BOLT_NAME, new Fields(Constants.EVENT_KEY_FIELD));
         }
+
+        LOG.info("Submitting topology '{}': {}",context.getPipelineName(),pipeline);
 
         LocalCluster cluster = new LocalCluster();
         cluster.submitTopology(context.getPipelineName(), stormConfig, builder.createTopology());
