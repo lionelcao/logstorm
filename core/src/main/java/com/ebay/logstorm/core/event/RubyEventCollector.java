@@ -1,8 +1,6 @@
 package com.ebay.logstorm.core.event;
 
-import org.jruby.RubyHash;
 import org.jruby.RubyObject;
-import org.jruby.javasupport.JavaUtil;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 

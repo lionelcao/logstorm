@@ -1,4 +1,4 @@
-require_relative "./logstorm"
+require_relative "../logstorm"
 
 pipeline_conf = %Q(
   input {

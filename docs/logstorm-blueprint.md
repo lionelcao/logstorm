@@ -1,2 +1,0 @@
-LogStorm Blueprint
-==================
