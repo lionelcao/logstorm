@@ -19,7 +19,7 @@ Test
 
 * Getting started
 
-		mvn test -Dtest=com.ebay.logstorm.runner.storm.TestStormPipelineRunner
+		mvn test -Dtest=com.ebay.logstorm.runner.storm.TestStormPipelineRunner -DfailIfNoTests=false
 
 * Run all unit tests 
 	
