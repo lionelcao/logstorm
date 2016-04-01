@@ -35,10 +35,12 @@ public class Event extends LogStashEventProxy {
 
     public Event(RubyObject internal){
         super(internal);
+        this.setPartitionKey(internal.hashCode());
     }
 
     public Event(RubyHash hash){
         super(hash);
+        this.setPartitionKey(internal.hashCode());
     }
 
     public Map<String, Object> getContext() {

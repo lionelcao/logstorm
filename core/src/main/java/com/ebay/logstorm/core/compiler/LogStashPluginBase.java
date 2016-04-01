@@ -107,7 +107,7 @@ public abstract class LogStashPluginBase implements LogStashPlugin {
     }
 
     public long getParallelism() {
-        return parallelism;
+        return parallelism > 0 ? parallelism:1;
     }
 
     public void setParallelism(long parallelism) {

@@ -34,10 +34,12 @@ public class StormEventCollector implements Collector{
     }
 
     public void collect(Event event) {
+        Tuple author = (Tuple) event.getContext().get(Constants.STORM_AUTHOR_TUPLE);
         collector.emit(
                 event.getStreamId(),
-                (Tuple) event.getContext().get(Constants.STORM_AUTHOR_TUPLE),
+                author,
                 Arrays.<Object>asList(event.getPartitionKey(), this.serializer.serialize(event)));
+        collector.ack(author);
     }
 
     public void flush() {

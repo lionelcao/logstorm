@@ -31,7 +31,6 @@ public class RubyEventCollector {
     }
 
     public void collect(RubyObject event){
-        if(LOG.isDebugEnabled()) LOG.debug("{}: {}", JavaUtil.convertRubyToJava(event.to_s()), event.toString());
         this.collector.collect(new Event(event));
     }
 }

@@ -36,7 +36,7 @@ public class LogStashFiltersBolt extends BaseRichBolt {
     private final List<LogStashFilter> logStashPlugins;
     private final Serializer serializer;
     private StormEventCollector collector;
-    private OutputCollector outputCollector;
+//    private OutputCollector collector;
     private final static Logger LOG = LoggerFactory.getLogger(LogStashFiltersBolt.class);
 
     public LogStashFiltersBolt(List<LogStashFilter> logStashPlugins, PipelineContext context){
@@ -46,7 +46,6 @@ public class LogStashFiltersBolt extends BaseRichBolt {
 
     public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
         this.collector = new StormEventCollector(collector,this.serializer);
-        this.outputCollector = collector;
         for(LogStashFilter filterPlugin: this.logStashPlugins) {
             try {
                 filterPlugin.initialize();
@@ -61,12 +60,12 @@ public class LogStashFiltersBolt extends BaseRichBolt {
     public void execute(Tuple input) {
         byte[] eventBytes = input.getBinaryByField(Constants.EVENT_VALUE_FIELD);
         Event event = this.serializer.deserialize(eventBytes);
+        event.setStreamId(input.getSourceStreamId());
         event.setContext(Constants.STORM_AUTHOR_TUPLE, input);
         for (LogStashFilter filter : this.logStashPlugins) {
             filter.filter(event);
         }
         this.collector.collect(event);
-        this.outputCollector.ack(input);
     }
 
     public void declareOutputFields(OutputFieldsDeclarer declarer) {

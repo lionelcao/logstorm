@@ -33,6 +33,6 @@ public class TestStormPipelineRunner {
     public void testStormPipelineTopologyBuilder() throws IOException, LogStashCompileException {
         LogStashPipeline pipeline = LogStashConfigCompiler.compileResource("/simple-generator-stdout.txt");
         PipelineManager.getInstance().submit(pipeline,runner);
-        Utils.sleep(5000);
+        Utils.sleep(5000l);
     }
 }

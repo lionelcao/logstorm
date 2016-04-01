@@ -68,7 +68,7 @@ public class StormPipelineRunner implements PipelineRunner {
         for(LogStashOutput output: outputs){
             LogStashOutputBolt outputBolt = new LogStashOutputBolt(output,context);
             outputBolts.add(outputBolt);
-            builder.setBolt(output.getUniqueName(),outputBolt,output.getParallelism()).fieldsGrouping(Constants.STORM_FILTER_BOLT_NAME, new Fields(Constants.EVENT_KEY_FIELD));
+            builder.setBolt(output.getUniqueName(),outputBolt,output.getParallelism() ).fieldsGrouping(Constants.STORM_FILTER_BOLT_NAME, new Fields(Constants.EVENT_KEY_FIELD));
         }
 
         LOG.info("Submitting topology '{}': {}",context.getPipelineName(),pipeline);
