@@ -31,10 +31,10 @@ Backlog
 1. Pipeline Server and Management UI
 2. LogStash Siddhi Filter Plugin (https://github.com/wso2/siddhi) 
 3. More Pipeline Runner Support
-* Apache Spark Runner (http://spark.apache.org/)
-* Apache Flink Runner (http://flink.apache.org/)
-* Apache Beam Runner (http://beam.incubator.apache.org/)
-* High Performance Local Runner
+    * Apache Spark Runner (http://spark.apache.org/)
+    * Apache Flink Runner (http://flink.apache.org/)
+    * Apache Beam Runner (http://beam.incubator.apache.org/)
+    * High Performance Local Runner
 4. Replace default logstash message queue with [Disruptor](https://github.com/LMAX-Exchange/disruptor)
 
 Contact
