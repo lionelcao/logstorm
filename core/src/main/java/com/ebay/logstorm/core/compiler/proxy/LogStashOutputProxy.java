@@ -1,7 +1,7 @@
 package com.ebay.logstorm.core.compiler.proxy;
 
 import com.ebay.logstorm.core.compiler.LogStashOutput;
-import com.ebay.logstorm.core.event.Event;
+import com.ebay.logstorm.core.event.EventContext;
 
 import java.util.List;
 
@@ -22,29 +22,13 @@ import java.util.List;
  * limitations under the License.
  */
 public class LogStashOutputProxy extends LogStashPluginProxyBase implements LogStashOutput {
-
     @Override
-    public void initialize() {
+    public void receive(EventContext event) {
 
     }
 
     @Override
-    public void register() {
-
-    }
-
-    @Override
-    public void close() {
-
-    }
-
-    @Override
-    public void receive(Event event) {
-
-    }
-
-    @Override
-    public void receive(List<Event> events) {
+    public void receive(List<EventContext> events) {
 
     }
 }

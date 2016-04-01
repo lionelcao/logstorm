@@ -1,5 +1,7 @@
 package com.ebay.logstorm.core.event;
 
+import org.jruby.RubyObject;
+
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,8 +21,8 @@ import java.util.Map;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class Event {
-    private final RawEvent rawEvent;
+public class EventContext {
+    private final RubyObject event;
     private int partitionKey;
 
     /**
@@ -28,8 +30,8 @@ public class Event {
      */
     private Map<String,Object> context;
 
-    public Event(RawEvent rawEvent){
-        this.rawEvent = rawEvent;
+    public EventContext(RubyObject event){
+        this.event = event;
     }
 
     public Map<String, Object> getContext() {
@@ -69,7 +71,7 @@ public class Event {
         this.cancelled = cancelled;
     }
 
-    public RawEvent getRawEvent() {
-        return rawEvent;
+    public RubyObject getEvent() {
+        return event;
     }
 }

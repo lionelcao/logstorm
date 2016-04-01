@@ -34,8 +34,6 @@ public abstract class LogStashPluginBase implements LogStashPlugin {
         return this.getPluginType()+"_"+this.getConfigName()+"_"+this.getIndex();
     }
 
-    private transient Boolean initialized = false;
-
     public String getConfigName() {
         return config_name;
     }
@@ -99,13 +97,6 @@ public abstract class LogStashPluginBase implements LogStashPlugin {
         return this.getString();
     }
 
-    public boolean isInitialized() {
-        return initialized;
-    }
-
-    public void setInitialized(boolean initialized) {
-        this.initialized = initialized;
-    }
 
     public String getPluginType() {
         return plugin_type;

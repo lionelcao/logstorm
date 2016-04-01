@@ -17,5 +17,7 @@ package com.ebay.logstorm.core.exception;
  * limitations under the License.
  */
 public class LogStashExecutionException extends Exception {
-
+    public LogStashExecutionException(String s) {
+        super(s);
+    }
 }

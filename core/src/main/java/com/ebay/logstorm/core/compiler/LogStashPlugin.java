@@ -33,15 +33,15 @@ public interface LogStashPlugin extends Serializable {
      *
      * Prepare object deserialization, resource, connection and so on.
      */
-    void initialize();
+    void initialize() throws Exception;
 
     /**
      * Register plugin, and start to run
      */
-    void register();
+    void register() throws Exception;
 
     /**
      * Shutdown plugin
      */
-    void close();
+    void close() throws Exception;
 }

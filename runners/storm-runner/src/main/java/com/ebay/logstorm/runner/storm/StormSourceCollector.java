@@ -2,7 +2,7 @@ package com.ebay.logstorm.runner.storm;
 
 import backtype.storm.spout.SpoutOutputCollector;
 import com.ebay.logstorm.core.event.Collector;
-import com.ebay.logstorm.core.event.Event;
+import com.ebay.logstorm.core.event.EventContext;
 import com.ebay.logstorm.core.serializer.Serializer;
 
 import java.util.Arrays;
@@ -25,19 +25,19 @@ import java.util.concurrent.LinkedBlockingQueue;
  * limitations under the License.
  */
 public class StormSourceCollector implements Collector {
-    private final LinkedBlockingQueue<Event> queue;
+    private final LinkedBlockingQueue<EventContext> queue;
     private final Serializer serializer;
     private final SpoutOutputCollector collector;
     private final int batchSize;
 
     public StormSourceCollector( Serializer serializer,SpoutOutputCollector collector,int maxQueueSize, int batchSize){
-        this.queue = new LinkedBlockingQueue<Event>(maxQueueSize);
+        this.queue = new LinkedBlockingQueue<EventContext>(maxQueueSize);
         this.serializer = serializer;
         this.collector = collector;
         this.batchSize = batchSize;
     }
 
-    public void collect(Event event) {
+    public void collect(EventContext event) {
         synchronized (queue) {
             try {
                 queue.put(event);
@@ -55,7 +55,7 @@ public class StormSourceCollector implements Collector {
             int count = 0;
             while(count < batchSize && !queue.isEmpty()){
                 try {
-                    Event event  = queue.take();
+                    EventContext event  = queue.take();
                     collector.emit(event.getRawEvent().getStreamId(), Arrays.<Object>asList(event.getPartitionKey(), this.serializer.serialize(event.getRawEvent())));
                     count ++;
                 } catch (InterruptedException e) {

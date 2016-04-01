@@ -42,7 +42,7 @@ public class TestLogStashPluginObjectProxy {
 
         List<Variable<Object>> variables  =  objectProxy.getVariables();
 
-        LOG.info("plugin_type",objectProxy.getPluginType());
+        LOG.info("plugin_type: {}",objectProxy.getPluginType());
         LOG.info("variables: {}",variables.toString());
         LOG.info("config: {}",objectProxy.getConfig());
         LOG.info("debug_info: {}",objectProxy.getDebugInfo());

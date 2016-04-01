@@ -9,6 +9,8 @@ import org.jruby.runtime.Helpers;
 import org.jruby.runtime.builtin.IRubyObject;
 import org.jruby.runtime.builtin.InternalVariables;
 import org.jruby.runtime.builtin.Variable;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
@@ -31,13 +33,8 @@ import java.util.Map;
  */
 public class LogStashPluginObjectProxy {
     private final IRubyObject rubyObject;
-    private final RubyModule logStashPluginClass = RubyRuntimeFactory.getSingletonRuntime().getClassFromPath(LogStashProxyConstants.LOGSTASH_PLUGIN_RUBY_CLASS);
     private Ruby ruby = RubyRuntimeFactory.getSingletonRuntime();
-    /**
-     * LogStash::Plugin
-     */
-//    private static RubyClass LOGSTASH_INPUTS_BASE_CLASS = (RubyClass) RubyRuntimeFactory.getSingletonRuntime().getClassFromPath("LogStash::Inputs::Base");
-//    private static RubyClass LOGSTASH_PLUGIN_CLASS = (RubyClass) RubyRuntimeFactory.getSingletonRuntime().getClassFromPath("LogStash::Plugin");
+    private final static Logger LOG = LoggerFactory.getLogger(LogStashPluginObjectProxy.class);
 
     public LogStashPluginObjectProxy(IRubyObject rubyObject){
         this.rubyObject = rubyObject;
@@ -45,6 +42,14 @@ public class LogStashPluginObjectProxy {
 
     public <T> T invoke(String methodName, Class<T> returnType){
         return (T) JavaUtil.convertRubyToJava(Helpers.invoke(ruby.getCurrentContext(),this.rubyObject,methodName),returnType);
+    }
+    public void invoke1(String methodName, IRubyObject ... args){
+        Helpers.invoke(ruby.getCurrentContext(),this.rubyObject,methodName,args);
+    }
+
+    public void invoke(String methodName){
+        if(LOG.isDebugEnabled()) LOG.debug("Invoking method '{}():void' of '{}''",methodName,this.rubyObject);
+        Helpers.invoke(ruby.getCurrentContext(),this.rubyObject,methodName);
     }
 
     public <T> T invokeAs(RubyClass clazz, String methodName, Class<T> returnType){
@@ -122,5 +127,13 @@ public class LogStashPluginObjectProxy {
         } else {
             return 1l;
         }
+    }
+
+    public void invokeRegister(){
+        this.invoke(LogStashProxyConstants.LOGSTASH_INPUT_PLUGIN_REGISTER_METHOD);
+    }
+
+    public void invokeClose(){
+        this.invoke(LogStashProxyConstants.LOGSTASH_INPUT_PLUGIN_CLOSE_METHOD);
     }
 }

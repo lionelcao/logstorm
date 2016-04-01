@@ -48,8 +48,16 @@ public class LogStashInputSpout extends BaseRichSpout {
 
     public void open(Map conf, TopologyContext context, SpoutOutputCollector collector) {
         this.collector = new StormSourceCollector(this.serializer,collector,this.memoryQueueCapacity,this.batchSize);
-        this.logStashPlugin.initialize();
-        this.logStashPlugin.register();
+        try {
+            this.logStashPlugin.initialize();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+        try {
+            this.logStashPlugin.register();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         this.logStashPlugin.run(this.collector);
     }
 
@@ -59,7 +67,12 @@ public class LogStashInputSpout extends BaseRichSpout {
 
     @Override
     public void close() {
-        this.logStashPlugin.close();
-        super.close();
+        try {
+            this.logStashPlugin.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }finally {
+            super.close();
+        }
     }
 }

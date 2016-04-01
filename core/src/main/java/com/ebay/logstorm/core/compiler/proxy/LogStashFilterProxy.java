@@ -1,10 +1,7 @@
 package com.ebay.logstorm.core.compiler.proxy;
 
 import com.ebay.logstorm.core.compiler.LogStashFilter;
-import com.ebay.logstorm.core.event.Collector;
-import com.ebay.logstorm.core.event.Event;
-
-import java.util.List;
+import com.ebay.logstorm.core.event.EventContext;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -23,24 +20,8 @@ import java.util.List;
  * limitations under the License.
  */
 public class LogStashFilterProxy extends LogStashPluginProxyBase implements LogStashFilter {
-
     @Override
-    public void initialize() {
-        throw new RuntimeException("not implement yet, should recreate ruby proxy here");
-    }
-
-    @Override
-    public void register() {
-
-    }
-
-    @Override
-    public void close() {
-
-    }
-
-    @Override
-    public void filter(Event event) {
+    public void filter(EventContext event) {
 
     }
 }

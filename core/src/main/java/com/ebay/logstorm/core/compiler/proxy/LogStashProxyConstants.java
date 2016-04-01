@@ -22,4 +22,9 @@ public class LogStashProxyConstants {
     public final static String LOGSTORM_RUBY_FILE="logstorm.rb";
     public final static String LOGSTASH_PIPELINE_RUBY_CLASS="LogStashPipelineRubyProxy";
     public final static String LOGSTASH_PLUGIN_RUBY_CLASS ="LogStash::Plugin";
+    public final static String LOGSTASH_COLLECTOR_RUBY_CLASS ="CollectorQueueRubyProxy";
+
+    public final static String  LOGSTASH_INPUT_PLUGIN_RUN_METHOD="run";
+    public final static String  LOGSTASH_INPUT_PLUGIN_REGISTER_METHOD="register";
+    public final static String  LOGSTASH_INPUT_PLUGIN_CLOSE_METHOD="do_close";
 }

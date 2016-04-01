@@ -1,4 +1,6 @@
-package com.ebay.logstorm.core.event;
+package com.ebay.logstorm.core;
+
+import com.ebay.logstorm.core.compiler.LogStashPlugin;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -16,6 +18,20 @@ package com.ebay.logstorm.core.event;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public interface Collector {
-    void collect(EventContext event);
+public class PipelineConstants {
+    public static class PluginType{
+        public final static String INPUT = "input";
+        public final static String FILTER = "filter";
+        public final static String OUTPUT = "output";
+
+        public static boolean isInputPlugin(LogStashPlugin plugin){
+            return INPUT.equals(plugin.getPluginType());
+        }
+        public static boolean isFilterPlugin(LogStashPlugin plugin){
+            return FILTER.equals(plugin.getPluginType());
+        }
+        public static boolean isOutputPlugin(LogStashPlugin plugin){
+            return OUTPUT.equals(plugin.getPluginType());
+        }
+    }
 }

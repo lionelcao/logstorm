@@ -20,24 +20,8 @@ import com.ebay.logstorm.core.event.Collector;
  * limitations under the License.
  */
 public class LogStashInputProxy extends LogStashPluginProxyBase implements LogStashInput {
-
-    @Override
-    public void initialize() {
-        
-    }
-
-    @Override
-    public void register() {
-
-    }
-
-    @Override
-    public void close() {
-
-    }
-
     @Override
     public void run(Collector collector) {
-
+        this.getProxy().invoke1(LogStashProxyConstants.LOGSTASH_INPUT_PLUGIN_RUN_METHOD,RubyRuntimeFactory.createRubyEventCollector(collector));
     }
 }

@@ -1,5 +1,10 @@
 package com.ebay.logstorm.core.event;
 
+import org.jruby.RubyObject;
+import org.jruby.javasupport.JavaUtil;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -16,6 +21,16 @@ package com.ebay.logstorm.core.event;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public interface Collector {
-    void collect(EventContext event);
+public class RubyEventCollector {
+    private final static Logger LOG = LoggerFactory.getLogger(RubyEventCollector.class);
+    private final Collector collector;
+
+    public RubyEventCollector(Collector collector){
+        this.collector = collector;
+    }
+
+    public void collect(RubyObject rubyEvent){
+        if(LOG.isDebugEnabled()) LOG.debug("{}: {}", JavaUtil.convertRubyToJava(rubyEvent.to_s()), rubyEvent.toString());
+        this.collector.collect(new EventContext(rubyEvent));
+    }
 }

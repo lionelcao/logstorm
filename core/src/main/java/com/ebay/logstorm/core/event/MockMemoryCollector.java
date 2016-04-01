@@ -1,8 +1,3 @@
-package com.ebay.logstorm.core.event;
-
-import java.io.Serializable;
-import java.util.Map;
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -19,24 +14,18 @@ import java.util.Map;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class RawEvent implements Serializable {
-    private String streamId = "default";
+package com.ebay.logstorm.core.event;
 
-    private Map<String,Object> variables;
+import java.util.LinkedList;
 
-    public String getStreamId() {
-        return streamId;
+public class MockMemoryCollector implements Collector {
+    LinkedList<EventContext> cache = new LinkedList<>();
+    @Override
+    public void collect(EventContext event) {
+        this.cache.add(event);
     }
 
-    public void setStreamId(String streamId) {
-        this.streamId = streamId;
-    }
-
-    public Map<String, Object> getVariables() {
-        return variables;
-    }
-
-    public void setVariables(Map<String, Object> variables) {
-        this.variables = variables;
+    public int size(){
+        return this.cache.size();
     }
 }

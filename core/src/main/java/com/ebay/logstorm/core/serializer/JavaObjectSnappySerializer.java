@@ -1,7 +1,8 @@
 package com.ebay.logstorm.core.serializer;
 
-import com.ebay.logstorm.core.event.RawEvent;
+import com.ebay.logstorm.core.event.EventContext;
 import com.ebay.logstorm.core.utils.SerializableUtils;
+import org.jruby.RubyObject;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -21,12 +22,12 @@ import com.ebay.logstorm.core.utils.SerializableUtils;
  */
 public class JavaObjectSnappySerializer implements Serializer {
     @Override
-    public byte[] serialize(RawEvent obj) {
-        return SerializableUtils.serializeToByteArray(obj);
+    public byte[] serialize(EventContext obj) {
+        return SerializableUtils.serializeToByteArray(obj.getEvent());
     }
 
     @Override
-    public RawEvent deserialize(byte[] bytes) {
-        return (RawEvent) SerializableUtils.deserializeFromByteArray(bytes,"Deserialize event object from binary array");
+    public EventContext deserialize(byte[] bytes) {
+        return new EventContext((RubyObject) SerializableUtils.deserializeFromByteArray(bytes,"Deserialize event object from binary array"));
     }
 }

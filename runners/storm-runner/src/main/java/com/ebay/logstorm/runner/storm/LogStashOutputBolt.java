@@ -8,7 +8,7 @@ import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import com.ebay.logstorm.core.PipelineConfig;
 import com.ebay.logstorm.core.compiler.LogStashOutput;
-import com.ebay.logstorm.core.event.Event;
+import com.ebay.logstorm.core.event.EventContext;
 import com.ebay.logstorm.core.event.RawEvent;
 import com.ebay.logstorm.core.serializer.Serializer;
 
@@ -48,7 +48,7 @@ public class LogStashOutputBolt extends BaseRichBolt{
     public void execute(Tuple input) {
         byte[] eventBytes = input.getBinaryByField(Constants.EVENT_VALUE_FIELD);
         RawEvent raw = this.serializer.deserialize(eventBytes);
-        Event event = new Event(raw);
+        EventContext event = new EventContext(raw);
         event.addContext(Constants.STORM_AUTHOR_TUPLE,input);
         logStashPlugin.receive(event);
     }
