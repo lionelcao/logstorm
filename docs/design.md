@@ -19,7 +19,8 @@
 	
 	    {
 		    "success":true,
-		    "message": null
+		    "message": null,
+		    "url":"http://../api/path/"
 	    }
 
 ### Pipeline Metadata API
@@ -30,9 +31,11 @@
 * `DELETE /api/pipeline/{id}`: delete pipeline
 
 ### Pipeline Operation API
+* `GET /api/pipeline/{id}/status`
 * `POST /api/pipeline/{id}/start`
 * `POST /api/pipeline/{id}/stop`
-* `GET /api/pipeline/{id}/status`
+* `POST /api/pipeline/{id}/scale`
+* `POST /api/pipeline/{id}/suspend`
 
 ### Plugin Metadata API (Optional)
 * `GET /api/plugin/input`: list all input plugins

@@ -36,9 +36,9 @@ public class PipelineContext implements Serializable{
     private String configString;
     private String pipelineName = "LOGSTORM_APP_"+ UUID.randomUUID();
 
-    public PipelineContext(String configString,Config context){
+    public PipelineContext(String configString,Config config){
         this.setConfigString(configString);
-        this.config = context;
+        this.config = config;
     }
 
     public PipelineContext(String configString){
