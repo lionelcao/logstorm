@@ -35,8 +35,12 @@ public class StormEventCollector implements Collector{
 
     public void collect(EventContext event) {
         collector.emit(
-                event.getRawEvent().getStreamId(),
+                event.getStreamId(),
                 (Tuple) event.getContext().get(Constants.STORM_AUTHOR_TUPLE),
-                Arrays.<Object>asList(event.getPartitionKey(), this.serializer.serialize(event.getRawEvent())));
+                Arrays.<Object>asList(event.getPartitionKey(), this.serializer.serialize(event)));
+    }
+
+    public void flush() {
+        // do nothing, if we don't use queue here
     }
 }

@@ -8,6 +8,8 @@ import backtype.storm.tuple.Fields;
 import com.ebay.logstorm.core.PipelineConfig;
 import com.ebay.logstorm.core.compiler.LogStashInput;
 import com.ebay.logstorm.core.serializer.Serializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -35,6 +37,8 @@ public class LogStashInputSpout extends BaseRichSpout {
     private final int batchSize;
     private StormSourceCollector collector;
 
+    private final static Logger LOG = LoggerFactory.getLogger(LogStashInputSpout.class);
+
     public LogStashInputSpout(LogStashInput logStashPlugin, PipelineConfig config){
         this.logStashPlugin = logStashPlugin;
         this.serializer = config.getSerializer();
@@ -51,12 +55,12 @@ public class LogStashInputSpout extends BaseRichSpout {
         try {
             this.logStashPlugin.initialize();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Failed to initialize",e);
         }
         try {
             this.logStashPlugin.register();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error("Failed to register",e);
         }
         this.logStashPlugin.run(this.collector);
     }

@@ -18,4 +18,5 @@ package com.ebay.logstorm.core.event;
  */
 public interface Collector {
     void collect(EventContext event);
+    void flush();
 }

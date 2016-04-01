@@ -24,5 +24,5 @@ public interface LogStashInput extends LogStashPlugin {
      *
      * @param collector
      */
-    void run(Collector collector) throws Exception;
+    void run(Collector collector);
 }

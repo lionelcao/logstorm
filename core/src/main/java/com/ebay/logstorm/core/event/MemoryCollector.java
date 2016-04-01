@@ -18,14 +18,19 @@ package com.ebay.logstorm.core.event;
 
 import java.util.LinkedList;
 
-public class MockMemoryCollector implements Collector {
-    LinkedList<EventContext> cache = new LinkedList<>();
+public class MemoryCollector implements Collector {
+    private LinkedList<EventContext> cache = new LinkedList<>();
     @Override
     public void collect(EventContext event) {
         this.cache.add(event);
     }
 
-    public int size(){
+    @Override
+    public void flush() {
+        cache.clear();
+    }
+
+    public int memorySize(){
         return this.cache.size();
     }
 }

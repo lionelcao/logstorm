@@ -2,6 +2,8 @@ package com.ebay.logstorm.core.compiler.proxy;
 
 import com.ebay.logstorm.core.compiler.LogStashInput;
 import com.ebay.logstorm.core.event.Collector;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -20,8 +22,22 @@ import com.ebay.logstorm.core.event.Collector;
  * limitations under the License.
  */
 public class LogStashInputProxy extends LogStashPluginProxyBase implements LogStashInput {
+    private Collector collector;
+    private final static Logger LOG = LoggerFactory.getLogger(LogStashInputProxy.class);
+
     @Override
     public void run(Collector collector) {
-        this.getProxy().invoke1(LogStashProxyConstants.LOGSTASH_INPUT_PLUGIN_RUN_METHOD,RubyRuntimeFactory.createRubyEventCollector(collector));
+        this.collector = collector;
+        this.getProxy().invokeWithArguments(LogStashProxyConstants.LOGSTASH_INPUT_PLUGIN_RUN_METHOD,RubyRuntimeFactory.createRubyEventCollector(collector));
+    }
+
+    @Override
+    public void close() {
+        if(this.collector != null) {
+            if(LOG.isDebugEnabled())
+                LOG.debug("Flushing '{}'",this.collector);
+            this.collector.flush();
+        }
+        super.close();
     }
 }

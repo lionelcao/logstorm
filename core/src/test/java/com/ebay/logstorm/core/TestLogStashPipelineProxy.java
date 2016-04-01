@@ -2,7 +2,7 @@ package com.ebay.logstorm.core;
 
 import com.ebay.logstorm.core.compiler.LogStashInput;
 import com.ebay.logstorm.core.compiler.proxy.LogStashPipelineProxy;
-import com.ebay.logstorm.core.event.MockMemoryCollector;
+import com.ebay.logstorm.core.event.MemoryCollector;
 import com.ebay.logstorm.core.exception.LogStashCompileException;
 import org.junit.Assert;
 import org.junit.Before;
@@ -46,10 +46,11 @@ public class TestLogStashPipelineProxy {
     public void testSingleInputProxyRun() throws Exception {
         LogStashInput input = proxy.getInputs().get(0);
         input.initialize();
-        MockMemoryCollector collector = new MockMemoryCollector();
+        MemoryCollector collector = new MemoryCollector();
         input.register();
         input.run(collector);
+        Assert.assertEquals(9,collector.memorySize());
         input.close();
-        Assert.assertEquals(9,collector.size());
+        Assert.assertEquals(0,collector.memorySize());
     }
 }

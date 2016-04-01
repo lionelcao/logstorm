@@ -23,6 +23,7 @@ import java.util.Map;
  */
 public class EventContext {
     private final RubyObject event;
+    private String  streamId = "default";
     private int partitionKey;
 
     /**
@@ -73,5 +74,13 @@ public class EventContext {
 
     public RubyObject getEvent() {
         return event;
+    }
+
+    public String getStreamId() {
+        return streamId;
+    }
+
+    public void setStreamId(String streamId) {
+        this.streamId = streamId;
     }
 }

@@ -43,7 +43,7 @@ public class LogStashPluginObjectProxy {
     public <T> T invoke(String methodName, Class<T> returnType){
         return (T) JavaUtil.convertRubyToJava(Helpers.invoke(ruby.getCurrentContext(),this.rubyObject,methodName),returnType);
     }
-    public void invoke1(String methodName, IRubyObject ... args){
+    public void invokeWithArguments(String methodName, IRubyObject ... args){
         Helpers.invoke(ruby.getCurrentContext(),this.rubyObject,methodName,args);
     }
 
@@ -125,7 +125,7 @@ public class LogStashPluginObjectProxy {
         if(this.getParams().containsKey("threads")) {
             return (Long) this.getParams().get("threads");
         } else {
-            return 1l;
+            return 0L;
         }
     }
 
