@@ -3,6 +3,8 @@ package com.ebay.logstorm.core.compiler.proxy;
 import com.ebay.logstorm.core.compiler.LogStashFilter;
 import com.ebay.logstorm.core.event.EventContext;
 
+import java.util.List;
+
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -20,8 +22,16 @@ import com.ebay.logstorm.core.event.EventContext;
  * limitations under the License.
  */
 public class LogStashFilterProxy extends LogStashPluginProxyBase implements LogStashFilter {
+
     @Override
     public void filter(EventContext event) {
+        this.getProxy().invokeFilter(event.getEvent());
+    }
 
+    @Override
+    public void filter(List<EventContext> events) {
+        for(EventContext event:events){
+            filter(event);
+        }
     }
 }

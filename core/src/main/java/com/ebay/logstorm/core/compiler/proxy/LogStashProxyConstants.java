@@ -27,4 +27,8 @@ public class LogStashProxyConstants {
     public final static String  LOGSTASH_INPUT_PLUGIN_RUN_METHOD="run";
     public final static String  LOGSTASH_INPUT_PLUGIN_REGISTER_METHOD="register";
     public final static String  LOGSTASH_INPUT_PLUGIN_CLOSE_METHOD="do_close";
+
+    public final static String  LOGSTASH_FILTER_PLUGIN_FILTER_METHOD="filter";
+    public final static String  LOGSTASH_OUTPUT_PLUGIN_RECEIVE_METHOD="receive";
+    public final static String  LOGSTASH_OUTPUT_PLUGIN_MULTI_RECEIVE_METHOD="multi_receive";
 }

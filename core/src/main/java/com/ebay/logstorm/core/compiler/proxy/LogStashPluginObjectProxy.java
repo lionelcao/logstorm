@@ -1,9 +1,7 @@
 package com.ebay.logstorm.core.compiler.proxy;
 
-import org.jruby.Ruby;
-import org.jruby.RubyClass;
-import org.jruby.RubyHash;
-import org.jruby.RubyModule;
+import com.ebay.logstorm.core.event.EventContext;
+import org.jruby.*;
 import org.jruby.javasupport.JavaUtil;
 import org.jruby.runtime.Helpers;
 import org.jruby.runtime.builtin.IRubyObject;
@@ -48,7 +46,7 @@ public class LogStashPluginObjectProxy {
     }
 
     public void invoke(String methodName){
-        if(LOG.isDebugEnabled()) LOG.debug("Invoking method '{}():void' of '{}''",methodName,this.rubyObject);
+        // if(LOG.isDebugEnabled()) LOG.debug("Invoking method '{}():void' of '{}''",methodName,this.rubyObject);
         Helpers.invoke(ruby.getCurrentContext(),this.rubyObject,methodName);
     }
 
@@ -135,5 +133,23 @@ public class LogStashPluginObjectProxy {
 
     public void invokeClose(){
         this.invoke(LogStashProxyConstants.LOGSTASH_INPUT_PLUGIN_CLOSE_METHOD);
+    }
+
+    public void invokeFilter(RubyObject event) {
+        this.invokeWithArguments(LogStashProxyConstants.LOGSTASH_FILTER_PLUGIN_FILTER_METHOD,event);
+    }
+
+    public void invokeReceive(RubyObject event) {
+        this.invokeWithArguments(LogStashProxyConstants.LOGSTASH_OUTPUT_PLUGIN_RECEIVE_METHOD,event);
+    }
+
+    public void invokeMultiReceive(RubyArray events) {
+        this.invokeWithArguments(LogStashProxyConstants.LOGSTASH_OUTPUT_PLUGIN_MULTI_RECEIVE_METHOD,events);
+    }
+
+    public void invokeReceive(List<EventContext> events) {
+        IRubyObject[] objects = new RubyObject[events.size()];
+        for(int i=0;i<events.size();i++) objects[i] = events.get(i).getEvent();
+        this.invokeMultiReceive(RubyArray.newArray(ruby,objects));
     }
 }

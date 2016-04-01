@@ -24,11 +24,11 @@ import java.util.List;
 public class LogStashOutputProxy extends LogStashPluginProxyBase implements LogStashOutput {
     @Override
     public void receive(EventContext event) {
-
+        this.getProxy().invokeReceive(event.getEvent());
     }
 
     @Override
     public void receive(List<EventContext> events) {
-
+        this.getProxy().invokeReceive(events);
     }
 }

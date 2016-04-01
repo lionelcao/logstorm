@@ -3,6 +3,7 @@ package com.ebay.logstorm.core;
 import com.ebay.logstorm.core.compiler.proxy.LogStashPipelineProxy;
 import com.ebay.logstorm.core.compiler.proxy.LogStashPluginObjectProxy;
 import com.ebay.logstorm.core.exception.LogStashCompileException;
+import com.ebay.logstorm.core.utils.SerializableUtils;
 import org.jruby.RubyObject;
 import org.jruby.runtime.builtin.Variable;
 import org.junit.Assert;
@@ -10,6 +11,7 @@ import org.junit.Test;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.NotSerializableException;
 import java.util.List;
 
 /**
@@ -34,7 +36,16 @@ public class TestLogStashPluginObjectProxy {
     public void testRubyObjectProxy() throws LogStashCompileException {
         String configStr = "input { generator { threads => 10 lines => [ \"GET /user 0.98\",\"GET /user 1.98\",\"GET /user 2.98\"] count => 3}}";
         LogStashPipelineProxy proxy = new LogStashPipelineProxy(configStr,null);
+
         RubyObject rubyObject = (RubyObject) proxy.getInputsProxy().get(0);
+
+        try {
+            SerializableUtils.ensureSerializable(rubyObject);
+            Assert.fail("Plugin RubyObject is not fully serializable");
+        } catch (IllegalArgumentException exception){
+            Assert.assertTrue(exception.getCause() instanceof NotSerializableException);
+        }
+
         LogStashPluginObjectProxy objectProxy = new LogStashPluginObjectProxy(rubyObject);
 
         LOG.info("meta_variable_names: {}",objectProxy.getMetaVariableNames());

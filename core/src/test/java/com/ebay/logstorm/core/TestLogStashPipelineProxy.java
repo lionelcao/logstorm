@@ -1,12 +1,20 @@
 package com.ebay.logstorm.core;
 
+import com.ebay.logstorm.core.compiler.LogStashFilter;
 import com.ebay.logstorm.core.compiler.LogStashInput;
+import com.ebay.logstorm.core.compiler.LogStashOutput;
 import com.ebay.logstorm.core.compiler.proxy.LogStashPipelineProxy;
+import com.ebay.logstorm.core.event.EventContext;
 import com.ebay.logstorm.core.event.MemoryCollector;
 import com.ebay.logstorm.core.exception.LogStashCompileException;
+import com.ebay.logstorm.core.utils.SerializableUtils;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+
+import java.io.NotSerializableException;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -26,7 +34,10 @@ import org.junit.Test;
  */
 public class TestLogStashPipelineProxy {
     LogStashPipelineProxy proxy;
-    final String configStr = "input { generator { lines => [ \"GET /user 0.98\",\"GET /user 1.98\",\"GET /user 2.98\"] count => 3}}";
+    final String configStr =
+            "input { generator { lines => [ \"GET /user 0.98\",\"GET /user 1.98\",\"GET /user 2.98\"] count => 3}}"     +
+            "filter{ grok { add_field => { \"new_field\" => \"new_value\" } } }"+
+            "output { stdout { codec => rubydebug } }";
 
     @Before
     public void setUp() throws LogStashCompileException {
@@ -43,14 +54,34 @@ public class TestLogStashPipelineProxy {
     }
 
     @Test
-    public void testSingleInputProxyRun() throws Exception {
+    public void testSimplePipelineRun() throws Exception {
         LogStashInput input = proxy.getInputs().get(0);
         input.initialize();
         MemoryCollector collector = new MemoryCollector();
         input.register();
         input.run(collector);
         Assert.assertEquals(9,collector.memorySize());
+        List<EventContext> events = new ArrayList<>(collector.getEvents());
         input.close();
         Assert.assertEquals(0,collector.memorySize());
+
+        try {
+            SerializableUtils.ensureSerializable(events.get(0).getEvent());
+            Assert.fail("Raw ruby event should not be fully serializable");
+        }catch (IllegalArgumentException ex){
+            Assert.assertTrue(ex.getCause() instanceof NotSerializableException);
+        }
+
+        LogStashFilter filter = proxy.getFilters().get(0);
+        filter.initialize();
+        filter.register();
+        filter.filter(events);
+        filter.close();
+
+        LogStashOutput output = proxy.getOutputs().get(0);
+        output.initialize();
+        output.register();
+        output.receive(events);
+        output.close();
     }
 }

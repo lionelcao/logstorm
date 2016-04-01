@@ -2,6 +2,8 @@ package com.ebay.logstorm.core.compiler;
 
 import com.ebay.logstorm.core.event.EventContext;
 
+import java.util.List;
+
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -25,5 +27,5 @@ public interface LogStashFilter extends LogStashPlugin {
      * LogStash::Filters::Base#multi_fiter(events)
      * @param events
      */
-//    void filter(List<Event> events);
+    void filter(List<EventContext> events);
 }

@@ -96,7 +96,7 @@ public class LogStashPipelineProxy implements LogStashPipeline {
 
     private void setInputs(RubyArray inputs){
         if(inputs != null) {
-            this.inputs = new ArrayList<LogStashInput>(inputs.size());
+            this.inputs = new ArrayList<>(inputs.size());
             for (int i = 0; i < inputs.size(); i++) {
                 LogStashInputProxy inputProxy = new LogStashInputProxy();
                 inputProxy.setRubyProxy((IRubyObject) inputs.get(i));
@@ -110,7 +110,7 @@ public class LogStashPipelineProxy implements LogStashPipeline {
 
     private void setOutputs(RubyArray outputs){
         if(outputs != null) {
-            this.outputs = new ArrayList<LogStashOutput>(outputs.size());
+            this.outputs = new ArrayList<>(outputs.size());
             for (int i = 0; i < outputs.size(); i++) {
                 LogStashOutputProxy outputProxy = new LogStashOutputProxy();
                 outputProxy.setRubyProxy((IRubyObject) outputs.get(i));
@@ -124,7 +124,7 @@ public class LogStashPipelineProxy implements LogStashPipeline {
 
     private void setFilters(RubyArray filters){
         if(filters != null) {
-            this.filters = new ArrayList<LogStashFilter>(filters.size());
+            this.filters = new ArrayList<>(filters.size());
             for (int i = 0; i < filters.size(); i++) {
                 LogStashFilterProxy filterProxy = new LogStashFilterProxy();
                 filterProxy.setRubyProxy((IRubyObject) filters.get(i));

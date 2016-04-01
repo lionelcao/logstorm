@@ -43,7 +43,7 @@ public class EventContext {
         this.context = context;
     }
 
-    public void addContext(String key, Object value){
+    public void setContext(String key, Object value){
         ensureContext();
         this.context.put(key,value);
     }
@@ -60,16 +60,6 @@ public class EventContext {
 
     public void setPartitionKey(int partitionKey) {
         this.partitionKey = partitionKey;
-    }
-
-    private boolean cancelled = false;
-
-    public boolean isCancelled() {
-        return cancelled;
-    }
-
-    public void setCancelled(boolean cancelled) {
-        this.cancelled = cancelled;
     }
 
     public RubyObject getEvent() {

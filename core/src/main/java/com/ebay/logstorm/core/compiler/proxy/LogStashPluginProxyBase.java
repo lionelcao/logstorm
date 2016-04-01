@@ -61,20 +61,21 @@ public abstract class LogStashPluginProxyBase extends LogStashPluginBase {
             } else {
                 throw new LogStashExecutionException("Illegal plugin type: " + this);
             }
+            LOG.info("Initialized '{}': {}",this.getUniqueName(),this.getProxy());
         } else {
-            LOG.warn("Re-initializing, do nothing");
+            LOG.warn("'{}' was already initialized, do nothing",this.getUniqueName());
         }
     }
 
     @Override
     public void register() {
-        LOG.info("Registering");
+        LOG.info("Registering '{}': {}",this.getUniqueName(),this.getProxy());
         this.getProxy().invokeRegister();
     }
 
     @Override
     public void close() {
-        LOG.info("Closing");
+        LOG.info("Closing '{}'",this.getUniqueName());
         this.getProxy().invokeClose();
     }
 }

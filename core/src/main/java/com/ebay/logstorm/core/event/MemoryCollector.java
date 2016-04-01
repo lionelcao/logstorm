@@ -17,6 +17,7 @@
 package com.ebay.logstorm.core.event;
 
 import java.util.LinkedList;
+import java.util.List;
 
 public class MemoryCollector implements Collector {
     private LinkedList<EventContext> cache = new LinkedList<>();
@@ -32,5 +33,9 @@ public class MemoryCollector implements Collector {
 
     public int memorySize(){
         return this.cache.size();
+    }
+
+    public List<EventContext> getEvents(){
+        return cache;
     }
 }

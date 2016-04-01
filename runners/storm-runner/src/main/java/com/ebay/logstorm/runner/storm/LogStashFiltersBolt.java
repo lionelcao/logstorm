@@ -55,7 +55,7 @@ public class LogStashFiltersBolt extends BaseRichBolt {
         byte[] eventBytes = input.getBinaryByField(Constants.EVENT_VALUE_FIELD);
         RawEvent rawEvent = this.serializer.deserialize(eventBytes);
         EventContext event = new EventContext(rawEvent);
-        event.addContext(Constants.STORM_AUTHOR_TUPLE, input);
+        event.setContext(Constants.STORM_AUTHOR_TUPLE, input);
         for (LogStashFilter filter : this.logStashPlugins) {
             filter.filter(event);
             if (event.isCancelled()) {

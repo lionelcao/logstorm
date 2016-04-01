@@ -9,7 +9,6 @@ import backtype.storm.tuple.Tuple;
 import com.ebay.logstorm.core.PipelineConfig;
 import com.ebay.logstorm.core.compiler.LogStashOutput;
 import com.ebay.logstorm.core.event.EventContext;
-import com.ebay.logstorm.core.event.RawEvent;
 import com.ebay.logstorm.core.serializer.Serializer;
 
 import java.util.Map;
@@ -41,15 +40,19 @@ public class LogStashOutputBolt extends BaseRichBolt{
     }
 
     public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
-        logStashPlugin.initialize();
-        logStashPlugin.register();
+        try {
+            logStashPlugin.initialize();
+            logStashPlugin.register();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
     }
 
     public void execute(Tuple input) {
         byte[] eventBytes = input.getBinaryByField(Constants.EVENT_VALUE_FIELD);
-        RawEvent raw = this.serializer.deserialize(eventBytes);
-        EventContext event = new EventContext(raw);
-        event.addContext(Constants.STORM_AUTHOR_TUPLE,input);
+        EventContext event = this.serializer.deserialize(eventBytes);
+        event.setContext(Constants.STORM_AUTHOR_TUPLE,input);
+        event.setStreamId(input.getSourceStreamId());
         logStashPlugin.receive(event);
     }
 
@@ -59,7 +62,11 @@ public class LogStashOutputBolt extends BaseRichBolt{
 
     @Override
     public void cleanup() {
-        this.logStashPlugin.close();
+        try {
+            this.logStashPlugin.close();
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
         super.cleanup();
     }
 }
