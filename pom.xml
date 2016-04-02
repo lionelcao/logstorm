@@ -35,8 +35,8 @@
         <maven-model.version>4.0.0</maven-model.version>
         <maven-release.version>2.5.1</maven-release.version>
         <maven-assembly.version>2.5.5</maven-assembly.version>
-        <maven-source.version>2.2</maven-source.version>
-        <maven-compiler.version>2.0.2</maven-compiler.version>
+        <maven-source.version>2.5</maven-source.version>
+        <maven-compiler.version>2.3.2</maven-compiler.version>
 
         <common-lang3.version>3.4</common-lang3.version>
         <common-io.version>2.4</common-io.version>
@@ -62,6 +62,8 @@
         <!-- Front-end -->
         <bootstrap.version>3.0.3</bootstrap.version>
         <jquery.version>2.0.3-1</jquery.version>
+
+
     </properties>
 
     <dependencyManagement>
@@ -179,6 +181,20 @@
                     <groupId>org.springframework.boot</groupId>
                     <artifactId>spring-boot-maven-plugin</artifactId>
                     <version>${spring-boot.version}</version>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-compiler-plugin</artifactId>
+                    <version>${maven-compiler.version}</version>
+                    <configuration>
+                        <source>${java.version}</source>
+                        <target>${java.version}</target>
+                    </configuration>
+                </plugin>
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-resources-plugin</artifactId>
+                    <version>${maven-source.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>

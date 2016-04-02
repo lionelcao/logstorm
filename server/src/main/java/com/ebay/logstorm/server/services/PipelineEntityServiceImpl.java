@@ -44,4 +44,8 @@ public class PipelineEntityServiceImpl implements PipelineEntityService {
             return findAll(pageable);
         }
     }
+
+    public PipelineEntity createPipeline(PipelineEntity pipelineEntity) {
+        return this.pipelineEntityRepository.save(pipelineEntity);
+    }
 }

@@ -25,4 +25,5 @@ import java.util.List;
 public interface PipelineEntityService {
     Page<PipelineEntity> findAll(Pageable pageable);
     Page<PipelineEntity> findPipelines(PipelineEntitySearchCriteria searchCriteria,Pageable pageable);
+    PipelineEntity createPipeline(PipelineEntity pipelineEntity);
 }

@@ -24,4 +24,5 @@ import org.springframework.data.repository.Repository;
 public interface PipelineEntityRepository extends Repository<PipelineEntity, String> {
     Page<PipelineEntity> findAll(Pageable pageable);
     Page<PipelineEntity> findById(String id,Pageable pageable);
+    PipelineEntity save(PipelineEntity pipelineEntity);
 }
