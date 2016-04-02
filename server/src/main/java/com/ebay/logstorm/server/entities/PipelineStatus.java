@@ -1,9 +1,4 @@
-package com.ebay.logstorm.server.services;
-
-import com.ebay.logstorm.server.entities.PipelineEntity;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.Repository;
+package com.ebay.logstorm.server.entities;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -21,8 +16,11 @@ import org.springframework.data.repository.Repository;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public interface PipelineEntityRepository extends Repository<PipelineEntity, String> {
-    Page<PipelineEntity> findAll(Pageable pageable);
-    Page<PipelineEntity> findByUuid(String uuid, Pageable pageable);
-    PipelineEntity save(PipelineEntity pipelineEntity);
+public enum PipelineStatus {
+    UNKNOWN,
+    INITIALIZED,
+    STARTING, RUNNING,
+    STOPPING, STOPPED,
+    REBALANCING,
+    FAILED
 }

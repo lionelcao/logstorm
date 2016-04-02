@@ -1,8 +1,7 @@
 package com.ebay.logstorm.server.entities;
 
-import com.ebay.logstorm.core.PipelineConstants;
-
 import javax.persistence.*;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -21,45 +20,43 @@ import java.util.Properties;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@Entity(name = "Pipeline")
-public class PipelineEntity {
+@Entity(name = "PipelineExecution")
+public class PipeineExecutionEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private String uuid;
 
-    @Column(unique = true,nullable = false)
-    private String name;
+    @OneToOne
+    private PipelineEntity pipeline;
 
-    @Column(nullable = false)
-    private String pipeline;
-
-    @Column(nullable = true)
+    @Column
     private Properties properties;
+
+    @Column
+    @Enumerated(EnumType.ORDINAL)
+    private PipelineStatus status;
+
+    @Column
+    private String trackingUrl = null;
 
     @Column
     private boolean locked = false;
 
-    @Column
-    @Enumerated(EnumType.ORDINAL)
-    private PipelineConstants.DeployMode deployMode = PipelineConstants.DeployMode.STANDALONE;
-
-    @OneToOne
-    private ClusterEntity deployCluster;
-
-    public String getName() {
-        return name;
-    }
-
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    public String getPipeline() {
+    public PipelineEntity getPipeline() {
         return pipeline;
     }
 
-    public void setPipeline(String pipeline) {
+    public void setPipeline(PipelineEntity pipeline) {
         this.pipeline = pipeline;
+    }
+
+
+    public String getTrackingUrl() {
+        return trackingUrl;
+    }
+
+    public void setTrackingUrl(String trackingUrl) {
+        this.trackingUrl = trackingUrl;
     }
 
     public boolean isLocked() {
@@ -70,28 +67,12 @@ public class PipelineEntity {
         this.locked = locked;
     }
 
-    public PipelineConstants.DeployMode getDeployMode() {
-        return deployMode;
+    public PipelineStatus getStatus() {
+        return status;
     }
 
-    public void setDeployMode(PipelineConstants.DeployMode deployMode) {
-        this.deployMode = deployMode;
-    }
-
-    public ClusterEntity getDeployCluster() {
-        return deployCluster;
-    }
-
-    public void setDeployCluster(ClusterEntity deployCluster) {
-        this.deployCluster = deployCluster;
-    }
-
-    public Properties getProperties() {
-        return properties;
-    }
-
-    public void setProperties(Properties properties) {
-        this.properties = properties;
+    public void setStatus(PipelineStatus status) {
+        this.status = status;
     }
 
     public String getUuid() {
@@ -100,5 +81,13 @@ public class PipelineEntity {
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public Properties getProperties() {
+        return properties;
+    }
+
+    public void setProperties(Properties properties) {
+        this.properties = properties;
     }
 }

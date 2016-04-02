@@ -43,9 +43,6 @@ public class RestController extends BaseController{
     @RequestMapping(path = "/pipeline",method= RequestMethod.POST)
     public @ResponseBody
     RestResponse createPipeline(PipelineEntity pipelineEntity) {
-        return RestResponse.of((builder) -> {
-                return pipelineEntityService.createPipeline(pipelineEntity);
-            }
-        );
+        return RestResponse.of(() -> pipelineEntityService.createPipeline(pipelineEntity));
     }
 }

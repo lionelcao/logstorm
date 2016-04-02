@@ -39,7 +39,7 @@ public class PipelineEntityServiceImpl implements PipelineEntityService {
 
     public Page<PipelineEntity> findPipelines(PipelineEntitySearchCriteria searchCriteria, Pageable pageable) {
         if(searchCriteria.getId()!=null) {
-            return this.pipelineEntityRepository.findById(searchCriteria.getId(),pageable);
+            return this.pipelineEntityRepository.findByUuid(searchCriteria.getId(),pageable);
         }else{
             return findAll(pageable);
         }

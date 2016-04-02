@@ -16,12 +16,12 @@ public class RestResponse extends ResponseEntity<RestResponseEntity> {
         return new RestResponseBuilder<E>();
     }
 
-    public static <E> RestResponseBuilder<E> data(E data){
+    public static <E> RestResponseBuilder<E> of(E data){
         return new RestResponseBuilder<E>().data(data);
     }
 
     public static <E> RestResponse of(Function<RestResponseBuilder,E> func){
-        RestResponseBuilder<E> builder = new RestResponseBuilder<E>();
+        RestResponseBuilder<E> builder = new RestResponseBuilder<>();
         try {
             builder.success(true).status(HttpStatus.OK).data(func.apply(builder));
         } catch (Exception ex){

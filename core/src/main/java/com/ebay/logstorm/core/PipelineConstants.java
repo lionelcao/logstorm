@@ -22,7 +22,7 @@ import java.io.Serializable;
  */
 public class PipelineConstants {
 
-    public final static DeployMode DEFAULT_DEPLOY_MODE = DeployMode.LOCAL;
+    public final static DeployMode DEFAULT_DEPLOY_MODE = DeployMode.STANDALONE;
     public final static String DEFAULT_RUNNER_CLASS_NAME = "com.ebay.logstorm.runner.storm.StormPipelineRunner";
 
     public static class PluginType{
@@ -42,7 +42,7 @@ public class PipelineConstants {
     }
 
     public enum DeployMode implements Serializable {
-        LOCAL("local"), CLUSTER("cluster");
+        STANDALONE("standalone"), CLUSTER("cluster");
 
         private final String mode;
 
@@ -51,8 +51,8 @@ public class PipelineConstants {
         }
 
         public static DeployMode locate(String mode){
-            if(LOCAL.mode.equalsIgnoreCase(mode)){
-                return LOCAL;
+            if(STANDALONE.mode.equalsIgnoreCase(mode) || "local".equals(mode)){
+                return STANDALONE;
             }else if(CLUSTER.mode.equalsIgnoreCase(mode)){
                 return CLUSTER;
             }else{
