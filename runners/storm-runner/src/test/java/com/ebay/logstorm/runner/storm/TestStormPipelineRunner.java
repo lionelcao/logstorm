@@ -28,11 +28,20 @@ import java.io.IOException;
 public class TestStormPipelineRunner {
     @Test
     public void testStormSimplestPipelineTopologyBuilder() throws IOException, LogStormException {
-        PipelineContext.define(
+        PipelineContext.pipeline(
             "input { generator { lines => [ \"GET /user 0.98\",\"GET /user 1.98\",\"GET /user 2.98\"] count => 3}}"     +
-            "filter{ grok { add_field => { \"new_field\" => \"new_value\" } } }"+
-            "output { stdout { codec => rubydebug } }"
+            "filter{ grok { add_field => { \"new_field\" => \"new_value\"}}}"+
+            "output { stdout { codec => rubydebug }}"
         ).submit();
+    }
+
+    @Test
+    public void testStormFluentPipelineTopologyBuilder() throws LogStormException {
+        PipelineContext.builder()
+            .input("generator{ lines => [\"GET /user 0.98\",\"GET /user 1.98\",\"GET /user 2.98\"] count => 3 }")
+            .filter("grok { add_field => { \"new_field\" => \"new_value\"}}")
+            .output("stdout { codec => rubydebug }")
+        .submit();
     }
 
     @Test
@@ -45,11 +54,11 @@ public class TestStormPipelineRunner {
     }
 
     @Test
-    public void testStormInlinePipelineTopologyBuilder() throws IOException, LogStormException {
+    public void testStormInlinePipelineTopologyBuilder() throws LogStormException {
         PipelineContext.pipeline(
-            "input { generator { lines => [ \"GET /user 0.98\",\"GET /user 1.98\",\"GET /user 2.98\"] count => 3}}"     +
-            "filter{ grok { add_field => { \"new_field\" => \"new_value\" } } }"+
-            "output { stdout { codec => rubydebug } }")
+                "input { generator { lines => [ \"GET /user 0.98\",\"GET /user 1.98\",\"GET /user 2.98\"] count => 3}}"     +
+                "filter{ grok { add_field => { \"new_field\" => \"new_value\" } } }"+
+                "output { stdout { codec => rubydebug } }")
             .name("simple-generator-stdout-pipeline")
             .deploy("local")
             .submit(StormPipelineRunner.class);

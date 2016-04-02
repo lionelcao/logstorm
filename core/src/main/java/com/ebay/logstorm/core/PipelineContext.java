@@ -44,6 +44,8 @@ public class PipelineContext implements Serializable{
     private String pipelineName = "LOGSTORM_APP_"+ UUID.randomUUID();
     private PipelineConstants.DeployMode deployMode = PipelineConstants.DEFAULT_DEPLOY_MODE;
 
+    public PipelineContext(){}
+
     public PipelineContext(String pipeline){
         this.setPipeline(pipeline);
         this.config = ConfigFactory.load(); // .withValue("logstorm.pipeline.configstr",null);
@@ -96,22 +98,20 @@ public class PipelineContext implements Serializable{
         }
     }
 
-    public static PipelineContextBuilder pipeline(String pipeline) throws IOException, LogStormException {
+    public static PipelineContextBuilder pipeline(String pipeline) throws LogStormException {
         return new PipelineContextBuilder(pipeline);
     }
 
     public void setConfig(Config config) {
-        this.config = config;
+        if(this.config == null) {
+            this.config = config;
+        }else{
+            this.config = this.config.withFallback(config);
+        }
     }
 
-    /**
-     * Define pipeline
-     *
-     * @param pipeline
-     * @return
-     */
-    public static PipelineContextBuilder define(String pipeline) {
-        return new PipelineContextBuilder(pipeline);
+    public static PipelineContextBuilder builder() {
+        return new PipelineContextBuilder();
     }
 
     public PipelineConstants.DeployMode getDeployMode() {
@@ -124,77 +124,5 @@ public class PipelineContext implements Serializable{
 
     public void setDeployMode(String mode) {
         this.setDeployMode(PipelineConstants.DeployMode.locate(mode));
-    }
-
-    public static class PipelineContextBuilder{
-        private final PipelineContext pipelineContext;
-        private PipelineRunner runner;
-        private final static Logger LOG = LoggerFactory.getLogger(PipelineContextBuilder.class);
-
-        public PipelineContextBuilder(String pipeline){
-            this.pipelineContext = new PipelineContext(pipeline);
-        }
-
-
-        public PipelineContextBuilder runner(PipelineRunner runner){
-            this.runner = runner;
-            return this;
-        }
-
-        public PipelineContextBuilder runner(Class<? extends PipelineRunner> runnerClass){
-            try {
-                this.runner = runnerClass.newInstance();
-            } catch (InstantiationException | IllegalAccessException e) {
-                throw new RuntimeException(e);
-            }
-            return this;
-        }
-
-        public PipelineContextBuilder runner(String runnerClass){
-            try {
-                this.runner = (PipelineRunner) Class.forName(runnerClass).newInstance();
-            } catch (InstantiationException | IllegalAccessException | ClassNotFoundException e) {
-                throw new RuntimeException(e);
-            }
-            return this;
-        }
-
-        public void submit() throws LogStormException {
-            if(this.runner == null){
-                LOG.info("No runner set, use default runner: "+PipelineConstants.DEFAULT_RUNNER_CLASS_NAME);
-                this.runner(PipelineConstants.DEFAULT_RUNNER_CLASS_NAME);
-            }
-            this.runner.run(PipelineCompiler.compile(this.pipelineContext));
-        }
-
-        public void submit(Class<? extends PipelineRunner> runnerClass) throws LogStormException {
-            this.runner(runnerClass);
-            submit();
-        }
-
-        public void submit(PipelineRunner runner) throws LogStormException {
-            this.runner = runner;
-            submit();
-        }
-
-        public PipelineContextBuilder setConfig(Config config) {
-            this.pipelineContext.setConfig(config);
-            return this;
-        }
-
-        public PipelineContextBuilder name(String pipelineName){
-            this.pipelineContext.setPipelineName(pipelineName);
-            return this;
-        }
-
-        public PipelineContextBuilder deploy(PipelineConstants.DeployMode mode){
-            this.pipelineContext.setDeployMode(mode);
-            return this;
-        }
-
-        public PipelineContextBuilder deploy(String mode){
-            this.pipelineContext.setDeployMode(mode);
-            return this;
-        }
     }
 }
