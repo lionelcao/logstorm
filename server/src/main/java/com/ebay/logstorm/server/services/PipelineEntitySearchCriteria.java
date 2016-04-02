@@ -1,4 +1,4 @@
-package com.ebay.logstorm.server.controllers;
+package com.ebay.logstorm.server.services;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -16,6 +16,14 @@ package com.ebay.logstorm.server.controllers;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class ServiceController {
+public class PipelineEntitySearchCriteria {
+    private String id;
 
+    public String getId() {
+        return id;
+    }
+
+    public void setId(String id) {
+        this.id = id;
+    }
 }

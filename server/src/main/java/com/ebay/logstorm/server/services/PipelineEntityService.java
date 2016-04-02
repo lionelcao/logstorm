@@ -1,4 +1,10 @@
-package com.ebay.logstorm.server.controllers;
+package com.ebay.logstorm.server.services;
+
+import com.ebay.logstorm.server.entities.PipelineEntity;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
+
+import java.util.List;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -16,6 +22,7 @@ package com.ebay.logstorm.server.controllers;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class SecurityController {
-
+public interface PipelineEntityService {
+    Page<PipelineEntity> findAll(Pageable pageable);
+    Page<PipelineEntity> findPipelines(PipelineEntitySearchCriteria searchCriteria,Pageable pageable);
 }

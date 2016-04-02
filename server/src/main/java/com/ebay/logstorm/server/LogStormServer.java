@@ -1,5 +1,16 @@
 package com.ebay.logstorm.server;
 
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import org.springframework.boot.SpringApplication;
+import org.springframework.boot.autoconfigure.SpringBootApplication;
+import org.springframework.boot.builder.SpringApplicationBuilder;
+import org.springframework.boot.context.web.SpringBootServletInitializer;
+import org.springframework.context.ApplicationContext;
+
+import javax.servlet.ServletContext;
+import javax.servlet.ServletException;
+
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -16,8 +27,26 @@ package com.ebay.logstorm.server;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class LogStormServer {
+@SpringBootApplication
+public class LogStormServer extends SpringBootServletInitializer {
+    private final static Logger LOG = LoggerFactory.getLogger(LogStormServer.class);
+
+    @Override
+    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+        return builder.sources(LogStormServer.class);
+    }
+
+    @Override
+    public void onStartup(ServletContext servletContext) throws ServletException {
+        super.onStartup(servletContext);
+    }
+
+    public static void start(String[] args){
+        ApplicationContext context = SpringApplication.run(LogStormServer.class,args);
+        LOG.info("Started application named '{}'",context.getApplicationName());
+    }
+
     public static void main(String[] args){
-        
+        start(args);
     }
 }
