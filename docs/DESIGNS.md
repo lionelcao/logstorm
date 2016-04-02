@@ -1,5 +1,20 @@
 # LogStorm Design
 
+## Terms
+* __Pipeline__: application pipeline definition
+* __Application__: pipeline + execution application (storm topology, spark streaming application or flink streaming application, etc.)
+* __Plugin__: logstash native plugins which will used executed in distributed way with logstorm
+
+## Principle
+* Provide tools for different layers of users: non-programming users / developers / contributors
+* Use embedded web server instead of being hosted inside external web servers
+
+## Technical Stack
+* Java Version: JDK 8
+* LogStash: 2.2.0
+* Web Server: Use embedded tomcat/jetty from starting instead of building as war.
+* Web Framework: Spring boot (version: 1.3.3-RELEASE)
+* Front-end Framework: Bootstrap Theme and AdminLTE
 
 ## REST API Design
 
