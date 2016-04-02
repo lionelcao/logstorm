@@ -1,9 +1,4 @@
-package com.ebay.logstorm.core.compiler.proxy;
-
-import com.ebay.logstorm.core.compiler.FilterPlugin;
-import com.ebay.logstorm.core.event.Event;
-
-import java.util.List;
+package com.ebay.logstorm.core.exception;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -21,17 +16,13 @@ import java.util.List;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class LogStashFilterProxy extends LogStashPluginProxyBase implements FilterPlugin {
-
-    @Override
-    public void filter(Event event) {
-        this.getProxy().invokeFilter(event.getInternal());
+public class LogStormException extends Exception{
+    public LogStormException(String msg, Throwable throwable){
+        super(msg,throwable);
     }
 
-    @Override
-    public void filter(List<Event> events) {
-        for(Event event:events){
-            filter(event);
-        }
+
+    public LogStormException(String s) {
+        super(s);
     }
 }

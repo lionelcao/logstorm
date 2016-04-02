@@ -7,7 +7,7 @@ import backtype.storm.topology.base.BaseRichBolt;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import com.ebay.logstorm.core.PipelineContext;
-import com.ebay.logstorm.core.compiler.LogStashOutput;
+import com.ebay.logstorm.core.compiler.OutputPlugin;
 import com.ebay.logstorm.core.event.Event;
 import com.ebay.logstorm.core.serializer.Serializer;
 
@@ -31,10 +31,10 @@ import java.util.Map;
  */
 public class LogStashOutputBolt extends BaseRichBolt{
 
-    private final LogStashOutput logStashPlugin;
+    private final OutputPlugin logStashPlugin;
     private final Serializer serializer;
 
-    public LogStashOutputBolt(LogStashOutput logStashFilterPlugin, PipelineContext context){
+    public LogStashOutputBolt(OutputPlugin logStashFilterPlugin, PipelineContext context){
         this.logStashPlugin = logStashFilterPlugin;
         this.serializer = context.getSerializer();
     }

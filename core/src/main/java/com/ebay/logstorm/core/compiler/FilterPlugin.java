@@ -1,7 +1,6 @@
 package com.ebay.logstorm.core.compiler;
 
-
-import com.ebay.logstorm.core.PipelineContext;
+import com.ebay.logstorm.core.event.Event;
 
 import java.util.List;
 
@@ -21,28 +20,12 @@ import java.util.List;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public interface LogStashPipeline {
-    /**
-     *
-     * @return
-     */
-    List<LogStashInput> getInputs();
+public interface FilterPlugin extends LogStashPlugin {
+    void filter(Event event);
 
     /**
-     *
-     * @return
+     * LogStash::Filters::Base#multi_fiter(events)
+     * @param events
      */
-    List<LogStashFilter> getFilters();
-
-    /**
-     *
-     * @return
-     */
-    List<LogStashOutput> getOutputs();
-
-    /**
-     *
-     * @return
-     */
-    PipelineContext getContext();
+    void filter(List<Event> events);
 }

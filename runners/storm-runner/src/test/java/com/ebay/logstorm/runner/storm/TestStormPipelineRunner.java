@@ -1,10 +1,10 @@
 package com.ebay.logstorm.runner.storm;
 
 import backtype.storm.utils.Utils;
-import com.ebay.logstorm.core.PipelineManager;
-import com.ebay.logstorm.core.compiler.LogStashConfigCompiler;
-import com.ebay.logstorm.core.compiler.LogStashPipeline;
-import com.ebay.logstorm.core.exception.LogStashCompileException;
+import com.ebay.logstorm.core.PipelineConstants;
+import com.ebay.logstorm.core.PipelineContext;
+import com.ebay.logstorm.core.exception.LogStormException;
+import org.junit.After;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -26,13 +26,37 @@ import java.io.IOException;
  * limitations under the License.
  */
 public class TestStormPipelineRunner {
-
-    private StormPipelineRunner runner = new StormPipelineRunner();
+    @Test
+    public void testStormSimplestPipelineTopologyBuilder() throws IOException, LogStormException {
+        PipelineContext.define(
+            "input { generator { lines => [ \"GET /user 0.98\",\"GET /user 1.98\",\"GET /user 2.98\"] count => 3}}"     +
+            "filter{ grok { add_field => { \"new_field\" => \"new_value\" } } }"+
+            "output { stdout { codec => rubydebug } }"
+        ).submit();
+    }
 
     @Test
-    public void testStormPipelineTopologyBuilder() throws IOException, LogStashCompileException {
-        LogStashPipeline pipeline = LogStashConfigCompiler.compileResource("/simple-generator-stdout.txt");
-        PipelineManager.getInstance().submit(pipeline,runner);
+    public void testStormResourcePipelineTopologyBuilder() throws IOException, LogStormException {
+        PipelineContext.pipelineResource("/simple-generator-stdout.txt")
+            .name("simple-generator-stdout-pipeline")
+            .runner(StormPipelineRunner.class)
+            .deploy(PipelineConstants.DeployMode.LOCAL)
+            .submit();
+    }
+
+    @Test
+    public void testStormInlinePipelineTopologyBuilder() throws IOException, LogStormException {
+        PipelineContext.pipeline(
+            "input { generator { lines => [ \"GET /user 0.98\",\"GET /user 1.98\",\"GET /user 2.98\"] count => 3}}"     +
+            "filter{ grok { add_field => { \"new_field\" => \"new_value\" } } }"+
+            "output { stdout { codec => rubydebug } }")
+            .name("simple-generator-stdout-pipeline")
+            .deploy("local")
+            .submit(StormPipelineRunner.class);
+    }
+
+    @After
+    public void onAfter(){
         Utils.sleep(5000l);
     }
 }

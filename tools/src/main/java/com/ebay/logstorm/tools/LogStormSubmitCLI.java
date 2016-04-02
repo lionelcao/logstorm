@@ -1,6 +1,4 @@
-package com.ebay.logstorm.core.compiler;
-
-import com.ebay.logstorm.core.event.Collector;
+package com.ebay.logstorm.tools;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -18,11 +16,6 @@ import com.ebay.logstorm.core.event.Collector;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public interface LogStashInput extends LogStashPlugin {
-    /**
-     * run(queue)
-     *
-     * @param collector
-     */
-    void run(Collector collector);
+public class LogStormSubmitCLI {
+    
 }

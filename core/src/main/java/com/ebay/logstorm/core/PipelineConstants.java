@@ -2,6 +2,8 @@ package com.ebay.logstorm.core;
 
 import com.ebay.logstorm.core.compiler.LogStashPlugin;
 
+import java.io.Serializable;
+
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -19,6 +21,10 @@ import com.ebay.logstorm.core.compiler.LogStashPlugin;
  * limitations under the License.
  */
 public class PipelineConstants {
+
+    public final static DeployMode DEFAULT_DEPLOY_MODE = DeployMode.LOCAL;
+    public final static String DEFAULT_RUNNER_CLASS_NAME = "com.ebay.logstorm.runner.storm.StormPipelineRunner";
+
     public static class PluginType{
         public final static String INPUT = "input";
         public final static String FILTER = "filter";
@@ -32,6 +38,26 @@ public class PipelineConstants {
         }
         public static boolean isOutputPlugin(LogStashPlugin plugin){
             return OUTPUT.equals(plugin.getPluginType());
+        }
+    }
+
+    public enum DeployMode implements Serializable {
+        LOCAL("local"), CLUSTER("cluster");
+
+        private final String mode;
+
+        DeployMode(String mode){
+            this.mode = mode;
+        }
+
+        public static DeployMode locate(String mode){
+            if(LOCAL.mode.equalsIgnoreCase(mode)){
+                return LOCAL;
+            }else if(CLUSTER.mode.equalsIgnoreCase(mode)){
+                return CLUSTER;
+            }else{
+                throw new RuntimeException("Illegal deployment mode: "+mode+", options: [local, cluster]");
+            }
         }
     }
 }

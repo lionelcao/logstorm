@@ -1,4 +1,6 @@
-package com.ebay.logstorm.core.exception;
+package com.ebay.logstorm.core.compiler;
+
+import com.ebay.logstorm.core.event.Collector;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -16,8 +18,11 @@ package com.ebay.logstorm.core.exception;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class LogStashCompileException extends Exception{
-    public LogStashCompileException(String msg, Throwable throwable){
-        super(msg,throwable);
-    }
+public interface InputPlugin extends LogStashPlugin {
+    /**
+     * run(queue)
+     *
+     * @param collector
+     */
+    void run(Collector collector);
 }

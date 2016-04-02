@@ -7,7 +7,7 @@ import backtype.storm.topology.base.BaseRichBolt;
 import backtype.storm.tuple.Fields;
 import backtype.storm.tuple.Tuple;
 import com.ebay.logstorm.core.PipelineContext;
-import com.ebay.logstorm.core.compiler.LogStashFilter;
+import com.ebay.logstorm.core.compiler.FilterPlugin;
 import com.ebay.logstorm.core.event.Event;
 import com.ebay.logstorm.core.serializer.Serializer;
 import org.slf4j.Logger;
@@ -33,20 +33,20 @@ import java.util.Map;
  * limitations under the License.
  */
 public class LogStashFiltersBolt extends BaseRichBolt {
-    private final List<LogStashFilter> logStashPlugins;
+    private final List<FilterPlugin> logStashPlugins;
     private final Serializer serializer;
     private StormEventCollector collector;
 //    private OutputCollector collector;
     private final static Logger LOG = LoggerFactory.getLogger(LogStashFiltersBolt.class);
 
-    public LogStashFiltersBolt(List<LogStashFilter> logStashPlugins, PipelineContext context){
+    public LogStashFiltersBolt(List<FilterPlugin> logStashPlugins, PipelineContext context){
         this.logStashPlugins = logStashPlugins;
         this.serializer = context.getSerializer();
     }
 
     public void prepare(Map stormConf, TopologyContext context, OutputCollector collector) {
         this.collector = new StormEventCollector(collector,this.serializer);
-        for(LogStashFilter filterPlugin: this.logStashPlugins) {
+        for(FilterPlugin filterPlugin: this.logStashPlugins) {
             try {
                 filterPlugin.initialize();
                 filterPlugin.register();
@@ -62,7 +62,7 @@ public class LogStashFiltersBolt extends BaseRichBolt {
         Event event = this.serializer.deserialize(eventBytes);
         event.setStreamId(input.getSourceStreamId());
         event.setContext(Constants.STORM_AUTHOR_TUPLE, input);
-        for (LogStashFilter filter : this.logStashPlugins) {
+        for (FilterPlugin filter : this.logStashPlugins) {
             filter.filter(event);
         }
         this.collector.collect(event);
@@ -74,7 +74,7 @@ public class LogStashFiltersBolt extends BaseRichBolt {
 
     @Override
     public void cleanup() {
-        for(LogStashFilter filterPlugin: this.logStashPlugins) {
+        for(FilterPlugin filterPlugin: this.logStashPlugins) {
             try {
                 filterPlugin.close();
             } catch (Exception e) {

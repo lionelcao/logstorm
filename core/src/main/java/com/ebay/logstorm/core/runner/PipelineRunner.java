@@ -16,10 +16,10 @@
  */
 package com.ebay.logstorm.core.runner;
 
-import com.ebay.logstorm.core.compiler.LogStashPipeline;
+import com.ebay.logstorm.core.compiler.Pipeline;
 
 import java.io.Serializable;
 
 public interface PipelineRunner extends Serializable{
-    void run(LogStashPipeline pipeline);
+    void run(Pipeline pipeline);
 }

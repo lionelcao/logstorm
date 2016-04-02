@@ -1,12 +1,12 @@
 package com.ebay.logstorm.core;
 
-import com.ebay.logstorm.core.compiler.LogStashFilter;
-import com.ebay.logstorm.core.compiler.LogStashInput;
-import com.ebay.logstorm.core.compiler.LogStashOutput;
+import com.ebay.logstorm.core.compiler.FilterPlugin;
+import com.ebay.logstorm.core.compiler.InputPlugin;
+import com.ebay.logstorm.core.compiler.OutputPlugin;
 import com.ebay.logstorm.core.compiler.proxy.LogStashPipelineProxy;
 import com.ebay.logstorm.core.event.Event;
 import com.ebay.logstorm.core.event.MemoryCollector;
-import com.ebay.logstorm.core.exception.LogStashCompileException;
+import com.ebay.logstorm.core.exception.LogStormException;
 import com.ebay.logstorm.core.utils.SerializableUtils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -40,13 +40,13 @@ public class TestLogStashPipelineProxy {
             "output { stdout { codec => rubydebug } }";
 
     @Before
-    public void setUp() throws LogStashCompileException {
+    public void setUp() throws LogStormException {
         proxy = new LogStashPipelineProxy(configStr);
     }
 
     @Test
-    public void testSingleInputProxy() throws LogStashCompileException {
-        LogStashInput input = proxy.getInputs().get(0);
+    public void testSingleInputProxy() throws LogStormException {
+        InputPlugin input = proxy.getInputs().get(0);
         Assert.assertEquals(1,proxy.getInputsProxy().size());
         Assert.assertEquals(0,input.getIndex());
         Assert.assertEquals(configStr,input.getConfigStr());
@@ -55,7 +55,7 @@ public class TestLogStashPipelineProxy {
 
     @Test
     public void testSimplePipelineRun() throws Exception {
-        LogStashInput input = proxy.getInputs().get(0);
+        InputPlugin input = proxy.getInputs().get(0);
         input.initialize();
         MemoryCollector collector = new MemoryCollector();
         input.register();
@@ -72,13 +72,13 @@ public class TestLogStashPipelineProxy {
             Assert.assertTrue(ex.getCause() instanceof NotSerializableException);
         }
 
-        LogStashFilter filter = proxy.getFilters().get(0);
+        FilterPlugin filter = proxy.getFilters().get(0);
         filter.initialize();
         filter.register();
         filter.filter(events);
         filter.close();
 
-        LogStashOutput output = proxy.getOutputs().get(0);
+        OutputPlugin output = proxy.getOutputs().get(0);
         output.initialize();
         output.register();
         output.receive(events);

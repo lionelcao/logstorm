@@ -12,9 +12,9 @@ TODO
     * High Performance Local Runner
 * Replace default logstash message queue with [Disruptor](https://github.com/LMAX-Exchange/disruptor)
 * LogStash input/output plugin metadata model and scanner, which could be used to provide more friendly experience while defining pipeline.
+* Support to use LogStash as multi-stages pipeline
 
 Done
 ----
 * LogStash Pipeline Parser
 * LogStash Plugin Proxy API
-

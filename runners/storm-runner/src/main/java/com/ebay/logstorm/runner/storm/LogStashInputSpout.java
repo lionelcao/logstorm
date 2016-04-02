@@ -6,7 +6,7 @@ import backtype.storm.topology.OutputFieldsDeclarer;
 import backtype.storm.topology.base.BaseRichSpout;
 import backtype.storm.tuple.Fields;
 import com.ebay.logstorm.core.PipelineContext;
-import com.ebay.logstorm.core.compiler.LogStashInput;
+import com.ebay.logstorm.core.compiler.InputPlugin;
 import com.ebay.logstorm.core.serializer.Serializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -31,7 +31,7 @@ import java.util.Map;
  */
 public class LogStashInputSpout extends BaseRichSpout {
 
-    private final LogStashInput logStashPlugin;
+    private final InputPlugin logStashPlugin;
     private final Serializer serializer;
     private final int memoryQueueCapacity;
     private final int batchSize;
@@ -39,7 +39,7 @@ public class LogStashInputSpout extends BaseRichSpout {
 
     private final static Logger LOG = LoggerFactory.getLogger(LogStashInputSpout.class);
 
-    public LogStashInputSpout(LogStashInput logStashPlugin, PipelineContext config){
+    public LogStashInputSpout(InputPlugin logStashPlugin, PipelineContext config){
         this.logStashPlugin = logStashPlugin;
         this.serializer = config.getSerializer();
         this.memoryQueueCapacity = config.getInputQueueCapacity();

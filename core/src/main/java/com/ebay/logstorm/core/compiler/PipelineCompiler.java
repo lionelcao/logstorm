@@ -18,25 +18,24 @@ package com.ebay.logstorm.core.compiler;
 
 import com.ebay.logstorm.core.PipelineContext;
 import com.ebay.logstorm.core.compiler.proxy.LogStashPipelineProxy;
-import com.ebay.logstorm.core.exception.LogStashCompileException;
-import com.typesafe.config.ConfigFactory;
+import com.ebay.logstorm.core.exception.LogStormException;
 import org.apache.commons.io.FileUtils;
 
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 
-public class LogStashConfigCompiler {
-    public static LogStashPipeline compile(PipelineContext config) throws LogStashCompileException {
+public class PipelineCompiler {
+    public static Pipeline compile(PipelineContext config) throws LogStormException {
         return new LogStashPipelineProxy(config);
     }
 
-    public static LogStashPipeline compile(File file) throws IOException, LogStashCompileException {
+    public static Pipeline compile(File file) throws IOException, LogStormException {
         return compileConfigString(FileUtils.readFileToString(file));
     }
 
-    public static LogStashPipeline compileResource(String resource) throws IOException, LogStashCompileException {
-        URL resourceUrl = LogStashConfigCompiler.class.getResource(resource);
+    public static Pipeline compileResource(String resource) throws IOException, LogStormException {
+        URL resourceUrl = PipelineCompiler.class.getResource(resource);
         if(resourceUrl == null) {
             throw new IOException("Resource "+resource+" not found");
         }else{
@@ -44,7 +43,7 @@ public class LogStashConfigCompiler {
         }
     }
 
-    public static LogStashPipeline compileConfigString(String configStr) throws LogStashCompileException {
+    public static Pipeline compileConfigString(String configStr) throws LogStormException {
         return new LogStashPipelineProxy(new PipelineContext(configStr));
     }
 }

@@ -19,11 +19,10 @@ package com.ebay.logstorm.core.compiler.proxy;
 
 import com.ebay.logstorm.core.PipelineContext;
 import com.ebay.logstorm.core.compiler.*;
-import com.ebay.logstorm.core.exception.LogStashCompileException;
+import com.ebay.logstorm.core.exception.LogStormException;
 import org.apache.commons.lang3.time.StopWatch;
 import org.jruby.Ruby;
 import org.jruby.RubyArray;
-import org.jruby.RubyModule;
 import org.jruby.javasupport.JavaUtil;
 import org.jruby.runtime.Helpers;
 import org.jruby.runtime.builtin.IRubyObject;
@@ -33,32 +32,32 @@ import org.slf4j.LoggerFactory;
 import java.util.ArrayList;
 import java.util.List;
 
-public class LogStashPipelineProxy implements LogStashPipeline {
+public class LogStashPipelineProxy implements Pipeline {
     private final PipelineContext context;
     private final String logStashConfigStr;
     private Ruby rubyRuntime;
     private IRubyObject pipelineProxy;
-    private List<LogStashInput> inputs;
-    private List<LogStashFilter> filters;
-    private List<LogStashOutput> outputs;
+    private List<InputPlugin> inputs;
+    private List<FilterPlugin> filters;
+    private List<OutputPlugin> outputs;
     private Logger LOG = LoggerFactory.getLogger(LogStashPipelineProxy.class);
     private RubyArray outputsProxy;
     private RubyArray inputsProxy;
     private RubyArray filtersProxy;
 
-    public LogStashPipelineProxy(String pipelineConfigStr) throws LogStashCompileException {
+    public LogStashPipelineProxy(String pipelineConfigStr) throws LogStormException {
         this(new PipelineContext(pipelineConfigStr));
     }
 
-    public LogStashPipelineProxy(PipelineContext context) throws LogStashCompileException {
+    public LogStashPipelineProxy(PipelineContext context) throws LogStormException {
         this.context = context;
-        this.logStashConfigStr = this.context.getConfigString();
+        this.logStashConfigStr = this.context.getPipeline();
         try {
             rubyRuntime = RubyRuntimeFactory.getSingletonRuntime();
         }catch (Exception ex){
             LOG.error("Failed to bootstrap ruby runtime "+ex.getMessage(),ex);
             if(rubyRuntime !=null) rubyRuntime.shutdownTruffleContextIfRunning();
-            throw new LogStashCompileException("Failed to bootstrap ruby runtime",ex);
+            throw new LogStormException("Failed to bootstrap ruby runtime",ex);
         }
         StopWatch stopWatch = new StopWatch();
         try {
@@ -67,7 +66,7 @@ public class LogStashPipelineProxy implements LogStashPipeline {
         } catch (Exception ex){
             LOG.error("Failed to evaluate logstash configuration: "+this.logStashConfigStr,ex);
             if(rubyRuntime !=null)  rubyRuntime.shutdownTruffleContextIfRunning();
-            throw new LogStashCompileException("Failed to evaluate logstash configuration: "+this.logStashConfigStr,ex);
+            throw new LogStormException("Failed to evaluate logstash configuration: "+this.logStashConfigStr,ex);
         } finally {
             stopWatch.stop();
             LOG.info("Taken {} seconds to evaluate",stopWatch.getTime()/1000.0);
@@ -140,17 +139,17 @@ public class LogStashPipelineProxy implements LogStashPipeline {
     }
 
     @Override
-    public List<LogStashInput> getInputs(){
+    public List<InputPlugin> getInputs(){
         return inputs;
     }
 
     @Override
-    public List<LogStashFilter> getFilters(){
+    public List<FilterPlugin> getFilters(){
         return filters;
     }
 
     @Override
-    public List<LogStashOutput> getOutputs(){
+    public List<OutputPlugin> getOutputs(){
         return outputs;
     }
 

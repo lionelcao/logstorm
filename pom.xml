@@ -15,6 +15,7 @@
         <module>examples</module>
         <module>runners</module>
         <module>assembly</module>
+        <module>tools</module>
     </modules>
 
     <properties>

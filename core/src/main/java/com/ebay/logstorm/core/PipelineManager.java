@@ -18,9 +18,9 @@
 
 package com.ebay.logstorm.core;
 
-import com.ebay.logstorm.core.exception.LogStashCompileException;
-import com.ebay.logstorm.core.compiler.LogStashConfigCompiler;
-import com.ebay.logstorm.core.compiler.LogStashPipeline;
+import com.ebay.logstorm.core.exception.LogStormException;
+import com.ebay.logstorm.core.compiler.PipelineCompiler;
+import com.ebay.logstorm.core.compiler.Pipeline;
 import com.ebay.logstorm.core.runner.PipelineRunner;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
@@ -41,12 +41,12 @@ public class PipelineManager {
         return instance;
     }
 
-    public void submit(PipelineContext context, PipelineRunner runner) throws LogStashCompileException {
-        LogStashPipeline pipeline =  LogStashConfigCompiler.compile(context);
+    public void submit(PipelineContext context, PipelineRunner runner) throws LogStormException {
+        Pipeline pipeline =  PipelineCompiler.compile(context);
         runner.run(pipeline);
     }
 
-    public void submit(LogStashPipeline pipeline, PipelineRunner runner) throws LogStashCompileException {
+    public void submit(Pipeline pipeline, PipelineRunner runner) throws LogStormException {
         runner.run(pipeline);
     }
 }

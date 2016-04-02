@@ -1,6 +1,6 @@
 package com.ebay.logstorm.core.compiler.proxy;
 
-import com.ebay.logstorm.core.compiler.LogStashInput;
+import com.ebay.logstorm.core.compiler.InputPlugin;
 import com.ebay.logstorm.core.event.Collector;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -21,7 +21,7 @@ import org.slf4j.LoggerFactory;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class LogStashInputProxy extends LogStashPluginProxyBase implements LogStashInput {
+public class LogStashInputProxy extends LogStashPluginProxyBase implements InputPlugin {
     private Collector collector;
     private final static Logger LOG = LoggerFactory.getLogger(LogStashInputProxy.class);
 
