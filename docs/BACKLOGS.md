@@ -12,9 +12,13 @@ TODO
     * High Performance Local Runner
 * Replace default logstash message queue with [Disruptor](https://github.com/LMAX-Exchange/disruptor)
 * LogStash input/output plugin metadata model and scanner, which could be used to provide more friendly experience while defining pipeline.
-* Support to use LogStash as multi-stages pipeline
+* Finalize the project name currently using "LogStorm", including:
+    * Rename package name to `org.apache.projectName`
+    * Rename `PipelineContext` to `ProjectNameContext`
+* Support to use LogStash as multi-stages pipeline instead of simple input-filter-output
 
 Done
 ----
 * LogStash Pipeline Parser
 * LogStash Plugin Proxy API
+* Apache Storm Runner (http://storm.apache.org/)
