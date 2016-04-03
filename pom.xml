@@ -43,6 +43,7 @@
 
         <slf4j-api.version>1.7.19</slf4j-api.version>
         <slf4j-log4j12.version>1.7.19</slf4j-log4j12.version>
+        <fasterxml-jackson.version>2.6.0</fasterxml-jackson.version>
 
         <junit.version>4.11</junit.version>
         <jruby-complete.version>9.0.5.0</jruby-complete.version>
@@ -98,6 +99,12 @@
                 <artifactId>slf4j-log4j12</artifactId>
                 <version>${slf4j-log4j12.version}</version>
             </dependency>
+            <dependency>
+                <groupId>com.fasterxml.jackson.core</groupId>
+                <artifactId>jackson-annotations</artifactId>
+                <version>${fasterxml-jackson.version}</version>
+            </dependency>
+
             <dependency>
                 <groupId>commons-io</groupId>
                 <artifactId>commons-io</artifactId>

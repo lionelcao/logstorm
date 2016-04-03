@@ -2,6 +2,7 @@ package com.ebay.logstorm.server.controllers;
 
 import com.ebay.logstorm.core.compiler.Pipeline;
 import com.ebay.logstorm.core.compiler.PipelineCompiler;
+import com.ebay.logstorm.core.compiler.proxy.RubyRuntimeFactory;
 import com.ebay.logstorm.server.entities.PipelineEntity;
 import com.ebay.logstorm.server.services.PipelineEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -57,5 +58,11 @@ public class RestController extends BaseController{
         return RestResponse.async(() -> {
             return PipelineCompiler.compileConfigString(pipelineEntity.getPipeline());
         });
+    }
+
+    @RequestMapping(path = "/ruby",method = RequestMethod.GET)
+    public @ResponseBody
+    ResponseEntity<RestResponse<Object>> getEngineStatus(){
+        return RestResponse.async(()->RubyRuntimeFactory.getSingletonRuntime().getBeanManager());
     }
 }

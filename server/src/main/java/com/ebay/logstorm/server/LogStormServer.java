@@ -1,6 +1,7 @@
 package com.ebay.logstorm.server;
 
 import com.ebay.logstorm.core.compiler.proxy.RubyRuntimeFactory;
+import org.jruby.Ruby;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.boot.SpringApplication;

@@ -37,9 +37,6 @@ public class PipelineEntity {
     private Properties properties;
 
     @Column
-    private boolean locked = false;
-
-    @Column
     @Enumerated(EnumType.ORDINAL)
     private LogStormConstants.DeployMode deployMode = LogStormConstants.DeployMode.STANDALONE;
 
@@ -60,14 +57,6 @@ public class PipelineEntity {
 
     public void setPipeline(String pipeline) {
         this.pipeline = pipeline;
-    }
-
-    public boolean isLocked() {
-        return locked;
-    }
-
-    public void setLocked(boolean locked) {
-        this.locked = locked;
     }
 
     public LogStormConstants.DeployMode getDeployMode() {

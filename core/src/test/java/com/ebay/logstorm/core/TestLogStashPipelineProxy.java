@@ -49,7 +49,7 @@ public class TestLogStashPipelineProxy {
         InputPlugin input = proxy.getInputs().get(0);
         Assert.assertEquals(1,proxy.getInputsProxy().size());
         Assert.assertEquals(0,input.getIndex());
-        Assert.assertEquals(configStr,input.getConfigStr());
+        Assert.assertEquals(configStr,input.getPipeline());
         Assert.assertEquals("input_generator_0",input.getUniqueName());
     }
 

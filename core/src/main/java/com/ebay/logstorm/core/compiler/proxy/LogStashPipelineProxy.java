@@ -20,6 +20,7 @@ package com.ebay.logstorm.core.compiler.proxy;
 import com.ebay.logstorm.core.PipelineContext;
 import com.ebay.logstorm.core.compiler.*;
 import com.ebay.logstorm.core.exception.LogStormException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.time.StopWatch;
 import org.jruby.Ruby;
 import org.jruby.RubyArray;
@@ -35,14 +36,22 @@ import java.util.List;
 public class LogStashPipelineProxy implements Pipeline {
     private final PipelineContext context;
     private final String logStashConfigStr;
+    @JsonIgnore
     private Ruby rubyRuntime;
+    @JsonIgnore
     private IRubyObject pipelineProxy;
     private List<InputPlugin> inputs;
     private List<FilterPlugin> filters;
     private List<OutputPlugin> outputs;
-    private Logger LOG = LoggerFactory.getLogger(LogStashPipelineProxy.class);
+    private final Logger LOG = LoggerFactory.getLogger(LogStashPipelineProxy.class);
+
+    @JsonIgnore
     private RubyArray outputsProxy;
+
+    @JsonIgnore
     private RubyArray inputsProxy;
+
+    @JsonIgnore
     private RubyArray filtersProxy;
 
     public LogStashPipelineProxy(String pipelineConfigStr) throws LogStormException {

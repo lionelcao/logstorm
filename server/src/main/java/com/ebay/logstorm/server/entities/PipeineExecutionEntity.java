@@ -38,23 +38,6 @@ public class PipeineExecutionEntity {
     @Column
     private String trackingUrl = null;
 
-    /**
-     * Used to locking
-     */
-    @Column
-    private boolean locked = false;
-
-    /**
-     * Used for situation when locking is timeout
-     */
-    @Column
-    private long lockedTimestamp;
-
-    /**
-     * Who is holding the lock
-     */
-    @Column
-    private String lockHolder;
 
     public PipelineEntity getPipeline() {
         return pipeline;
@@ -71,14 +54,6 @@ public class PipeineExecutionEntity {
 
     public void setTrackingUrl(String trackingUrl) {
         this.trackingUrl = trackingUrl;
-    }
-
-    public boolean isLocked() {
-        return locked;
-    }
-
-    public void setLocked(boolean locked) {
-        this.locked = locked;
     }
 
     public PipelineStatus getStatus() {
@@ -103,21 +78,5 @@ public class PipeineExecutionEntity {
 
     public void setProperties(Properties properties) {
         this.properties = properties;
-    }
-
-    public long getLockedTimestamp() {
-        return lockedTimestamp;
-    }
-
-    public void setLockedTimestamp(long lockedTimestamp) {
-        this.lockedTimestamp = lockedTimestamp;
-    }
-
-    public String getLockHolder() {
-        return lockHolder;
-    }
-
-    public void setLockHolder(String lockHolder) {
-        this.lockHolder = lockHolder;
     }
 }

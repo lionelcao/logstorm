@@ -20,6 +20,7 @@ import com.ebay.logstorm.core.compiler.PipelineCompiler;
 import com.ebay.logstorm.core.exception.LogStormException;
 import com.ebay.logstorm.core.serializer.SnappyJSONSerializer;
 import com.ebay.logstorm.core.serializer.Serializer;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import com.typesafe.config.*;
 import org.apache.commons.io.FileUtils;
 
@@ -48,6 +49,7 @@ public class PipelineContext implements Serializable{
         this.config = ConfigFactory.load(); // .withValue("logstorm.pipeline.configstr",null);
     }
 
+    @JsonIgnore
     public Serializer getSerializer(){
         return DEFAULT_SERIALIZER;
     }

@@ -23,7 +23,7 @@ public interface LogStashPlugin extends Serializable {
     String getConfigName();
     String getUniqueName();
     String getDebugInfo();
-    String getConfigStr();
+    String getPipeline();
     String getPluginType();
 
     long getParallelism();

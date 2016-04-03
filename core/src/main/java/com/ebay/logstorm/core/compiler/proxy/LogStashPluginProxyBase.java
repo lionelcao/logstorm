@@ -3,6 +3,7 @@ package com.ebay.logstorm.core.compiler.proxy;
 import com.ebay.logstorm.core.LogStormConstants;
 import com.ebay.logstorm.core.compiler.LogStashPluginBase;
 import com.ebay.logstorm.core.exception.LogStashExecutionException;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jruby.runtime.builtin.IRubyObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -39,6 +40,7 @@ public abstract class LogStashPluginProxyBase extends LogStashPluginBase {
 
     public LogStashPluginProxyBase(){}
 
+    @JsonIgnore
     public LogStashPluginObjectProxy getProxy(){
         return rubyProxy;
     }

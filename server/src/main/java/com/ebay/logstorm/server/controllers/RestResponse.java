@@ -5,6 +5,7 @@ import com.ebay.logstorm.server.functions.UnhandledConsumer;
 import com.ebay.logstorm.server.functions.UnhandledSupplier;
 import com.fasterxml.jackson.annotation.JsonInclude;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.apache.commons.lang3.time.StopWatch;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -15,14 +16,15 @@ import java.util.function.Supplier;
 
 @JsonInclude(JsonInclude.Include.NON_NULL)
 public class RestResponse<T>{
-    private boolean success = false;
-    private String message;
-    private T data;
-    private String exception;
-    private Class<?> type;
-    private String path;
     private String version = LogStormConstants.CURRENT_VERSION;
     private Long timestamp;
+    private boolean success = false;
+    private String message;
+    private String exception;
+    private T data;
+    private Long spend;
+    private String path;
+    private Class<?> type;
 
     public T getData() {
         return data;
@@ -58,21 +60,31 @@ public class RestResponse<T>{
 
     public static <E> ResponseEntity<RestResponse<E>> of(Consumer<RestResponseBuilder<E>> func){
         RestResponseBuilder<E> builder = new RestResponseBuilder<>();
+        StopWatch stopWatch = new StopWatch();
         try {
+            stopWatch.start();
             builder.success(true).status(HttpStatus.OK);
             func.accept(builder);
         } catch (Exception ex){
             builder.success(false).data(null).status(HttpStatus.INTERNAL_SERVER_ERROR).message(ex.getMessage());
+        } finally {
+            stopWatch.stop();
+            builder.spend(stopWatch.getTime());
         }
         return builder.build();
     }
 
     public static <E> ResponseEntity<RestResponse<E>> of(Supplier<E> func){
         RestResponseBuilder<E> builder = new RestResponseBuilder<>();
+        StopWatch stopWatch = new StopWatch();
         try {
+            stopWatch.start();
             builder.success(true).status(HttpStatus.OK).data(func.get());
         } catch (Throwable ex){
             builder.success(false).status(HttpStatus.INTERNAL_SERVER_ERROR).message(ex.getMessage());
+        } finally {
+            stopWatch.stop();
+            builder.spend(stopWatch.getTime());
         }
         return builder.build();
     }
@@ -86,11 +98,13 @@ public class RestResponse<T>{
                 builder.success(false).status(HttpStatus.INTERNAL_SERVER_ERROR).message(e.getMessage()).exception(e);
             }
         });
-        return buildAsync(future,builder);
+        return runAsync(future,builder);
     }
 
-    private static <E> ResponseEntity<RestResponse<E>> buildAsync(CompletableFuture future,RestResponseBuilder<E> builder){
+    private static <E> ResponseEntity<RestResponse<E>> runAsync(CompletableFuture future, RestResponseBuilder<E> builder){
+        StopWatch stopWatch = new StopWatch();
         try {
+            stopWatch.start();
             future.get();
         } catch (InterruptedException ex) {
             Thread.currentThread().interrupt();
@@ -98,6 +112,9 @@ public class RestResponse<T>{
             builder.success(false).status(HttpStatus.INTERNAL_SERVER_ERROR).message(ex.getMessage()).exception(ex);
         } catch (Throwable ex) {
             builder.success(false).status(HttpStatus.INTERNAL_SERVER_ERROR).message(ex.getMessage()).exception(ex);
+        } finally {
+            stopWatch.stop();
+            builder.spend(stopWatch.getTime());
         }
         return builder.build();
     }
@@ -111,7 +128,7 @@ public class RestResponse<T>{
                 builder.success(false).status(HttpStatus.INTERNAL_SERVER_ERROR).message(ex.getMessage()).exception(ex);
             }
         });
-        return buildAsync(future,builder);
+        return runAsync(future,builder);
     }
 
     public String getException() {
@@ -158,6 +175,14 @@ public class RestResponse<T>{
         this.timestamp = timestamp;
     }
 
+    public Long getSpend() {
+        return spend;
+    }
+
+    public void setSpend(Long spend) {
+        this.spend = spend;
+    }
+
 
     public static class RestResponseBuilder<E>{
         RestResponse<E> response;
@@ -179,6 +204,7 @@ public class RestResponse<T>{
 
         public RestResponseBuilder<E> data(E data){
             this.response.setData(data);
+            if(data!=null) this.response.setType(data.getClass());
             return this;
         }
 
@@ -194,6 +220,11 @@ public class RestResponse<T>{
 
         public RestResponseBuilder<E> type(Class<?> clazz){
             this.response.setType(clazz);
+            return this;
+        }
+
+        public RestResponseBuilder<E> spend(Long spendMilis){
+            this.response.setSpend(spendMilis);
             return this;
         }
 

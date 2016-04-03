@@ -59,7 +59,7 @@ public abstract class LogStashPluginBase implements LogStashPlugin {
         this.context = context;
     }
 
-    public String getConfigStr() {
+    public String getPipeline() {
         return configStr;
     }
 
