@@ -22,7 +22,7 @@ public class RestResponse<T>{
     private String message;
     private String exception;
     private T data;
-    private Long spend;
+    private Long taken;
     private String path;
     private Class<?> type;
 
@@ -122,14 +122,13 @@ public class RestResponse<T>{
         this.timestamp = timestamp;
     }
 
-    public Long getSpend() {
-        return spend;
+    public Long getTaken() {
+        return taken;
     }
 
-    public void setSpend(Long spend) {
-        this.spend = spend;
+    public void setTaken(Long taken) {
+        this.taken = taken;
     }
-
 
     public static class RestResponseBuilder<E>{
         RestResponse<E> current;
@@ -171,8 +170,12 @@ public class RestResponse<T>{
             return this;
         }
 
-        public RestResponseBuilder<E> spend(Long spendMilis){
-            this.current.setSpend(spendMilis);
+        public RestResponseBuilder<E> spend(Long spendMillis){
+            return take(spendMillis);
+        }
+
+        public RestResponseBuilder<E> take(Long spendMillis){
+            this.current.setTaken(spendMillis);
             return this;
         }
 
