@@ -20,7 +20,7 @@ import java.util.Properties;
  * limitations under the License.
  */
 @Entity(name = "PipelineExecution")
-public class PipeineExecutionEntity {
+public class PipeineExecutionEntity  extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private String uuid;

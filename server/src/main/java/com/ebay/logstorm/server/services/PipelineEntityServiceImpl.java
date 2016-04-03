@@ -37,15 +37,34 @@ public class PipelineEntityServiceImpl implements PipelineEntityService {
        return this.pipelineEntityRepository.findAll(pageable);
     }
 
-    public Page<PipelineEntity> findPipelines(PipelineEntitySearchCriteria searchCriteria, Pageable pageable) {
-        if(searchCriteria.getId()!=null) {
-            return this.pipelineEntityRepository.findByUuid(searchCriteria.getId(),pageable);
+    public Page<PipelineEntity> searchPipelines(PipelineSearchCriteria searchCriteria, Pageable pageable) {
+        if(searchCriteria.getUuid()!=null) {
+            return this.pipelineEntityRepository.findOneByUuid(searchCriteria.getUuid(), pageable);
+        } if(searchCriteria.getName()!=null){
+            return this.pipelineEntityRepository.findOneByName(searchCriteria.getName(),pageable);
         }else{
             return findAll(pageable);
         }
     }
 
     public PipelineEntity createPipeline(PipelineEntity pipelineEntity) {
+        pipelineEntity.setAutoUuidIfNull();
         return this.pipelineEntityRepository.save(pipelineEntity);
+    }
+
+    @Override
+    public PipelineEntity updatePipeline(PipelineEntity pipelineEntity) {
+        return this.pipelineEntityRepository.save(pipelineEntity);
+    }
+
+    @Override
+    public Integer deletePipeline(PipelineEntity pipelineEntity) {
+        if(pipelineEntity.getUuid()!=null){
+            return this.pipelineEntityRepository.removeByUuid(pipelineEntity.getUuid());
+        }else if(pipelineEntity.getName()!=null) {
+            return this.pipelineEntityRepository.removeByName(pipelineEntity.getName());
+        } else {
+            throw new IllegalArgumentException("uuid and name are both null");
+        }
     }
 }

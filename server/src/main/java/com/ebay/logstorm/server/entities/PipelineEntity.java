@@ -22,9 +22,8 @@ import java.util.Properties;
  * limitations under the License.
  */
 @Entity(name = "Pipeline")
-public class PipelineEntity {
+public class PipelineEntity extends BaseEntity{
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private String uuid;
 
     @Column(unique = true,nullable = false)

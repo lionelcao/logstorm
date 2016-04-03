@@ -1,9 +1,7 @@
-package com.ebay.logstorm.server.services;
+package com.ebay.logstorm.server.controllers;
 
-import com.ebay.logstorm.server.entities.PipelineEntity;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.Repository;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -21,12 +19,9 @@ import org.springframework.data.repository.Repository;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public interface PipelineEntityRepository extends Repository<PipelineEntity, String> {
-    Page<PipelineEntity> findAll(Pageable pageable);
-    Page<PipelineEntity> findOneByUuid(String uuid,Pageable pageable);
-    Page<PipelineEntity> findOneByName(String name,Pageable pageable);
 
-    PipelineEntity save(PipelineEntity pipelineEntity);
-    Integer removeByUuid(String uuid);
-    Integer removeByName(String name);
+@Controller
+@RequestMapping("/api/cluster")
+public class ClusterController extends BaseController {
+    
 }

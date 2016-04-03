@@ -4,8 +4,6 @@ import com.ebay.logstorm.server.entities.PipelineEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
-import java.util.List;
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -24,6 +22,8 @@ import java.util.List;
  */
 public interface PipelineEntityService {
     Page<PipelineEntity> findAll(Pageable pageable);
-    Page<PipelineEntity> findPipelines(PipelineEntitySearchCriteria searchCriteria,Pageable pageable);
+    Page<PipelineEntity> searchPipelines(PipelineSearchCriteria searchCriteria, Pageable pageable);
     PipelineEntity createPipeline(PipelineEntity pipelineEntity);
+    PipelineEntity updatePipeline(PipelineEntity pipelineEntity);
+    Integer deletePipeline(PipelineEntity pipelineEntity);
 }

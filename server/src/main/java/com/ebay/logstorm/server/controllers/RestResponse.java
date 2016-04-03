@@ -51,91 +51,38 @@ public class RestResponse<T>{
     }
 
     public static <E> RestResponseBuilder<E> builder(){
-        return new RestResponseBuilder<E>();
+        return new RestResponseBuilder<>();
     }
 
     public static <E> RestResponseBuilder<E> of(E data){
-        return new RestResponseBuilder<E>().data(data);
+        return RestResponse.<E>builder().data(data);
     }
 
-    public static <E> ResponseEntity<RestResponse<E>> of(Consumer<RestResponseBuilder<E>> func){
-        RestResponseBuilder<E> builder = new RestResponseBuilder<>();
-        StopWatch stopWatch = new StopWatch();
-        try {
-            stopWatch.start();
-            builder.success(true).status(HttpStatus.OK);
-            func.accept(builder);
-        } catch (Exception ex){
-            builder.success(false).data(null).status(HttpStatus.INTERNAL_SERVER_ERROR).message(ex.getMessage());
-        } finally {
-            stopWatch.stop();
-            builder.spend(stopWatch.getTime());
-        }
-        return builder.build();
+    public static <E> RestResponseBuilder<E> of(Consumer<RestResponseBuilder<E>> func){
+        return RestResponse.<E>builder().of(func);
     }
 
-    public static <E> ResponseEntity<RestResponse<E>> of(Supplier<E> func){
-        RestResponseBuilder<E> builder = new RestResponseBuilder<>();
-        StopWatch stopWatch = new StopWatch();
-        try {
-            stopWatch.start();
-            builder.success(true).status(HttpStatus.OK).data(func.get());
-        } catch (Throwable ex){
-            builder.success(false).status(HttpStatus.INTERNAL_SERVER_ERROR).message(ex.getMessage());
-        } finally {
-            stopWatch.stop();
-            builder.spend(stopWatch.getTime());
-        }
-        return builder.build();
+    public static <E> RestResponseBuilder<E> of(Supplier<E> func){
+        return RestResponse.<E>builder().of(func);
     }
 
-    public static <E> ResponseEntity<RestResponse<E>> async(UnhandledSupplier<E,Exception> func) {
-        final RestResponseBuilder<E> builder = new RestResponseBuilder<>();
-        CompletableFuture future = CompletableFuture.runAsync(() -> {
-            try {
-                builder.data(func.get()).status(HttpStatus.OK).success(true);
-            } catch (Throwable e) {
-                builder.success(false).status(HttpStatus.INTERNAL_SERVER_ERROR).message(e.getMessage()).exception(e);
-            }
-        });
-        return runAsync(future,builder);
+    public static <E> RestResponseBuilder<E> async(UnhandledSupplier<E,Exception> func) {
+        return RestResponse.<E>builder().async(func);
     }
 
-    private static <E> ResponseEntity<RestResponse<E>> runAsync(CompletableFuture future, RestResponseBuilder<E> builder){
-        StopWatch stopWatch = new StopWatch();
-        try {
-            stopWatch.start();
-            future.get();
-        } catch (InterruptedException ex) {
-            Thread.currentThread().interrupt();
-            future.cancel(true);
-            builder.success(false).status(HttpStatus.INTERNAL_SERVER_ERROR).message(ex.getMessage()).exception(ex);
-        } catch (Throwable ex) {
-            builder.success(false).status(HttpStatus.INTERNAL_SERVER_ERROR).message(ex.getMessage()).exception(ex);
-        } finally {
-            stopWatch.stop();
-            builder.spend(stopWatch.getTime());
-        }
-        return builder.build();
+    public static <E> RestResponseBuilder<E> async(UnhandledConsumer<RestResponseBuilder<E>, Exception> func){
+        return RestResponse.<E>builder().async(func);
     }
 
-    public static <E> ResponseEntity<RestResponse<E>> async(UnhandledConsumer<RestResponseBuilder<E>, Exception> func){
-        final RestResponseBuilder<E> builder = new RestResponseBuilder<>();
-        CompletableFuture future = CompletableFuture.runAsync(() -> {
-            try {
-                func.accept(builder);
-            } catch (Throwable ex) {
-                builder.success(false).status(HttpStatus.INTERNAL_SERVER_ERROR).message(ex.getMessage()).exception(ex);
-            }
-        });
-        return runAsync(future,builder);
+    public static <E> RestResponseBuilder<E> verbose(boolean verbose) {
+        return RestResponse.<E>builder().verbose(verbose);
     }
 
     public String getException() {
         return exception;
     }
 
-    public void setException(Throwable exception) {
+    public void setThrowable(Throwable exception) {
         this.setException(ExceptionUtils.getStackTrace(exception));
     }
 
@@ -185,26 +132,27 @@ public class RestResponse<T>{
 
 
     public static class RestResponseBuilder<E>{
-        RestResponse<E> response;
+        RestResponse<E> current;
         HttpStatus status = HttpStatus.OK;
+        boolean verbose;
 
         public RestResponseBuilder(){
-            response = new RestResponse<>();
+            current = new RestResponse<>();
         }
 
         public RestResponseBuilder<E> success(boolean success){
-            this.response.setSuccess(success);
+            this.current.setSuccess(success);
             return this;
         }
 
         public RestResponseBuilder<E> message(String message){
-            this.response.setMessage(message);
+            this.current.setMessage(message);
             return this;
         }
 
         public RestResponseBuilder<E> data(E data){
-            this.response.setData(data);
-            if(data!=null) this.response.setType(data.getClass());
+            this.current.setData(data);
+            if(data!=null) this.current.setType(data.getClass());
             return this;
         }
 
@@ -213,25 +161,120 @@ public class RestResponse<T>{
             return this;
         }
         public RestResponseBuilder<E> exception(Throwable exception){
-            this.response.setException(exception);
-            this.response.setType(exception.getClass());
+            this.current.setThrowable(exception);
+            this.current.setType(exception.getClass());
             return this;
         }
 
         public RestResponseBuilder<E> type(Class<?> clazz){
-            this.response.setType(clazz);
+            this.current.setType(clazz);
             return this;
         }
 
         public RestResponseBuilder<E> spend(Long spendMilis){
-            this.response.setSpend(spendMilis);
+            this.current.setSpend(spendMilis);
             return this;
         }
 
-        public ResponseEntity<RestResponse<E>> build(){
-            this.response.setPath(BaseController.getCurrentRequest().getRequestURI());
-            this.response.setTimestamp(System.currentTimeMillis());
-            return new ResponseEntity<>(this.response, this.status);
+        public RestResponseBuilder<E> verbose(boolean verbose){
+            this.verbose = verbose;
+            return this;
+        }
+
+        public RestResponseBuilder<E> of(Consumer<RestResponseBuilder<E>> func){
+            StopWatch stopWatch = new StopWatch();
+            try {
+                stopWatch.start();
+                this.success(true).status(HttpStatus.OK);
+                func.accept(this);
+            } catch (Exception ex){
+                this.success(false).data(null).status(HttpStatus.INTERNAL_SERVER_ERROR).message(ex.getMessage());
+            } finally {
+                stopWatch.stop();
+                this.spend(stopWatch.getTime());
+            }
+            return this;
+        }
+
+        public RestResponseBuilder<E>  of(Supplier<E> func){
+            StopWatch stopWatch = new StopWatch();
+            try {
+                stopWatch.start();
+                this.success(true).status(HttpStatus.OK).data(func.get());
+            } catch (Throwable ex){
+                this.success(false).status(HttpStatus.INTERNAL_SERVER_ERROR).message(ex.getMessage());
+            } finally {
+                stopWatch.stop();
+                this.spend(stopWatch.getTime());
+            }
+            return this;
+        }
+
+        public RestResponseBuilder<E> async(UnhandledSupplier<E,Exception> func) {
+            CompletableFuture future = CompletableFuture.runAsync(() -> {
+                try {
+                    this.status(HttpStatus.OK).success(true).data(func.get());
+                } catch (Throwable e) {
+                    this.success(false).status(HttpStatus.INTERNAL_SERVER_ERROR).message(e.getMessage()).exception(e);
+                }
+            });
+            runAsync(future);
+            return this;
+        }
+
+        private void runAsync(CompletableFuture future){
+            StopWatch stopWatch = new StopWatch();
+            try {
+                stopWatch.start();
+                future.get();
+            } catch (InterruptedException ex) {
+                Thread.currentThread().interrupt();
+                future.cancel(true);
+                this.success(false).status(HttpStatus.INTERNAL_SERVER_ERROR).message(ex.getMessage()).exception(ex);
+            } catch (Throwable ex) {
+                this.success(false).status(HttpStatus.INTERNAL_SERVER_ERROR).message(ex.getMessage()).exception(ex);
+            } finally {
+                stopWatch.stop();
+                this.spend(stopWatch.getTime());
+            }
+        }
+
+        public RestResponseBuilder<E> async(UnhandledConsumer<RestResponseBuilder<E>, Exception> func){
+            CompletableFuture future = CompletableFuture.runAsync(() -> {
+                try {
+                    func.accept(this);
+                    this.success(true);
+                } catch (Throwable ex) {
+                    this.success(false).status(HttpStatus.INTERNAL_SERVER_ERROR).message(ex.getMessage()).exception(ex);
+                }
+            });
+            runAsync(future);
+            return this;
+        }
+
+        public RestResponseBuilder<E> then(UnhandledConsumer<RestResponseBuilder<E>, Exception> func){
+            try {
+                func.accept(this);
+            } catch (Throwable ex) {
+                this.success(false).status(HttpStatus.INTERNAL_SERVER_ERROR).message(ex.getMessage()).exception(ex);
+            }
+            return this;
+        }
+
+        public ResponseEntity<RestResponse<E>> result(){
+            this.current.setPath(BaseController.getCurrentRequest().getRequestURI());
+            this.current.setTimestamp(System.currentTimeMillis());
+            if(!this.verbose){
+                this.current.setException(null);
+                this.current.setPath(null);
+            }
+            return new ResponseEntity<>(this.current, this.status);
+        }
+
+        public RestResponseBuilder<E> status(boolean success, HttpStatus status) {
+            this.success(success);
+            this.status(status);
+            return this;
         }
     }
 }

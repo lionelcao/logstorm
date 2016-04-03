@@ -20,9 +20,8 @@ import java.util.Properties;
  * limitations under the License.
  */
 @Entity(name = "Cluster")
-public class ClusterEntity{
+public class ClusterEntity extends BaseEntity{
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private String uuid;
 
     @Column(nullable = false)
