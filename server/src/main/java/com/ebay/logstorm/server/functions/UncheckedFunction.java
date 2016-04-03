@@ -1,11 +1,4 @@
-package com.ebay.logstorm.server.services;
-
-import com.ebay.logstorm.server.entities.PipelineEntity;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.Repository;
-
-import java.util.Optional;
+package com.ebay.logstorm.server.functions;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -23,14 +16,14 @@ import java.util.Optional;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public interface PipelineEntityRepository extends Repository<PipelineEntity, String> {
-    Page<PipelineEntity> findAll(Pageable pageable);
-    Page<PipelineEntity> findOneByUuid(String uuid,Pageable pageable);
-    Page<PipelineEntity> findOneByName(String name,Pageable pageable);
+@FunctionalInterface
+public interface UncheckedFunction<T, R> {
 
-    PipelineEntity save(PipelineEntity pipelineEntity);
-    Integer removeByUuid(String uuid);
-    Integer removeByName(String name);
-
-    Optional<PipelineEntity> findOneByUuid(String uuid);
+    /**
+     * Applies this function to the given argument.
+     *
+     * @param t the function argument
+     * @return the function result
+     */
+    R apply(T t) throws Exception;
 }

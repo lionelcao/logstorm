@@ -23,7 +23,7 @@ public abstract class BaseEntity {
 
     public abstract void setUuid(String uuid);
 
-    public void setAutoUuidIfNull() {
+    public void ensureDefault() {
         if(this.getUuid() == null){
             this.setUuid(UUID.randomUUID().toString());
         }

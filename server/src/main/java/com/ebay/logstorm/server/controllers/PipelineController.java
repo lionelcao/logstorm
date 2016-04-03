@@ -2,9 +2,11 @@ package com.ebay.logstorm.server.controllers;
 
 import com.ebay.logstorm.core.compiler.Pipeline;
 import com.ebay.logstorm.core.compiler.PipelineCompiler;
+import com.ebay.logstorm.server.entities.PipeineExecutionEntity;
 import com.ebay.logstorm.server.entities.PipelineEntity;
-import com.ebay.logstorm.server.services.PipelineSearchCriteria;
+import com.ebay.logstorm.server.functions.UncheckedFunction;
 import com.ebay.logstorm.server.services.PipelineEntityService;
+import com.ebay.logstorm.server.services.PipelineSearchCriteria;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -17,6 +19,7 @@ import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Optional;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -54,23 +57,6 @@ public class PipelineController extends BaseController{
         return RestResponse.async(()->pipelineEntityService.searchPipelines(searchCriteria,pageable).getContent()).result();
     }
 
-    @RequestMapping(path = "/{uuid}",method= RequestMethod.GET)
-    @Transactional(readOnly = true)
-    public @ResponseBody
-    ResponseEntity<RestResponse<PipelineEntity>> getPipeline(
-            @PathVariable String uuid) {
-        PipelineSearchCriteria searchCriteria = new PipelineSearchCriteria();
-        searchCriteria.setUuid(uuid);
-        return RestResponse.<PipelineEntity>async((response)->{
-            List<PipelineEntity> list = pipelineEntityService.searchPipelines(searchCriteria,null).getContent();
-            if(list == null || list.size()==0){
-                response.status(false,HttpStatus.NOT_FOUND);
-            }else{
-                response.data(list.get(0)).success(true);
-            }
-        }).result();
-    }
-
     @RequestMapping(method= RequestMethod.POST)
     @Transactional
     public @ResponseBody
@@ -103,5 +89,61 @@ public class PipelineController extends BaseController{
     public @ResponseBody
     ResponseEntity<RestResponse<Pipeline>> compilePipeline(@RequestBody PipelineEntity pipelineEntity){
         return RestResponse.async(() -> PipelineCompiler.compileConfigString(pipelineEntity.getPipeline())).result();
+    }
+
+    @RequestMapping(path = "/{uuid}",method= RequestMethod.GET)
+    @Transactional(readOnly = true)
+    public @ResponseBody
+    ResponseEntity<RestResponse<PipelineEntity>> getPipeline(
+            @PathVariable String uuid) {
+        PipelineSearchCriteria searchCriteria = new PipelineSearchCriteria();
+        searchCriteria.setUuid(uuid);
+        return RestResponse.<PipelineEntity>async((response)->{
+            List<PipelineEntity> list = pipelineEntityService.searchPipelines(searchCriteria,null).getContent();
+            if(list == null || list.size()==0){
+                response.status(false,HttpStatus.NOT_FOUND);
+            }else{
+                response.data(list.get(0)).success(true);
+            }
+        }).result();
+    }
+
+    @RequestMapping(path = "/{uuid}/compile",method = RequestMethod.POST)
+    public @ResponseBody
+    ResponseEntity<RestResponse<Pipeline>> compilePipeline(@PathVariable String uuid){
+        return RestResponse.async(() -> withPipeline(uuid,(pipeline) -> PipelineCompiler.compileConfigString(pipeline.getPipeline()))).result();
+    }
+
+    private <T> T withPipeline(String uuid, UncheckedFunction<PipelineEntity,T> func) throws Exception {
+        Optional<PipelineEntity> entity = pipelineEntityService.getPipelineByUuid(uuid);
+        if(entity.isPresent()) {
+            return func.apply(entity.get());
+        }else{
+            throw new IllegalArgumentException("Pipeline [ uuid='"+uuid+"'] not found");
+        }
+    }
+
+    @RequestMapping(path = "/{uuid}/start",method = RequestMethod.POST)
+    public @ResponseBody
+    ResponseEntity<RestResponse<PipeineExecutionEntity>> startPipeline(@RequestBody PipelineEntity pipelineEntity){
+        return null;
+    }
+
+    @RequestMapping(path = "/{uuid}/stop",method = RequestMethod.POST)
+    public @ResponseBody
+    ResponseEntity<RestResponse<PipeineExecutionEntity>> stopPipeline(@RequestBody PipelineEntity pipelineEntity){
+        return null;
+    }
+
+    @RequestMapping(path = "/{uuid}/restart/",method = RequestMethod.POST)
+    public @ResponseBody
+    ResponseEntity<RestResponse<PipeineExecutionEntity>> restartPipeline(@RequestBody PipelineEntity pipelineEntity){
+        return null;
+    }
+
+    @RequestMapping(path = "/{uuid}/rescale",method = RequestMethod.POST)
+    public @ResponseBody
+    ResponseEntity<RestResponse<PipeineExecutionEntity>> rescalePipeline(@RequestBody PipelineEntity pipelineEntity){
+        return null;
     }
 }

@@ -4,6 +4,8 @@ import com.ebay.logstorm.server.entities.PipelineEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 
+import java.util.Optional;
+
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -26,4 +28,6 @@ public interface PipelineEntityService {
     PipelineEntity createPipeline(PipelineEntity pipelineEntity);
     PipelineEntity updatePipeline(PipelineEntity pipelineEntity);
     Integer deletePipeline(PipelineEntity pipelineEntity);
+
+    Optional<PipelineEntity> getPipelineByUuid(String uuid);
 }

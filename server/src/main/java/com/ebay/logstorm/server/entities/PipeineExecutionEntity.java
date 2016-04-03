@@ -38,7 +38,6 @@ public class PipeineExecutionEntity  extends BaseEntity {
     @Column
     private String trackingUrl = null;
 
-
     public PipelineEntity getPipeline() {
         return pipeline;
     }
@@ -78,5 +77,11 @@ public class PipeineExecutionEntity  extends BaseEntity {
 
     public void setProperties(Properties properties) {
         this.properties = properties;
+    }
+
+    @Override
+    public void ensureDefault() {
+        this.setStatus(PipelineStatus.UNKNOWN);
+        super.ensureDefault();
     }
 }

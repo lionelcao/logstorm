@@ -7,6 +7,8 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
+
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -48,7 +50,7 @@ public class PipelineEntityServiceImpl implements PipelineEntityService {
     }
 
     public PipelineEntity createPipeline(PipelineEntity pipelineEntity) {
-        pipelineEntity.setAutoUuidIfNull();
+        pipelineEntity.ensureDefault();
         return this.pipelineEntityRepository.save(pipelineEntity);
     }
 
@@ -66,5 +68,10 @@ public class PipelineEntityServiceImpl implements PipelineEntityService {
         } else {
             throw new IllegalArgumentException("uuid and name are both null");
         }
+    }
+
+    @Override
+    public Optional<PipelineEntity> getPipelineByUuid(String uuid) {
+        return this.pipelineEntityRepository.findOneByUuid(uuid);
     }
 }
