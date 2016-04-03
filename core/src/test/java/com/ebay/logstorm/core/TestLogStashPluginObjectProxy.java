@@ -2,7 +2,7 @@ package com.ebay.logstorm.core;
 
 import com.ebay.logstorm.core.compiler.proxy.LogStashPipelineProxy;
 import com.ebay.logstorm.core.compiler.proxy.LogStashPluginObjectProxy;
-import com.ebay.logstorm.core.exception.LogStormException;
+import com.ebay.logstorm.core.exception.PipelineException;
 import com.ebay.logstorm.core.utils.SerializableUtils;
 import org.jruby.RubyObject;
 import org.jruby.runtime.builtin.Variable;
@@ -33,7 +33,7 @@ import java.util.List;
 public class TestLogStashPluginObjectProxy {
     private final static Logger LOG = LoggerFactory.getLogger(TestLogStashPluginObjectProxy.class);
     @Test
-    public void testRubyObjectProxy() throws LogStormException {
+    public void testRubyObjectProxy() throws PipelineException {
         String configStr = "input { generator { threads => 10 lines => [ \"GET /user 0.98\",\"GET /user 1.98\",\"GET /user 2.98\"] count => 3}}";
         LogStashPipelineProxy proxy = new LogStashPipelineProxy(configStr);
 

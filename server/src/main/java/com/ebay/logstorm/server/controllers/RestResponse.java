@@ -264,7 +264,7 @@ public class RestResponse<T>{
             return this;
         }
 
-        public ResponseEntity<RestResponse<E>> result(){
+        public ResponseEntity<RestResponse<E>> get(){
             this.current.setPath(BaseController.getCurrentRequest().getRequestURI());
             this.current.setTimestamp(System.currentTimeMillis());
             if(!this.verbose){

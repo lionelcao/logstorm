@@ -6,7 +6,7 @@ import com.ebay.logstorm.core.compiler.OutputPlugin;
 import com.ebay.logstorm.core.compiler.proxy.LogStashPipelineProxy;
 import com.ebay.logstorm.core.event.Event;
 import com.ebay.logstorm.core.event.MemoryCollector;
-import com.ebay.logstorm.core.exception.LogStormException;
+import com.ebay.logstorm.core.exception.PipelineException;
 import com.ebay.logstorm.core.utils.SerializableUtils;
 import org.junit.Assert;
 import org.junit.Before;
@@ -40,12 +40,12 @@ public class TestLogStashPipelineProxy {
             "output { stdout { codec => rubydebug } }";
 
     @Before
-    public void setUp() throws LogStormException {
+    public void setUp() throws PipelineException {
         proxy = new LogStashPipelineProxy(configStr);
     }
 
     @Test
-    public void testSingleInputProxy() throws LogStormException {
+    public void testSingleInputProxy() throws PipelineException {
         InputPlugin input = proxy.getInputs().get(0);
         Assert.assertEquals(1,proxy.getInputsProxy().size());
         Assert.assertEquals(0,input.getIndex());

@@ -2,7 +2,7 @@ package com.ebay.logstorm.core.compiler.proxy;
 
 import com.ebay.logstorm.core.LogStormConstants;
 import com.ebay.logstorm.core.compiler.LogStashPluginBase;
-import com.ebay.logstorm.core.exception.LogStashExecutionException;
+import com.ebay.logstorm.core.exception.PipelineExecutionException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.jruby.runtime.builtin.IRubyObject;
 import org.slf4j.Logger;
@@ -61,7 +61,7 @@ public abstract class LogStashPluginProxyBase extends LogStashPluginBase {
             } else if (LogStormConstants.PluginType.isOutputPlugin(this)) {
                 this.rubyProxy = new LogStashPluginObjectProxy((IRubyObject) pipelineProxy.getOutputsProxy().get(this.getIndex()));
             } else {
-                throw new LogStashExecutionException("Illegal plugin type: " + this);
+                throw new PipelineExecutionException("Illegal plugin type: " + this);
             }
             LOG.info("Initialized '{}': {}",this.getUniqueName(),this.getProxy());
         } else {

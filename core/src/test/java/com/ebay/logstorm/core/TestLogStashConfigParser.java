@@ -1,6 +1,6 @@
 package com.ebay.logstorm.core;
 
-import com.ebay.logstorm.core.exception.LogStormException;
+import com.ebay.logstorm.core.exception.PipelineException;
 import com.ebay.logstorm.core.compiler.PipelineCompiler;
 import com.ebay.logstorm.core.compiler.Pipeline;
 import org.junit.Assert;
@@ -26,11 +26,11 @@ import java.io.IOException;
  */
 public class TestLogStashConfigParser {
     @Test
-    public void testSimpleConfigureCompile() throws IOException, LogStormException {
+    public void testSimpleConfigureCompile() throws IOException, PipelineException {
         Pipeline pipeline = PipelineCompiler.compileResource("/simple-generator-stdout.txt");
         Assert.assertNotNull(pipeline);
         Assert.assertEquals(1,pipeline.getInputs().size());
         Assert.assertEquals(1,pipeline.getOutputs().size());
-        Assert.assertEquals(0,pipeline.getFilters().size());
+        Assert.assertEquals(1,pipeline.getFilters().size());
     }
 }

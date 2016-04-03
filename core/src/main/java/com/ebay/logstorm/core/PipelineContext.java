@@ -17,7 +17,7 @@
 package com.ebay.logstorm.core;
 
 import com.ebay.logstorm.core.compiler.PipelineCompiler;
-import com.ebay.logstorm.core.exception.LogStormException;
+import com.ebay.logstorm.core.exception.PipelineException;
 import com.ebay.logstorm.core.serializer.SnappyJSONSerializer;
 import com.ebay.logstorm.core.serializer.Serializer;
 import com.fasterxml.jackson.annotation.JsonIgnore;
@@ -88,7 +88,7 @@ public class PipelineContext implements Serializable{
         this.pipelineName = pipelineName;
     }
 
-    public static PipelineContextBuilder pipelineResource(String pipelineResource) throws IOException, LogStormException {
+    public static PipelineContextBuilder pipelineResource(String pipelineResource) throws IOException, PipelineException {
         URL resourceUrl = PipelineCompiler.class.getResource(pipelineResource);
         if(resourceUrl == null) {
             throw new IOException("Pipeline resource "+pipelineResource+" not found");
@@ -97,7 +97,7 @@ public class PipelineContext implements Serializable{
         }
     }
 
-    public static PipelineContextBuilder pipeline(String pipeline) throws LogStormException {
+    public static PipelineContextBuilder pipeline(String pipeline) throws PipelineException {
         return new PipelineContextBuilder(pipeline);
     }
 

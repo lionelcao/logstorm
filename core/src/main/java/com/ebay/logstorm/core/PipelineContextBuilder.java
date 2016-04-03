@@ -1,7 +1,7 @@
 package com.ebay.logstorm.core;
 
 import com.ebay.logstorm.core.compiler.PipelineCompiler;
-import com.ebay.logstorm.core.exception.LogStormException;
+import com.ebay.logstorm.core.exception.PipelineException;
 import com.ebay.logstorm.core.runner.PipelineRunner;
 import com.typesafe.config.Config;
 import org.slf4j.Logger;
@@ -45,9 +45,9 @@ public class PipelineContextBuilder{
     /**
      * Keep single final submit method
      *
-     * @throws LogStormException
+     * @throws PipelineException
      */
-    public final void submit() throws LogStormException {
+    public final void submit() throws PipelineException {
         if(this.runner == null){
             LOG.info("No runner set, use default runner: "+ LogStormConstants.DEFAULT_RUNNER_CLASS_NAME);
             this.runner(LogStormConstants.DEFAULT_RUNNER_CLASS_NAME);
@@ -65,12 +65,12 @@ public class PipelineContextBuilder{
         }
     }
 
-    public void submit(Class<? extends PipelineRunner> runnerClass) throws LogStormException {
+    public void submit(Class<? extends PipelineRunner> runnerClass) throws PipelineException {
         this.runner(runnerClass);
         submit();
     }
 
-    public void submit(PipelineRunner runner) throws LogStormException {
+    public void submit(PipelineRunner runner) throws PipelineException {
         this.runner = runner;
         submit();
     }

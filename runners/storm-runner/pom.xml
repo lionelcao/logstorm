@@ -38,5 +38,15 @@
             <groupId>com.google.guava</groupId>
             <artifactId>guava</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.ebay.logstorm</groupId>
+            <artifactId>logstorm-core</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+        <dependency>
+            <groupId>com.ebay.logstorm</groupId>
+            <artifactId>logstorm-server</artifactId>
+            <version>${project.version}</version>
+        </dependency>
     </dependencies>
 </project>

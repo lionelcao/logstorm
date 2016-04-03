@@ -19,7 +19,7 @@ package com.ebay.logstorm.core.compiler.proxy;
 
 import com.ebay.logstorm.core.PipelineContext;
 import com.ebay.logstorm.core.compiler.*;
-import com.ebay.logstorm.core.exception.LogStormException;
+import com.ebay.logstorm.core.exception.PipelineException;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import org.apache.commons.lang3.time.StopWatch;
 import org.jruby.Ruby;
@@ -54,11 +54,11 @@ public class LogStashPipelineProxy implements Pipeline {
     @JsonIgnore
     private RubyArray filtersProxy;
 
-    public LogStashPipelineProxy(String pipelineConfigStr) throws LogStormException {
+    public LogStashPipelineProxy(String pipelineConfigStr) throws PipelineException {
         this(new PipelineContext(pipelineConfigStr));
     }
 
-    public LogStashPipelineProxy(PipelineContext context) throws LogStormException {
+    public LogStashPipelineProxy(PipelineContext context) throws PipelineException {
         this.context = context;
         this.logStashConfigStr = this.context.getPipeline();
         try {
@@ -66,7 +66,7 @@ public class LogStashPipelineProxy implements Pipeline {
         }catch (Exception ex){
             LOG.error("Failed to bootstrap ruby runtime "+ex.getMessage(),ex);
             if(rubyRuntime !=null) rubyRuntime.shutdownTruffleContextIfRunning();
-            throw new LogStormException("Failed to bootstrap ruby runtime",ex);
+            throw new PipelineException("Failed to bootstrap ruby runtime",ex);
         }
         StopWatch stopWatch = new StopWatch();
         try {
@@ -75,7 +75,7 @@ public class LogStashPipelineProxy implements Pipeline {
         } catch (Exception ex){
             LOG.error("Failed to evaluate logstash configuration: "+this.logStashConfigStr,ex);
             if(rubyRuntime !=null)  rubyRuntime.shutdownTruffleContextIfRunning();
-            throw new LogStormException("Failed to evaluate logstash configuration: "+this.logStashConfigStr,ex);
+            throw new PipelineException("Failed to evaluate logstash configuration: "+this.logStashConfigStr,ex);
         } finally {
             stopWatch.stop();
             LOG.info("Taken {} seconds to evaluate",stopWatch.getTime()/1000.0);

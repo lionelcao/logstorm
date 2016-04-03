@@ -3,7 +3,7 @@ package com.ebay.logstorm.runner.storm;
 import backtype.storm.utils.Utils;
 import com.ebay.logstorm.core.LogStormConstants;
 import com.ebay.logstorm.core.PipelineContext;
-import com.ebay.logstorm.core.exception.LogStormException;
+import com.ebay.logstorm.core.exception.PipelineException;
 import org.junit.After;
 import org.junit.Test;
 
@@ -27,7 +27,7 @@ import java.io.IOException;
  */
 public class TestStormPipelineRunner {
     @Test
-    public void testStormSimplestPipelineTopologyBuilder() throws IOException, LogStormException {
+    public void testStormSimplestPipelineTopologyBuilder() throws IOException, PipelineException {
         PipelineContext.pipeline(
             "input { generator { lines => [ \"GET /user 0.98\",\"GET /user 1.98\",\"GET /user 2.98\"] count => 3}}"     +
             "filter{ grok { add_field => { \"new_field\" => \"new_value\"}}}"+
@@ -36,7 +36,7 @@ public class TestStormPipelineRunner {
     }
 
     @Test
-    public void testStormFluentPipelineTopologyBuilder() throws LogStormException {
+    public void testStormFluentPipelineTopologyBuilder() throws PipelineException {
         PipelineContext.builder()
             .input("generator{ lines => [\"GET /user 0.98\",\"GET /user 1.98\",\"GET /user 2.98\"] count => 3 }")
             .filter("grok { add_field => { \"new_field\" => \"new_value\"}}")
@@ -45,7 +45,7 @@ public class TestStormPipelineRunner {
     }
 
     @Test
-    public void testStormResourcePipelineTopologyBuilder() throws IOException, LogStormException {
+    public void testStormResourcePipelineTopologyBuilder() throws IOException, PipelineException {
         PipelineContext.pipelineResource("/simple-generator-stdout.txt")
             .name("simple-generator-stdout-pipeline")
             .runner(StormPipelineRunner.class)
@@ -54,7 +54,7 @@ public class TestStormPipelineRunner {
     }
 
     @Test
-    public void testStormInlinePipelineTopologyBuilder() throws LogStormException {
+    public void testStormInlinePipelineTopologyBuilder() throws PipelineException {
         PipelineContext.pipeline(
                 "input { generator { lines => [ \"GET /user 0.98\",\"GET /user 1.98\",\"GET /user 2.98\"] count => 3}}"     +
                 "filter{ grok { add_field => { \"new_field\" => \"new_value\" } } }"+

@@ -1,6 +1,8 @@
 package com.ebay.logstorm.server.services;
 
 import com.ebay.logstorm.server.entities.PipelineEntity;
+import com.ebay.logstorm.server.entities.PipelineExecutionEntity;
+import org.springframework.data.repository.Repository;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -18,35 +20,8 @@ import com.ebay.logstorm.server.entities.PipelineEntity;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public interface PipelineManagementService {
-    /**
-     *
-     * @param pipeline
-     */
-    void deploy(PipelineEntity pipeline);
+public interface PipelineExecutionRepository extends Repository<PipelineExecutionEntity, String> {
+    PipelineExecutionEntity save(PipelineExecutionEntity pipelineEntity);
 
-    /**
-     *
-     * @param pipeline
-     */
-    void start(PipelineEntity pipeline);
-
-    /**
-     *
-     * @param pipeline
-     */
-    void stop(PipelineEntity pipeline);
-
-    /**
-     *
-     * @param pipeline
-     */
-    void suspend(PipelineEntity pipeline);
-
-    /**
-     * re-balance or scale pipeline according new configuration
-     *
-     * @param pipeline
-     */
-    void scale(PipelineEntity pipeline);
+    PipelineExecutionEntity update(PipelineExecutionEntity executionEntity);
 }

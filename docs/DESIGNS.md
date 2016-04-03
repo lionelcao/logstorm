@@ -16,13 +16,34 @@
 * Web Framework: Spring boot (version: 1.3.3-RELEASE)
 * Front-end Framework: Bootstrap Theme and AdminLTE
 
+## Target Customers
+* Simply Submit logstash configuration directly as distributed streaming application on storm/spark/flink, etc.
+* Simply Submit logstash configuration directly on web ui
+* Program logstash-based distrbuted application with Java API
+* Use LogStash as Native API/Library using Java interface.
+* Pipeline  lifecyle(start/stop/status/rescale) management on web ui
+
+## Command-Line Design
+
+`logstorm-submit`
+
+## Web UI Design
+* Submit: pipeline content + selected cluster
+* Pipeline (Lifecyle Management): define pipeline + deploy execution + status checking
+* Environment: environment name, type, properties, master
+* Configuration: Server configuration
+
+## Streaming Platform Adapter Interface
+* Runner (for simply submitting with shell or web ui)
+* Platform (for rich pipeline  lifecyle(start/stop/status/rescale) management on web ui)
+
 ## REST API Design
 
-### Authentication
+### Security/Authentication
 > Basic Authentication: https://en.wikipedia.org/wiki/Basic_access_authentication
 	
 	Authorization: Basic QWxhZGRpbjpPcGVuU2VzYW1l
-        	
+	
 ### Request/Response Structure
 * Request:
 	
@@ -49,8 +70,7 @@
 * `GET /api/pipeline/{id}/status`
 * `POST /api/pipeline/{id}/start`
 * `POST /api/pipeline/{id}/stop`
-* `POST /api/pipeline/{id}/scale`
-* `POST /api/pipeline/{id}/suspend`
+* `POST /api/pipeline/{id}/rescale`
 
 ### Plugin Metadata API (Optional)
 * `GET /api/plugin/input`: list all input plugins

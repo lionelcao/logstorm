@@ -1,4 +1,7 @@
-package com.ebay.logstorm.core.exception;
+package com.ebay.logstorm.platform.storm;
+
+import com.ebay.logstorm.server.entities.PipelineExecutionEntity;
+import com.ebay.logstorm.server.platform.ExecutionEnvironment;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -16,11 +19,20 @@ package com.ebay.logstorm.core.exception;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class LogStormException extends Exception{
-    public LogStormException(String msg, Throwable throwable){
-        super(msg,throwable);
+public class StormEnvironment implements ExecutionEnvironment {
+
+    @Override
+    public void start(PipelineExecutionEntity entity) throws Exception {
+
     }
-    public LogStormException(String s) {
-        super(s);
+
+    @Override
+    public void stop(PipelineExecutionEntity entity) throws Exception {
+
+    }
+
+    @Override
+    public void status(PipelineExecutionEntity entity) throws Exception {
+
     }
 }

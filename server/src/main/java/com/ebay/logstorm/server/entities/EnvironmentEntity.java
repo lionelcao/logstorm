@@ -1,5 +1,7 @@
 package com.ebay.logstorm.server.entities;
 
+import com.ebay.logstorm.server.platform.ExecutionEnvironment;
+
 import javax.persistence.*;
 import java.util.Properties;
 
@@ -20,7 +22,7 @@ import java.util.Properties;
  * limitations under the License.
  */
 @Entity(name = "Cluster")
-public class ClusterEntity extends BaseEntity{
+public class EnvironmentEntity extends BaseEntity{
     @Id
     private String uuid;
 
@@ -63,5 +65,9 @@ public class ClusterEntity extends BaseEntity{
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public ExecutionEnvironment getScheduleService() {
+        throw new RuntimeException("Not implemented");
     }
 }

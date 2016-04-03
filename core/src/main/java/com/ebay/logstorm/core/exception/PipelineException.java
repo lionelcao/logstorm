@@ -16,8 +16,11 @@ package com.ebay.logstorm.core.exception;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class LogStashExecutionException extends Exception {
-    public LogStashExecutionException(String s) {
+public class PipelineException extends Exception{
+    public PipelineException(String msg, Throwable throwable){
+        super(msg,throwable);
+    }
+    public PipelineException(String s) {
         super(s);
     }
 }

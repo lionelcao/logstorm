@@ -25,7 +25,7 @@ import java.util.Optional;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@Component("pipelineService")
+@Component("pipelineEntityService")
 @Transactional
 public class PipelineEntityServiceImpl implements PipelineEntityService {
     private final PipelineEntityRepository pipelineEntityRepository;

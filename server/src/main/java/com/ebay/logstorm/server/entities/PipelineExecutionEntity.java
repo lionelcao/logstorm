@@ -20,23 +20,32 @@ import java.util.Properties;
  * limitations under the License.
  */
 @Entity(name = "PipelineExecution")
-public class PipeineExecutionEntity  extends BaseEntity {
+public class PipelineExecutionEntity extends BaseEntity {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private String uuid;
 
-    @OneToOne
+    @OneToOne @MapsId
     private PipelineEntity pipeline;
 
     @Column
     private Properties properties;
 
     @Column
+    private long createdTimestamp;
+
+    @Column
+    private long modifiedTimestamp;
+
+    @Column
     @Enumerated(EnumType.ORDINAL)
-    private PipelineStatus status;
+    private PipelineExecutionStatus status;
 
     @Column
     private String trackingUrl = null;
+
+    @Column
+    private String description;
 
     public PipelineEntity getPipeline() {
         return pipeline;
@@ -46,7 +55,6 @@ public class PipeineExecutionEntity  extends BaseEntity {
         this.pipeline = pipeline;
     }
 
-
     public String getTrackingUrl() {
         return trackingUrl;
     }
@@ -55,11 +63,11 @@ public class PipeineExecutionEntity  extends BaseEntity {
         this.trackingUrl = trackingUrl;
     }
 
-    public PipelineStatus getStatus() {
+    public PipelineExecutionStatus getStatus() {
         return status;
     }
 
-    public void setStatus(PipelineStatus status) {
+    public void setStatus(PipelineExecutionStatus status) {
         this.status = status;
     }
 
@@ -79,9 +87,46 @@ public class PipeineExecutionEntity  extends BaseEntity {
         this.properties = properties;
     }
 
+    public void setProperty(String key, String value) {
+        this.properties.setProperty(key,value);
+    }
+
     @Override
     public void ensureDefault() {
-        this.setStatus(PipelineStatus.UNKNOWN);
+        this.setStatus(PipelineExecutionStatus.INITIALIZED);
+        this.setProperties(new Properties());
+        if(this.createdTimestamp == 0) this.updateCreatedTimestamp();
+        if(this.modifiedTimestamp == 0) this.updateModifiedTimestamp();
         super.ensureDefault();
+    }
+
+    public String getDescription() {
+        return description;
+    }
+
+    public void setDescription(String description) {
+        this.description = description;
+    }
+
+    public long getModifiedTimestamp() {
+        return modifiedTimestamp;
+    }
+
+    public void setModifiedTimestamp(long modifiedTimestamp) {
+        this.modifiedTimestamp = modifiedTimestamp;
+    }
+
+    public long getCreatedTimestamp() {
+        return createdTimestamp;
+    }
+
+    public void setCreatedTimestamp(long createdTimestamp) {
+        this.createdTimestamp = createdTimestamp;
+    }
+    public void updateCreatedTimestamp() {
+        this.createdTimestamp = System.currentTimeMillis();
+    }
+    public void updateModifiedTimestamp() {
+        this.modifiedTimestamp = System.currentTimeMillis();
     }
 }

@@ -16,11 +16,25 @@ package com.ebay.logstorm.server.entities;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public enum PipelineStatus {
+public enum PipelineExecutionStatus {
     UNKNOWN,
     INITIALIZED,
     STARTING, RUNNING,
     STOPPING, STOPPED,
-    REBALANCING,
-    FAILED
+    RESCALING,
+    FAILED;
+
+    public static boolean isReadyToStart(PipelineExecutionStatus status){
+        return status.equals(INITIALIZED) ||
+                status.equals(STOPPED) ||
+                status.equals(FAILED);
+    }
+
+    public static boolean isReadyToStop(PipelineExecutionStatus status){
+        return status.equals(RUNNING);
+    }
+
+    public static boolean isReadyToScale(PipelineExecutionStatus status){
+        return status.equals(RUNNING);
+    }
 }

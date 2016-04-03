@@ -14,12 +14,4 @@
     <modules>
         <module>storm-runner</module>
     </modules>
-
-    <dependencies>
-        <dependency>
-            <groupId>com.ebay.logstorm</groupId>
-            <artifactId>logstorm-core</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-    </dependencies>
 </project>

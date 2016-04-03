@@ -1,6 +1,7 @@
 package com.ebay.logstorm.server.entities;
 
 import com.ebay.logstorm.core.LogStormConstants;
+import com.ebay.logstorm.server.platform.ExecutionEnvironment;
 
 import javax.persistence.*;
 import java.util.Properties;
@@ -40,7 +41,7 @@ public class PipelineEntity extends BaseEntity{
     private LogStormConstants.DeployMode deployMode = LogStormConstants.DeployMode.STANDALONE;
 
     @OneToOne
-    private ClusterEntity deployCluster;
+    private EnvironmentEntity deployEnvironment;
 
     public String getName() {
         return name;
@@ -66,12 +67,12 @@ public class PipelineEntity extends BaseEntity{
         this.deployMode = deployMode;
     }
 
-    public ClusterEntity getDeployCluster() {
-        return deployCluster;
+    public EnvironmentEntity getDeployEnvironment() {
+        return deployEnvironment;
     }
 
-    public void setDeployCluster(ClusterEntity deployCluster) {
-        this.deployCluster = deployCluster;
+    public void setDeployEnvironment(EnvironmentEntity deployEnvironment) {
+        this.deployEnvironment = deployEnvironment;
     }
 
     public Properties getProperties() {
@@ -88,5 +89,9 @@ public class PipelineEntity extends BaseEntity{
 
     public void setUuid(String uuid) {
         this.uuid = uuid;
+    }
+
+    public ExecutionEnvironment getPlatform() {
+        throw new RuntimeException("Not implemented yet");
     }
 }

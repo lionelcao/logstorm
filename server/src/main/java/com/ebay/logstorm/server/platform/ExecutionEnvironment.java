@@ -1,12 +1,6 @@
-package com.ebay.logstorm.server.controllers;
+package com.ebay.logstorm.server.platform;
 
-import com.ebay.logstorm.core.compiler.proxy.RubyRuntimeFactory;
-import org.jruby.management.BeanManager;
-import org.springframework.http.ResponseEntity;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import com.ebay.logstorm.server.entities.PipelineExecutionEntity;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -23,13 +17,11 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ *
  */
-@Controller
-@RequestMapping("/api/system")
-public class SystemController extends BaseController {
-    @RequestMapping(path = "/ruby",method = RequestMethod.GET)
-    public @ResponseBody
-    ResponseEntity<RestResponse<BeanManager>> getEngineStatus(){
-        return RestResponse.async(()-> RubyRuntimeFactory.getSingletonRuntime().getBeanManager()).get();
-    }
+public interface ExecutionEnvironment {
+    void start(PipelineExecutionEntity entity) throws Exception;
+    void stop(PipelineExecutionEntity entity) throws Exception;
+    void status(PipelineExecutionEntity entity) throws Exception;
 }
