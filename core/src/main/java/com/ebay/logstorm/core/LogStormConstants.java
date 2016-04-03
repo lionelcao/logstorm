@@ -20,7 +20,8 @@ import java.io.Serializable;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class PipelineConstants {
+public class LogStormConstants {
+    public final static String CURRENT_VERSION = "0.1-SNAPSHOT";
 
     public final static DeployMode DEFAULT_DEPLOY_MODE = DeployMode.STANDALONE;
     public final static String DEFAULT_RUNNER_CLASS_NAME = "com.ebay.logstorm.runner.storm.StormPipelineRunner";

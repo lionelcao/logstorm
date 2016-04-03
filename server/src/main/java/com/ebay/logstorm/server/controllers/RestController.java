@@ -1,15 +1,20 @@
 package com.ebay.logstorm.server.controllers;
 
+import com.ebay.logstorm.core.compiler.Pipeline;
+import com.ebay.logstorm.core.compiler.PipelineCompiler;
 import com.ebay.logstorm.server.entities.PipelineEntity;
 import com.ebay.logstorm.server.services.PipelineEntityService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.List;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -36,13 +41,21 @@ public class RestController extends BaseController{
     @RequestMapping(path = "/pipeline",method= RequestMethod.GET)
     @Transactional(readOnly = true)
     public @ResponseBody
-    RestResponse listPipelines(@PageableDefault(value = 50) Pageable pageable) {
+    ResponseEntity<RestResponse<List<PipelineEntity>>> listPipelines(@PageableDefault(value = 50) Pageable pageable) {
         return RestResponse.of(()->pipelineEntityService.findAll(pageable).getContent());
     }
 
     @RequestMapping(path = "/pipeline",method= RequestMethod.POST)
     public @ResponseBody
-    RestResponse createPipeline(PipelineEntity pipelineEntity) {
+    ResponseEntity<RestResponse<PipelineEntity>> createPipeline(PipelineEntity pipelineEntity) {
         return RestResponse.of(() -> pipelineEntityService.createPipeline(pipelineEntity));
+    }
+
+    @RequestMapping(path = "/pipeline/compile",method = RequestMethod.POST)
+    public @ResponseBody
+    ResponseEntity<RestResponse<Pipeline>> compilePipeline(PipelineEntity pipelineEntity){
+        return RestResponse.async(() -> {
+            return PipelineCompiler.compileConfigString(pipelineEntity.getPipeline());
+        });
     }
 }

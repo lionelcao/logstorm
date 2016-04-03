@@ -1,9 +1,4 @@
-package com.ebay.logstorm.server.controllers;
-
-import org.springframework.web.context.request.RequestContextHolder;
-import org.springframework.web.context.request.ServletRequestAttributes;
-
-import javax.servlet.http.HttpServletRequest;
+package com.ebay.logstorm.server.functions;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -20,9 +15,15 @@ import javax.servlet.http.HttpServletRequest;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
+ * @see java.util.function.Supplier
  */
-public class BaseController {
-    public static HttpServletRequest getCurrentRequest() {
-        return ((ServletRequestAttributes) RequestContextHolder.currentRequestAttributes()).getRequest();
-    }
+@FunctionalInterface
+public interface UnhandledSupplier<T, E extends Exception> {
+    /**
+     * Gets a result.
+     *
+     * @return a result
+     */
+    T get() throws E;
 }

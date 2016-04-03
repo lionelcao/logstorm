@@ -49,8 +49,8 @@ public class PipelineContextBuilder{
      */
     public final void submit() throws LogStormException {
         if(this.runner == null){
-            LOG.info("No runner set, use default runner: "+PipelineConstants.DEFAULT_RUNNER_CLASS_NAME);
-            this.runner(PipelineConstants.DEFAULT_RUNNER_CLASS_NAME);
+            LOG.info("No runner set, use default runner: "+ LogStormConstants.DEFAULT_RUNNER_CLASS_NAME);
+            this.runner(LogStormConstants.DEFAULT_RUNNER_CLASS_NAME);
         }
         validate();
         this.runner.run(PipelineCompiler.compile(this.pipelineContext));
@@ -85,7 +85,7 @@ public class PipelineContextBuilder{
         return this;
     }
 
-    public PipelineContextBuilder deploy(PipelineConstants.DeployMode mode){
+    public PipelineContextBuilder deploy(LogStormConstants.DeployMode mode){
         this.pipelineContext.setDeployMode(mode);
         return this;
     }

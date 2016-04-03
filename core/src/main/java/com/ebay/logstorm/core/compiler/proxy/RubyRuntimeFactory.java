@@ -35,7 +35,7 @@ public class RubyRuntimeFactory {
     public static Ruby getSingletonRuntime(){
         if(runtime == null) {
             runtime = Ruby.getGlobalRuntime();
-            LOG.info("New ruby runtime instance: "+runtime);
+            LOG.info("Creating ruby runtime: "+runtime);
             String rubyGemHome = String.format("%s/vendor/bundle/jruby/%s", LOGSTASH_HOME, JRUBY_VERSION);
             String bootstrap = "";
             bootstrap += String.format("ENV[\"%s\"] = \"%s\";\n", "LOGSTASH_HOME", LOGSTASH_HOME);

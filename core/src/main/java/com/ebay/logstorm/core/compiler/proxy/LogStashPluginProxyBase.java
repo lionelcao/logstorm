@@ -1,6 +1,6 @@
 package com.ebay.logstorm.core.compiler.proxy;
 
-import com.ebay.logstorm.core.PipelineConstants;
+import com.ebay.logstorm.core.LogStormConstants;
 import com.ebay.logstorm.core.compiler.LogStashPluginBase;
 import com.ebay.logstorm.core.exception.LogStashExecutionException;
 import org.jruby.runtime.builtin.IRubyObject;
@@ -52,11 +52,11 @@ public abstract class LogStashPluginProxyBase extends LogStashPluginBase {
     public void initialize() throws Exception {
         if(this.rubyProxy == null) {
             LogStashPipelineProxy pipelineProxy = new LogStashPipelineProxy(this.getContext());
-            if (PipelineConstants.PluginType.isInputPlugin(this)) {
+            if (LogStormConstants.PluginType.isInputPlugin(this)) {
                 this.rubyProxy = new LogStashPluginObjectProxy((IRubyObject) pipelineProxy.getInputsProxy().get(this.getIndex()));
-            } else if (PipelineConstants.PluginType.isFilterPlugin(this)) {
+            } else if (LogStormConstants.PluginType.isFilterPlugin(this)) {
                 this.rubyProxy = new LogStashPluginObjectProxy((IRubyObject) pipelineProxy.getFiltersProxy().get(this.getIndex()));
-            } else if (PipelineConstants.PluginType.isOutputPlugin(this)) {
+            } else if (LogStormConstants.PluginType.isOutputPlugin(this)) {
                 this.rubyProxy = new LogStashPluginObjectProxy((IRubyObject) pipelineProxy.getOutputsProxy().get(this.getIndex()));
             } else {
                 throw new LogStashExecutionException("Illegal plugin type: " + this);

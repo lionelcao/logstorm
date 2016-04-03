@@ -1,7 +1,6 @@
 package com.ebay.logstorm.server.entities;
 
 import javax.persistence.*;
-import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -39,8 +38,23 @@ public class PipeineExecutionEntity {
     @Column
     private String trackingUrl = null;
 
+    /**
+     * Used to locking
+     */
     @Column
     private boolean locked = false;
+
+    /**
+     * Used for situation when locking is timeout
+     */
+    @Column
+    private long lockedTimestamp;
+
+    /**
+     * Who is holding the lock
+     */
+    @Column
+    private String lockHolder;
 
     public PipelineEntity getPipeline() {
         return pipeline;
@@ -89,5 +103,21 @@ public class PipeineExecutionEntity {
 
     public void setProperties(Properties properties) {
         this.properties = properties;
+    }
+
+    public long getLockedTimestamp() {
+        return lockedTimestamp;
+    }
+
+    public void setLockedTimestamp(long lockedTimestamp) {
+        this.lockedTimestamp = lockedTimestamp;
+    }
+
+    public String getLockHolder() {
+        return lockHolder;
+    }
+
+    public void setLockHolder(String lockHolder) {
+        this.lockHolder = lockHolder;
     }
 }

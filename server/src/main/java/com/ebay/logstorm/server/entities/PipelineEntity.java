@@ -1,6 +1,6 @@
 package com.ebay.logstorm.server.entities;
 
-import com.ebay.logstorm.core.PipelineConstants;
+import com.ebay.logstorm.core.LogStormConstants;
 
 import javax.persistence.*;
 import java.util.Properties;
@@ -41,7 +41,7 @@ public class PipelineEntity {
 
     @Column
     @Enumerated(EnumType.ORDINAL)
-    private PipelineConstants.DeployMode deployMode = PipelineConstants.DeployMode.STANDALONE;
+    private LogStormConstants.DeployMode deployMode = LogStormConstants.DeployMode.STANDALONE;
 
     @OneToOne
     private ClusterEntity deployCluster;
@@ -70,11 +70,11 @@ public class PipelineEntity {
         this.locked = locked;
     }
 
-    public PipelineConstants.DeployMode getDeployMode() {
+    public LogStormConstants.DeployMode getDeployMode() {
         return deployMode;
     }
 
-    public void setDeployMode(PipelineConstants.DeployMode deployMode) {
+    public void setDeployMode(LogStormConstants.DeployMode deployMode) {
         this.deployMode = deployMode;
     }
 

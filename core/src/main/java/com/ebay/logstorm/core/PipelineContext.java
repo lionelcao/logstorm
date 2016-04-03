@@ -18,13 +18,10 @@ package com.ebay.logstorm.core;
 
 import com.ebay.logstorm.core.compiler.PipelineCompiler;
 import com.ebay.logstorm.core.exception.LogStormException;
-import com.ebay.logstorm.core.runner.PipelineRunner;
 import com.ebay.logstorm.core.serializer.SnappyJSONSerializer;
 import com.ebay.logstorm.core.serializer.Serializer;
 import com.typesafe.config.*;
 import org.apache.commons.io.FileUtils;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
 
 import java.io.File;
 import java.io.IOException;
@@ -42,7 +39,7 @@ public class PipelineContext implements Serializable{
      */
     private String pipeline = null;
     private String pipelineName = "LOGSTORM_APP_"+ UUID.randomUUID();
-    private PipelineConstants.DeployMode deployMode = PipelineConstants.DEFAULT_DEPLOY_MODE;
+    private LogStormConstants.DeployMode deployMode = LogStormConstants.DEFAULT_DEPLOY_MODE;
 
     public PipelineContext(){}
 
@@ -114,15 +111,15 @@ public class PipelineContext implements Serializable{
         return new PipelineContextBuilder();
     }
 
-    public PipelineConstants.DeployMode getDeployMode() {
+    public LogStormConstants.DeployMode getDeployMode() {
         return deployMode;
     }
 
-    public void setDeployMode(PipelineConstants.DeployMode deployMode) {
+    public void setDeployMode(LogStormConstants.DeployMode deployMode) {
         this.deployMode = deployMode;
     }
 
     public void setDeployMode(String mode) {
-        this.setDeployMode(PipelineConstants.DeployMode.locate(mode));
+        this.setDeployMode(LogStormConstants.DeployMode.locate(mode));
     }
 }

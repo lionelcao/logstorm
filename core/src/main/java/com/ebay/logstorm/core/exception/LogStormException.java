@@ -20,8 +20,6 @@ public class LogStormException extends Exception{
     public LogStormException(String msg, Throwable throwable){
         super(msg,throwable);
     }
-
-
     public LogStormException(String s) {
         super(s);
     }

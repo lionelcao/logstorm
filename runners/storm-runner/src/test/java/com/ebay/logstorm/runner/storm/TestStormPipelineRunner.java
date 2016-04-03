@@ -1,7 +1,7 @@
 package com.ebay.logstorm.runner.storm;
 
 import backtype.storm.utils.Utils;
-import com.ebay.logstorm.core.PipelineConstants;
+import com.ebay.logstorm.core.LogStormConstants;
 import com.ebay.logstorm.core.PipelineContext;
 import com.ebay.logstorm.core.exception.LogStormException;
 import org.junit.After;
@@ -49,7 +49,7 @@ public class TestStormPipelineRunner {
         PipelineContext.pipelineResource("/simple-generator-stdout.txt")
             .name("simple-generator-stdout-pipeline")
             .runner(StormPipelineRunner.class)
-            .deploy(PipelineConstants.DeployMode.STANDALONE)
+            .deploy(LogStormConstants.DeployMode.STANDALONE)
             .submit();
     }
 
