@@ -25,7 +25,7 @@ import org.springframework.web.bind.annotation.ResponseBody;
  * limitations under the License.
  */
 @Controller
-@RequestMapping("/api/system")
+@RequestMapping("/api")
 public class SystemController extends BaseController {
     @RequestMapping(path = "/ruby",method = RequestMethod.GET)
     public @ResponseBody
