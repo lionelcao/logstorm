@@ -30,19 +30,23 @@ import org.jruby.runtime.builtin.IRubyObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.beans.Transient;
 import java.util.ArrayList;
 import java.util.List;
 
 public class LogStashPipelineProxy implements Pipeline {
     private final PipelineContext context;
     private final String logStashConfigStr;
+
     @JsonIgnore
     private Ruby rubyRuntime;
+
     @JsonIgnore
     private IRubyObject pipelineProxy;
     private List<InputPlugin> inputs;
     private List<FilterPlugin> filters;
     private List<OutputPlugin> outputs;
+
     private final Logger LOG = LoggerFactory.getLogger(LogStashPipelineProxy.class);
 
     @JsonIgnore

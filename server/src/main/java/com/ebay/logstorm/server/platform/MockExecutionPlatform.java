@@ -2,6 +2,8 @@ package com.ebay.logstorm.server.platform;
 
 import com.ebay.logstorm.server.entities.PipelineEntity;
 
+import java.util.Properties;
+
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -19,6 +21,11 @@ import com.ebay.logstorm.server.entities.PipelineEntity;
  * limitations under the License.
  */
 public class MockExecutionPlatform implements ExecutionPlatform {
+
+    @Override
+    public void init(Properties properties) {
+
+    }
 
     @Override
     public String getTypeName() {

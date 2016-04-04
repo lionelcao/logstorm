@@ -8,6 +8,8 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
+
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -58,5 +60,11 @@ public class ClusterController extends BaseController {
     public @ResponseBody
     ResponseEntity<RestResponse<ClusterEntity>> getClusterEntity(@PathVariable String uuidOrName) {
         return RestResponse.async(() -> entityService.getClusterByUuidOrName(uuidOrName,uuidOrName)).get();
+    }
+    @RequestMapping(method= RequestMethod.GET)
+    @Transactional(readOnly = true)
+    public @ResponseBody
+    ResponseEntity<RestResponse<List<ClusterEntity>>> getAllClusters() {
+        return RestResponse.async(() -> entityService.getAllClusters()).get();
     }
 }

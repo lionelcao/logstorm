@@ -8,6 +8,8 @@ import com.google.common.base.Preconditions;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
+import java.util.List;
+
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -35,6 +37,7 @@ public class ClusterEntityServiceImpl implements ClusterEntityService {
 
     @Override
     public ClusterEntity createCluster(ClusterEntity clusterEntity) {
+        clusterEntity.ensureDefault();
         return entityRepository.save(clusterEntity);
     }
 
@@ -57,5 +60,10 @@ public class ClusterEntityServiceImpl implements ClusterEntityService {
     public ClusterEntity getClusterByUuidOrName(String uuid, String name) throws Exception {
         Preconditions.checkArgument(uuid!=null || name!=null,"uuid and name are both null");
         return entityRepository.findOneByUuidOrName(uuid,name).orElseThrow(()-> new PipelineException("No cluster found for uuid = "+uuid+" or name = '"+name+"'"));
+    }
+
+    @Override
+    public List<ClusterEntity> getAllClusters() {
+        return entityRepository.findAll();
     }
 }

@@ -1,6 +1,9 @@
 package com.ebay.logstorm.server.entities;
 
 import com.ebay.logstorm.server.platform.ExecutionPlatform;
+import com.ebay.logstorm.server.platform.ExecutionPlatformFactory;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.google.common.base.Preconditions;
 
 import javax.persistence.*;
 import java.util.Properties;
@@ -29,16 +32,8 @@ public class ClusterEntity extends BaseEntity{
     @Column(nullable = false, unique = true)
     private String name;
 
-    /**
-     * ExecutionEnvironment type class name
-     *
-     * @see ExecutionPlatform
-     */
     @Column(nullable = false)
-    private String type;
-
-    @Column(nullable = false)
-    private String className;
+    private String adapterClass;
 
     @Column(nullable = true)
     private Properties properties;
@@ -52,7 +47,11 @@ public class ClusterEntity extends BaseEntity{
     }
 
     public String getType() {
-        return type;
+        if(getPlatformInstance()!=null){
+            return getPlatformInstance().getTypeName();
+        }else {
+            return null;
+        }
     }
 
     public String getName() {
@@ -71,19 +70,28 @@ public class ClusterEntity extends BaseEntity{
         this.uuid = uuid;
     }
 
-    public ExecutionPlatform getPlatform() {
-        throw new RuntimeException("Not implemented");
+    @JsonIgnore
+    public ExecutionPlatform getPlatformInstance() {
+        if(perInstanceCache == null && getAdapterClass()!=null) {
+            perInstanceCache = ExecutionPlatformFactory.newPlatformInstance(getAdapterClass(), this.getProperties());
+        }
+        return perInstanceCache;
     }
 
-    public String getClassName() {
-        return className;
+    public String getAdapterClass() {
+        return adapterClass;
     }
 
-    public void setClassName(String className) {
-        this.className = className;
+    public void setAdapterClass(String adapterClass) {
+        try {
+            Preconditions.checkArgument(ExecutionPlatform.class.isAssignableFrom(Class.forName(adapterClass)));
+        } catch (ClassNotFoundException e) {
+            throw new RuntimeException(e);
+        }
+        this.adapterClass = adapterClass;
     }
 
-    protected void setType(String type) {
-        this.type = type;
-    }
+    @JsonIgnore
+    @Transient
+    private ExecutionPlatform perInstanceCache;
 }

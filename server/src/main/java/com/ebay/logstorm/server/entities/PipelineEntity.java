@@ -1,7 +1,11 @@
 package com.ebay.logstorm.server.entities;
 
 import com.ebay.logstorm.core.LogStormConstants;
+import com.ebay.logstorm.core.compiler.Pipeline;
+import com.ebay.logstorm.core.compiler.PipelineCompiler;
+import com.ebay.logstorm.core.exception.PipelineException;
 import com.ebay.logstorm.server.platform.ExecutionPlatform;
+import com.ebay.logstorm.server.platform.ExecutionPlatformFactory;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
@@ -95,11 +99,6 @@ public class PipelineEntity extends BaseEntity {
         this.uuid = uuid;
     }
 
-    @JsonIgnore
-    public ExecutionPlatform getPlatform() {
-        throw new RuntimeException("Not implemented yet");
-    }
-
     public PipelineExecutionEntity getExecution() {
         return execution;
     }
@@ -107,4 +106,10 @@ public class PipelineEntity extends BaseEntity {
     public void setExecution(PipelineExecutionEntity executionContext) {
         this.execution = executionContext;
     }
+
+    @Override
+    public String toString() {
+        return String.format("Pipeline[uuid=%s, name=%s, pipeline=%s]",this.getUuid(),this.getName(),this.getPipeline());
+    }
+
 }

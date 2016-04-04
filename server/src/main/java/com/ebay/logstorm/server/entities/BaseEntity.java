@@ -1,5 +1,8 @@
 package com.ebay.logstorm.server.entities;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+
 import java.util.UUID;
 
 /**
@@ -26,6 +29,21 @@ public abstract class BaseEntity {
     public void ensureDefault() {
         if(this.getUuid() == null){
             this.setUuid(UUID.randomUUID().toString());
+        }
+    }
+
+    public String toJson() throws JsonProcessingException {
+        return objectMapper.writeValueAsString(this);
+    }
+
+    private final static ObjectMapper objectMapper = new ObjectMapper();
+
+    @Override
+    public String toString() {
+        try {
+            return toJson();
+        } catch (JsonProcessingException e) {
+            return super.toString();
         }
     }
 }

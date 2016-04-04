@@ -2,6 +2,9 @@ package com.ebay.logstorm.server.services;
 
 import com.ebay.logstorm.core.exception.PipelineException;
 import com.ebay.logstorm.server.entities.ClusterEntity;
+import com.ebay.logstorm.server.platform.ExecutionPlatform;
+
+import java.util.List;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -29,4 +32,6 @@ public interface ClusterEntityService {
     Integer deleteClusterByName(String name);
 
     ClusterEntity getClusterByUuidOrName(String uuid, String name) throws Exception;
+
+    List<ClusterEntity> getAllClusters();
 }

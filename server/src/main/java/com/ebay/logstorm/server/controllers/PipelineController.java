@@ -3,6 +3,7 @@ package com.ebay.logstorm.server.controllers;
 import com.ebay.logstorm.core.compiler.Pipeline;
 import com.ebay.logstorm.core.compiler.PipelineCompiler;
 import com.ebay.logstorm.server.entities.PipelineEntity;
+import com.ebay.logstorm.server.entities.PipelineExecutionEntity;
 import com.ebay.logstorm.server.services.PipelineEntityService;
 import com.ebay.logstorm.server.services.PipelineExecutionService;
 import com.ebay.logstorm.server.services.PipelineSearchCriteria;
@@ -98,6 +99,20 @@ public class PipelineController extends BaseController{
     public @ResponseBody
     ResponseEntity<RestResponse<PipelineEntity>> getPipeline(@PathVariable String uuidOrName) {
         return RestResponse.async(()-> entityService.getPipelineByUuidOrNameOrThrow(uuidOrName,uuidOrName)).get();
+    }
+
+    @RequestMapping(path = "/{uuidOrName}/compiled",method= RequestMethod.GET)
+    @Transactional(readOnly = true)
+    public @ResponseBody
+    ResponseEntity<RestResponse<Pipeline>> getCompiledPipeline(@PathVariable String uuidOrName) {
+        return RestResponse.async(()-> PipelineCompiler.compileConfigString(entityService.getPipelineByUuidOrNameOrThrow(uuidOrName,uuidOrName).getPipeline())).get();
+    }
+
+    @RequestMapping(path = "/{uuidOrName}/execution",method= RequestMethod.GET)
+    @Transactional(readOnly = true)
+    public @ResponseBody
+    ResponseEntity<RestResponse<PipelineExecutionEntity>> getPipelineExecution(@PathVariable String uuidOrName) {
+        return RestResponse.async(()-> entityService.getPipelineByUuidOrNameOrThrow(uuidOrName,uuidOrName).getExecution()).get();
     }
 
     @RequestMapping(path = "/start",method = RequestMethod.POST)

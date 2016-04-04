@@ -3,6 +3,7 @@ package com.ebay.logstorm.core.compiler;
 
 import com.ebay.logstorm.core.PipelineContext;
 
+import java.io.Serializable;
 import java.util.List;
 
 /**
@@ -21,9 +22,8 @@ import java.util.List;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public interface Pipeline {
+public interface Pipeline{
     /**
-     *
      * @return
      */
     List<InputPlugin> getInputs();

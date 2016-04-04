@@ -3,6 +3,7 @@ package com.ebay.logstorm.server.services;
 import com.ebay.logstorm.server.entities.ClusterEntity;
 import org.springframework.data.repository.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -29,4 +30,5 @@ public interface ClusterEntityRepository extends Repository<ClusterEntity, Strin
     Integer deleteByUuid(String uuid);
     Integer deleteByName(String name);
     Optional<ClusterEntity> findOneByUuidOrName(String uuid, String name);
+    List<ClusterEntity> findAll();
 }

@@ -1,7 +1,9 @@
-package com.ebay.logstorm.server.storm;
+package com.ebay.logstorm.server.platform;
 
 import com.ebay.logstorm.server.entities.PipelineEntity;
 import com.ebay.logstorm.server.platform.ExecutionPlatform;
+
+import java.util.Properties;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -21,8 +23,13 @@ import com.ebay.logstorm.server.platform.ExecutionPlatform;
  */
 public class StormExecutionPlatform implements ExecutionPlatform {
     @Override
+    public void init(Properties properties) {
+
+    }
+
+    @Override
     public String getTypeName() {
-        return null;
+        return "storm";
     }
 
     @Override

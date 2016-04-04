@@ -45,7 +45,9 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
 
     @Transactional
     private void checkInitExecutionContext(PipelineEntity pipeline){
-        Preconditions.checkNotNull(pipeline);
+        Preconditions.checkNotNull(pipeline,"pipeline is null: "+pipeline);
+        Preconditions.checkNotNull(pipeline.getCluster(),"cluster is null: "+ pipeline);
+        Preconditions.checkNotNull(pipeline.getCluster().getPlatformInstance(),"platform instance is null: "+pipeline);
         if(pipeline.getExecution() == null) {
             LOG.info("{} has not been deployed yet, deploying now",pipeline);
             pipeline.setExecution(this.createExecutionEntity(new PipelineExecutionEntity()));
@@ -60,7 +62,7 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
             try {
                 pipeline.getExecution().setStatus(PipelineExecutionStatus.STARTING);
                 updateExecutionEntity(pipeline.getExecution());
-                pipeline.getCluster().getPlatform().start(pipeline);
+                pipeline.getCluster().getPlatformInstance().start(pipeline);
                 pipeline.getExecution().setStatus(PipelineExecutionStatus.RUNNING);
                 updateExecutionEntity(pipeline.getExecution());
             } catch (Exception ex){
