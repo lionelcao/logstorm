@@ -1,7 +1,6 @@
 package com.ebay.logstorm.server.platform;
 
-import com.ebay.logstorm.server.entities.PipelineExecutionEntity;
-import com.ebay.logstorm.server.entities.PipelineExecutionStatus;
+import com.ebay.logstorm.server.entities.PipelineEntity;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -19,22 +18,25 @@ import com.ebay.logstorm.server.entities.PipelineExecutionStatus;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class MockExecutionEnvironment implements ExecutionEnvironment {
+public class MockExecutionPlatform implements ExecutionPlatform {
+
     @Override
-    public void start(PipelineExecutionEntity entity) throws Exception {
-        entity.setStatus(PipelineExecutionStatus.RUNNING);
-        entity.setDescription(entity+" is running on mock platform");
+    public String getTypeName() {
+        return "mock";
     }
 
     @Override
-    public void stop(PipelineExecutionEntity entity) throws Exception {
-        entity.setStatus(PipelineExecutionStatus.STOPPED);
-        entity.setDescription(entity+" is stopped on mock platform");
+    public void start(PipelineEntity entity) throws Exception {
+
     }
 
     @Override
-    public void status(PipelineExecutionEntity entity) throws Exception {
-        entity.setStatus(PipelineExecutionStatus.RUNNING);
-        entity.setDescription(entity+" has been updated with latest status");
+    public void stop(PipelineEntity entity) throws Exception {
+
+    }
+
+    @Override
+    public void status(PipelineEntity entity) throws Exception {
+
     }
 }

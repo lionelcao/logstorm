@@ -1,6 +1,10 @@
-package com.ebay.logstorm.server.services;
+package com.ebay.logstorm.server.services.impl;
 
+import com.ebay.logstorm.core.exception.PipelineException;
 import com.ebay.logstorm.server.entities.PipelineEntity;
+import com.ebay.logstorm.server.services.PipelineEntityRepository;
+import com.ebay.logstorm.server.services.PipelineEntityService;
+import com.ebay.logstorm.server.services.PipelineSearchCriteria;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -73,5 +77,25 @@ public class PipelineEntityServiceImpl implements PipelineEntityService {
     @Override
     public Optional<PipelineEntity> getPipelineByUuid(String uuid) {
         return this.pipelineEntityRepository.findOneByUuid(uuid);
+    }
+
+    @Override
+    public PipelineEntity getPipelineByIdOrThrow(String uuid) throws Exception {
+        Optional<PipelineEntity> entity = getPipelineByUuid(uuid);
+        if(entity.isPresent()){
+            return entity.get();
+        }else{
+            throw new PipelineException("Pipeline [uuid='"+uuid+"'] not found");
+        }
+    }
+
+    @Override
+    public PipelineEntity getPipelineOrThrow(PipelineEntity pipeline) throws Exception {
+        return pipelineEntityRepository.findOneByUuidOrName(pipeline.getUuid(),pipeline.getName()).orElseThrow(()-> new PipelineException("Pipeline ["+pipeline+"] not found"));
+    }
+
+    @Override
+    public PipelineEntity getPipelineByUuidOrNameOrThrow(String uuid,String name) throws Exception {
+        return pipelineEntityRepository.findOneByUuidOrName(uuid,name).orElseThrow(()-> new PipelineException("Pipeline [uuid='"+uuid+"' or name='"+name+"'] not found"));
     }
 }

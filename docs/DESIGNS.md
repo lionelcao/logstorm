@@ -28,9 +28,8 @@
 `logstorm-submit`
 
 ## Web UI Design
-* Submit: pipeline content + selected cluster
-* Pipeline (Lifecyle Management): define pipeline + deploy execution + status checking
-* Environment: environment name, type, properties, master
+* Cluster: environment name, type, properties, master
+* Pipeline (Lifecyle Management): define pipeline + deploy execution + status sync
 * Configuration: Server configuration
 
 ## Streaming Platform Adapter Interface

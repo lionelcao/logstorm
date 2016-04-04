@@ -22,11 +22,7 @@ import java.util.Properties;
 @Entity(name = "PipelineExecution")
 public class PipelineExecutionEntity extends BaseEntity {
     @Id
-    @GeneratedValue(strategy = GenerationType.AUTO)
     private String uuid;
-
-    @OneToOne @MapsId
-    private PipelineEntity pipeline;
 
     @Column
     private Properties properties;
@@ -42,26 +38,10 @@ public class PipelineExecutionEntity extends BaseEntity {
     private PipelineExecutionStatus status;
 
     @Column
-    private String trackingUrl = null;
+    private String url;
 
-    @Column
+    @Column(length = 10000)
     private String description;
-
-    public PipelineEntity getPipeline() {
-        return pipeline;
-    }
-
-    public void setPipeline(PipelineEntity pipeline) {
-        this.pipeline = pipeline;
-    }
-
-    public String getTrackingUrl() {
-        return trackingUrl;
-    }
-
-    public void setTrackingUrl(String trackingUrl) {
-        this.trackingUrl = trackingUrl;
-    }
 
     public PipelineExecutionStatus getStatus() {
         return status;
@@ -93,7 +73,7 @@ public class PipelineExecutionEntity extends BaseEntity {
 
     @Override
     public void ensureDefault() {
-        this.setStatus(PipelineExecutionStatus.INITIALIZED);
+        this.setStatus(PipelineExecutionStatus.UNDEPLOYED);
         this.setProperties(new Properties());
         if(this.createdTimestamp == 0) this.updateCreatedTimestamp();
         if(this.modifiedTimestamp == 0) this.updateModifiedTimestamp();
@@ -123,10 +103,20 @@ public class PipelineExecutionEntity extends BaseEntity {
     public void setCreatedTimestamp(long createdTimestamp) {
         this.createdTimestamp = createdTimestamp;
     }
-    public void updateCreatedTimestamp() {
+    public PipelineExecutionEntity updateCreatedTimestamp() {
         this.createdTimestamp = System.currentTimeMillis();
+        return this;
     }
-    public void updateModifiedTimestamp() {
+    public PipelineExecutionEntity updateModifiedTimestamp() {
         this.modifiedTimestamp = System.currentTimeMillis();
+        return this;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public void setUrl(String url) {
+        this.url = url;
     }
 }

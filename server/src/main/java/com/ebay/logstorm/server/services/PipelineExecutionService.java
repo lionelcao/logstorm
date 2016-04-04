@@ -27,61 +27,31 @@ public interface PipelineExecutionService {
      * @param pipelineEntity
      * @return
      */
-    PipelineExecutionEntity start(PipelineEntity pipelineEntity) throws Exception;
+    PipelineEntity start(PipelineEntity pipelineEntity) throws Exception;
+
     /**
      *
      * @param pipelineId
      * @return
      */
-    PipelineExecutionEntity start(String pipelineId) throws Exception;
-
-    /**
-     *
-     * @param executionEntity
-     * @return
-     */
-    PipelineExecutionEntity start(PipelineExecutionEntity executionEntity) throws Exception;
+    PipelineEntity start(String pipelineId) throws Exception;
 
     /**
      *
      * @param instance
      */
-    PipelineExecutionEntity stop(PipelineExecutionEntity instance);
+    PipelineEntity stop(PipelineEntity instance);
+    PipelineEntity stop(String uuid) throws Exception;
 
     /**
      * re-balance or scale pipeline according new configuration
      *
      * @param instance
      */
-    PipelineExecutionEntity rescale(PipelineExecutionEntity instance);
+    PipelineEntity rescale(PipelineEntity instance);
+    PipelineEntity restart(PipelineEntity instance);
+    PipelineEntity restart(String uuid) throws Exception;
 
-
-    PipelineExecutionEntity restart(PipelineExecutionEntity instance);
-
-    /**
-     * Submit only and don't persiste any status
-     *
-     * @param pipeline
-     * @return
-     */
-    PipelineExecutionEntity submitOnly(PipelineEntity pipeline);
-
-    /**
-     *
-     * @param uuid
-     * @return
-     */
-    Optional<PipelineExecutionEntity> getExecutionEntityByPipelineId(String uuid);
-
-    /**
-     *
-     * @param pipelineEntity
-     * @return
-     */
-    Optional<PipelineExecutionEntity> getExecutionEntityByPipeline(PipelineEntity pipelineEntity);
-    PipelineExecutionEntity saveExecutionEntity(PipelineExecutionEntity pipelineExecutionEntity);
-    PipelineExecutionEntity updateExecutionEntity(PipelineExecutionEntity pipelineExecutionEntity);
-    PipelineExecutionEntity deleteExecutionEntity(PipelineExecutionEntity pipelineExecutionEntity);
-
-
+    PipelineExecutionEntity updateExecutionEntity(PipelineExecutionEntity executionEntity);
+    PipelineExecutionEntity createExecutionEntity(PipelineExecutionEntity executionEntity);
 }

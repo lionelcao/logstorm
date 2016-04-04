@@ -18,14 +18,14 @@ package com.ebay.logstorm.server.entities;
  */
 public enum PipelineExecutionStatus {
     UNKNOWN,
-    INITIALIZED,
+    UNDEPLOYED,
     STARTING, RUNNING,
     STOPPING, STOPPED,
     RESCALING,
     FAILED;
 
     public static boolean isReadyToStart(PipelineExecutionStatus status){
-        return status.equals(INITIALIZED) ||
+        return status.equals(UNDEPLOYED) ||
                 status.equals(STOPPED) ||
                 status.equals(FAILED);
     }

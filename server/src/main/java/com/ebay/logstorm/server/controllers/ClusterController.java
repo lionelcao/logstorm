@@ -1,7 +1,12 @@
 package com.ebay.logstorm.server.controllers;
 
+import com.ebay.logstorm.server.entities.ClusterEntity;
+import com.ebay.logstorm.server.services.ClusterEntityService;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.transaction.annotation.Transactional;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -23,5 +28,35 @@ import org.springframework.web.bind.annotation.RequestMapping;
 @Controller
 @RequestMapping("/api/cluster")
 public class ClusterController extends BaseController {
-    
+
+    @Autowired
+    private ClusterEntityService entityService;
+
+    @RequestMapping(method= RequestMethod.POST)
+    @Transactional
+    public @ResponseBody
+    ResponseEntity<RestResponse<ClusterEntity>> saveClusterEntity(@RequestBody ClusterEntity clusterEntity) {
+        return RestResponse.async(() -> entityService.createCluster(clusterEntity)).get();
+    }
+
+    @RequestMapping(method= RequestMethod.PUT)
+    @Transactional
+    public @ResponseBody
+    ResponseEntity<RestResponse<ClusterEntity>> updateClusterEntity(@RequestBody ClusterEntity clusterEntity) {
+        return RestResponse.async(() -> entityService.updateCluster(clusterEntity)).get();
+    }
+
+    @RequestMapping(method= RequestMethod.DELETE)
+    @Transactional
+    public @ResponseBody
+    ResponseEntity<RestResponse<Integer>> deleteClusterEntity(@RequestBody ClusterEntity clusterEntity) {
+        return RestResponse.async(() -> entityService.deleteCluster(clusterEntity)).get();
+    }
+
+    @RequestMapping(path = "/{uuidOrName}",method= RequestMethod.GET)
+    @Transactional(readOnly = true)
+    public @ResponseBody
+    ResponseEntity<RestResponse<ClusterEntity>> getClusterEntity(@PathVariable String uuidOrName) {
+        return RestResponse.async(() -> entityService.getClusterByUuidOrName(uuidOrName,uuidOrName)).get();
+    }
 }

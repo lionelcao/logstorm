@@ -1,6 +1,5 @@
 package com.ebay.logstorm.server.services;
 
-import com.ebay.logstorm.server.entities.PipelineEntity;
 import com.ebay.logstorm.server.entities.PipelineExecutionEntity;
 import org.springframework.data.repository.Repository;
 
@@ -21,7 +20,5 @@ import org.springframework.data.repository.Repository;
  * limitations under the License.
  */
 public interface PipelineExecutionRepository extends Repository<PipelineExecutionEntity, String> {
-    PipelineExecutionEntity save(PipelineExecutionEntity pipelineEntity);
-
-    PipelineExecutionEntity update(PipelineExecutionEntity executionEntity);
+    PipelineExecutionEntity save(PipelineExecutionEntity pipelineExecutionEntity);
 }

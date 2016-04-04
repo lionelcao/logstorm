@@ -1,9 +1,10 @@
-package com.ebay.logstorm.runner.storm;
+package com.ebay.logstorm.storm.runner;
 
 import backtype.storm.utils.Utils;
 import com.ebay.logstorm.core.LogStormConstants;
 import com.ebay.logstorm.core.PipelineContext;
 import com.ebay.logstorm.core.exception.PipelineException;
+import com.ebay.logstorm.runner.storm.StormPipelineRunner;
 import org.junit.After;
 import org.junit.Test;
 

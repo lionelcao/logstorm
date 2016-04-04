@@ -1,5 +1,6 @@
 package com.ebay.logstorm.server.services;
 
+import com.ebay.logstorm.core.exception.PipelineException;
 import com.ebay.logstorm.server.entities.PipelineEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -30,4 +31,8 @@ public interface PipelineEntityService {
     Integer deletePipeline(PipelineEntity pipelineEntity);
 
     Optional<PipelineEntity> getPipelineByUuid(String uuid);
+    PipelineEntity getPipelineByIdOrThrow(String uuid) throws Exception;
+    PipelineEntity getPipelineOrThrow(PipelineEntity pipeline) throws Exception;
+
+    PipelineEntity getPipelineByUuidOrNameOrThrow(String uuid,String name) throws Exception;
 }

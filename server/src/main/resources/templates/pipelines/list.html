@@ -1,0 +1,43 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org"
+	  xmlns:layout="http://www.ultraq.net.nz/web/thymeleaf/layout"
+	  layout:decorator="layout">
+<div layout:fragment="content" class="container">
+	<div class="table-responsive">
+		<h2>Pipelines</h2>
+		<a class="btn btn-primary" style="float:right" href="/pipeline/create">New Pipeline</a>
+		<table class="table table-condensed" >
+			<thead>
+			<tr>
+				<th>Name</th>
+				<th>Status</th>
+				<th>Action</th>
+			</tr>
+			</thead>
+			<tbody>
+			<tr>
+				<td>name</td>
+				<td><span class="label label-default">UNKNOWN</span></td>
+				<td>
+					<button class="btn btn-default btn-xs">View</button>
+					<!-- Single button -->
+					<div class="btn-group">
+						<button type="button" class="btn btn-default btn-xs dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+							Operation <span class="caret"></span>
+						</button>
+						<ul class="dropdown-menu">
+							<li><a href="#">Start</a></li>
+							<li><a href="#">Stop</a></li>
+							<li><a href="#">Restart</a></li>
+							<li role="separator" class="divider"></li>
+							<li><a href="#">Edit</a></li>
+							<li><a href="#">Delete</a></li>
+						</ul>
+					</div>
+				</td>
+			</tr>
+			</tbody>
+		</table>
+	</div>
+</div>
+</html>

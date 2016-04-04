@@ -1,6 +1,6 @@
 package com.ebay.logstorm.server.entities;
 
-import com.ebay.logstorm.server.platform.ExecutionEnvironment;
+import com.ebay.logstorm.server.platform.ExecutionPlatform;
 
 import javax.persistence.*;
 import java.util.Properties;
@@ -22,15 +22,23 @@ import java.util.Properties;
  * limitations under the License.
  */
 @Entity(name = "Cluster")
-public class EnvironmentEntity extends BaseEntity{
+public class ClusterEntity extends BaseEntity{
     @Id
     private String uuid;
 
-    @Column(nullable = false)
+    @Column(nullable = false, unique = true)
     private String name;
 
+    /**
+     * ExecutionEnvironment type class name
+     *
+     * @see ExecutionPlatform
+     */
     @Column(nullable = false)
     private String type;
+
+    @Column(nullable = false)
+    private String className;
 
     @Column(nullable = true)
     private Properties properties;
@@ -45,10 +53,6 @@ public class EnvironmentEntity extends BaseEntity{
 
     public String getType() {
         return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getName() {
@@ -67,7 +71,19 @@ public class EnvironmentEntity extends BaseEntity{
         this.uuid = uuid;
     }
 
-    public ExecutionEnvironment getScheduleService() {
+    public ExecutionPlatform getPlatform() {
         throw new RuntimeException("Not implemented");
+    }
+
+    public String getClassName() {
+        return className;
+    }
+
+    public void setClassName(String className) {
+        this.className = className;
+    }
+
+    protected void setType(String type) {
+        this.type = type;
     }
 }

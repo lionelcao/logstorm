@@ -1,11 +1,7 @@
-package com.ebay.logstorm.server.services;
+package com.ebay.logstorm.server.storm;
 
 import com.ebay.logstorm.server.entities.PipelineEntity;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
-import org.springframework.data.repository.Repository;
-
-import java.util.Optional;
+import com.ebay.logstorm.server.platform.ExecutionPlatform;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -23,16 +19,24 @@ import java.util.Optional;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public interface PipelineEntityRepository extends Repository<PipelineEntity, String> {
-    Page<PipelineEntity> findAll(Pageable pageable);
-    Page<PipelineEntity> findOneByUuid(String uuid,Pageable pageable);
-    Page<PipelineEntity> findOneByName(String name,Pageable pageable);
+public class StormExecutionPlatform implements ExecutionPlatform {
+    @Override
+    public String getTypeName() {
+        return null;
+    }
 
-    PipelineEntity save(PipelineEntity pipelineEntity);
-    Integer removeByUuid(String uuid);
-    Integer removeByName(String name);
+    @Override
+    public void start(PipelineEntity entity) throws Exception {
 
-    Optional<PipelineEntity> findOneByUuid(String uuid);
+    }
 
-    Optional<PipelineEntity> findOneByUuidOrName(String uuid, String name);
+    @Override
+    public void stop(PipelineEntity entity) throws Exception {
+
+    }
+
+    @Override
+    public void status(PipelineEntity entity) throws Exception {
+
+    }
 }

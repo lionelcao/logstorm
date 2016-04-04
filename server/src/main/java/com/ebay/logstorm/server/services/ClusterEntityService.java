@@ -1,6 +1,7 @@
-package com.ebay.logstorm.server.platform;
+package com.ebay.logstorm.server.services;
 
-import com.ebay.logstorm.server.entities.PipelineExecutionEntity;
+import com.ebay.logstorm.core.exception.PipelineException;
+import com.ebay.logstorm.server.entities.ClusterEntity;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -17,11 +18,15 @@ import com.ebay.logstorm.server.entities.PipelineExecutionEntity;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
- *
- *
  */
-public interface ExecutionEnvironment {
-    void start(PipelineExecutionEntity entity) throws Exception;
-    void stop(PipelineExecutionEntity entity) throws Exception;
-    void status(PipelineExecutionEntity entity) throws Exception;
+public interface ClusterEntityService {
+    ClusterEntity createCluster(ClusterEntity clusterEntity);
+
+    ClusterEntity updateCluster(ClusterEntity clusterEntity);
+
+    Integer deleteCluster(ClusterEntity clusterEntity);
+
+    Integer deleteClusterByName(String name);
+
+    ClusterEntity getClusterByUuidOrName(String uuid, String name) throws Exception;
 }

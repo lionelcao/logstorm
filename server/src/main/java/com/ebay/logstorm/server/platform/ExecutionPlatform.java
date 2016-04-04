@@ -1,7 +1,7 @@
-package com.ebay.logstorm.platform.storm;
+package com.ebay.logstorm.server.platform;
 
+import com.ebay.logstorm.server.entities.PipelineEntity;
 import com.ebay.logstorm.server.entities.PipelineExecutionEntity;
-import com.ebay.logstorm.server.platform.ExecutionEnvironment;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -18,21 +18,11 @@ import com.ebay.logstorm.server.platform.ExecutionEnvironment;
  * WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
  * See the License for the specific language governing permissions and
  * limitations under the License.
+ *
  */
-public class StormEnvironment implements ExecutionEnvironment {
-
-    @Override
-    public void start(PipelineExecutionEntity entity) throws Exception {
-
-    }
-
-    @Override
-    public void stop(PipelineExecutionEntity entity) throws Exception {
-
-    }
-
-    @Override
-    public void status(PipelineExecutionEntity entity) throws Exception {
-
-    }
+public interface ExecutionPlatform {
+    String getTypeName();
+    void start(PipelineEntity entity) throws Exception;
+    void stop(PipelineEntity entity) throws Exception;
+    void status(PipelineEntity entity) throws Exception;
 }

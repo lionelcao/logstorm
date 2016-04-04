@@ -1,7 +1,8 @@
 package com.ebay.logstorm.server.entities;
 
 import com.ebay.logstorm.core.LogStormConstants;
-import com.ebay.logstorm.server.platform.ExecutionEnvironment;
+import com.ebay.logstorm.server.platform.ExecutionPlatform;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
 import java.util.Properties;
@@ -23,7 +24,7 @@ import java.util.Properties;
  * limitations under the License.
  */
 @Entity(name = "Pipeline")
-public class PipelineEntity extends BaseEntity{
+public class PipelineEntity extends BaseEntity {
     @Id
     private String uuid;
 
@@ -36,12 +37,15 @@ public class PipelineEntity extends BaseEntity{
     @Column(nullable = true)
     private Properties properties;
 
+    @OneToOne
+    private PipelineExecutionEntity execution;
+
     @Column
     @Enumerated(EnumType.ORDINAL)
-    private LogStormConstants.DeployMode deployMode = LogStormConstants.DeployMode.STANDALONE;
+    private LogStormConstants.DeployMode mode = LogStormConstants.DeployMode.CLUSTER;
 
     @OneToOne
-    private EnvironmentEntity deployEnvironment;
+    private ClusterEntity cluster;
 
     public String getName() {
         return name;
@@ -59,20 +63,20 @@ public class PipelineEntity extends BaseEntity{
         this.pipeline = pipeline;
     }
 
-    public LogStormConstants.DeployMode getDeployMode() {
-        return deployMode;
+    public LogStormConstants.DeployMode getMode() {
+        return mode;
     }
 
-    public void setDeployMode(LogStormConstants.DeployMode deployMode) {
-        this.deployMode = deployMode;
+    public void setMode(LogStormConstants.DeployMode mode) {
+        this.mode = mode;
     }
 
-    public EnvironmentEntity getDeployEnvironment() {
-        return deployEnvironment;
+    public ClusterEntity getCluster() {
+        return cluster;
     }
 
-    public void setDeployEnvironment(EnvironmentEntity deployEnvironment) {
-        this.deployEnvironment = deployEnvironment;
+    public void setCluster(ClusterEntity cluster) {
+        this.cluster = cluster;
     }
 
     public Properties getProperties() {
@@ -91,7 +95,16 @@ public class PipelineEntity extends BaseEntity{
         this.uuid = uuid;
     }
 
-    public ExecutionEnvironment getPlatform() {
+    @JsonIgnore
+    public ExecutionPlatform getPlatform() {
         throw new RuntimeException("Not implemented yet");
+    }
+
+    public PipelineExecutionEntity getExecution() {
+        return execution;
+    }
+
+    public void setExecution(PipelineExecutionEntity executionContext) {
+        this.execution = executionContext;
     }
 }

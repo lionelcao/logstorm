@@ -1,8 +1,6 @@
 package com.ebay.logstorm.server.services;
 
-import com.ebay.logstorm.server.entities.PipelineEntity;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import com.ebay.logstorm.server.entities.ClusterEntity;
 import org.springframework.data.repository.Repository;
 
 import java.util.Optional;
@@ -23,16 +21,12 @@ import java.util.Optional;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public interface PipelineEntityRepository extends Repository<PipelineEntity, String> {
-    Page<PipelineEntity> findAll(Pageable pageable);
-    Page<PipelineEntity> findOneByUuid(String uuid,Pageable pageable);
-    Page<PipelineEntity> findOneByName(String name,Pageable pageable);
-
-    PipelineEntity save(PipelineEntity pipelineEntity);
-    Integer removeByUuid(String uuid);
-    Integer removeByName(String name);
-
-    Optional<PipelineEntity> findOneByUuid(String uuid);
-
-    Optional<PipelineEntity> findOneByUuidOrName(String uuid, String name);
+public interface ClusterEntityRepository extends Repository<ClusterEntity, String> {
+    Optional<ClusterEntity> findOneByName(String name);
+    Optional<ClusterEntity> findOneByUuid(String uuid);
+    ClusterEntity save(ClusterEntity entity);
+    Integer delete(ClusterEntity entity);
+    Integer deleteByUuid(String uuid);
+    Integer deleteByName(String name);
+    Optional<ClusterEntity> findOneByUuidOrName(String uuid, String name);
 }
