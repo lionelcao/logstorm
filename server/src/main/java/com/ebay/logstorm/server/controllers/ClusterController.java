@@ -61,6 +61,7 @@ public class ClusterController extends BaseController {
     ResponseEntity<RestResponse<ClusterEntity>> getClusterEntity(@PathVariable String uuidOrName) {
         return RestResponse.async(() -> entityService.getClusterByUuidOrName(uuidOrName,uuidOrName)).get();
     }
+
     @RequestMapping(method= RequestMethod.GET)
     @Transactional(readOnly = true)
     public @ResponseBody

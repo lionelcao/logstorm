@@ -23,7 +23,7 @@ import java.io.Serializable;
 public class LogStormConstants {
     public final static String CURRENT_VERSION = "0.1-SNAPSHOT";
 
-    public final static DeployMode DEFAULT_DEPLOY_MODE = DeployMode.STANDALONE;
+    public final static DeployMode DEFAULT_DEPLOY_MODE = DeployMode.LOCAL;
     public final static String DEFAULT_RUNNER_CLASS_NAME = "com.ebay.logstorm.runner.storm.StormPipelineRunner";
 
     public static class PluginType{
@@ -43,7 +43,7 @@ public class LogStormConstants {
     }
 
     public enum DeployMode implements Serializable {
-        STANDALONE("standalone"), CLUSTER("cluster");
+        LOCAL("standalone"), CLUSTER("cluster");
 
         private final String mode;
 
@@ -52,8 +52,8 @@ public class LogStormConstants {
         }
 
         public static DeployMode locate(String mode){
-            if(STANDALONE.mode.equalsIgnoreCase(mode) || "local".equals(mode)){
-                return STANDALONE;
+            if(LOCAL.mode.equalsIgnoreCase(mode) || "local".equals(mode)){
+                return LOCAL;
             }else if(CLUSTER.mode.equalsIgnoreCase(mode)){
                 return CLUSTER;
             }else{

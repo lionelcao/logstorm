@@ -24,7 +24,7 @@ public class PipelineExecutionEntity extends BaseEntity {
     @Id
     private String uuid;
 
-    @Column
+    @Column(nullable = true,length = 10000)
     private Properties properties;
 
     @Column
@@ -68,6 +68,7 @@ public class PipelineExecutionEntity extends BaseEntity {
     }
 
     public void setProperty(String key, String value) {
+        if(this.properties == null) this.properties = new Properties();
         this.properties.setProperty(key,value);
     }
 

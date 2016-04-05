@@ -50,7 +50,7 @@ public class TestStormPipelineRunner {
         PipelineContext.pipelineResource("/simple-generator-stdout.txt")
             .name("simple-generator-stdout-pipeline")
             .runner(StormPipelineRunner.class)
-            .deploy(LogStormConstants.DeployMode.STANDALONE)
+            .deploy(LogStormConstants.DeployMode.LOCAL)
             .submit();
     }
 

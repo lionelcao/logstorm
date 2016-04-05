@@ -5,6 +5,7 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.repository.Repository;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -35,4 +36,6 @@ public interface PipelineEntityRepository extends Repository<PipelineEntity, Str
     Optional<PipelineEntity> findOneByUuid(String uuid);
 
     Optional<PipelineEntity> findOneByUuidOrName(String uuid, String name);
+
+    List<PipelineEntity> findAll();
 }

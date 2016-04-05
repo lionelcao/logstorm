@@ -69,6 +69,7 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
                 pipeline.getExecution().setStatus(PipelineExecutionStatus.FAILED);
                 pipeline.getExecution().setDescription(ExceptionUtils.getStackTrace(ex));
                 updateExecutionEntity(pipeline.getExecution());
+                LOG.error(ex.getMessage(),ex);
                 throw ex;
             }
             return pipeline;

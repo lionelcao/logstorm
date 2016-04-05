@@ -1,9 +1,8 @@
 package com.ebay.logstorm.server.platform;
 
-import com.ebay.logstorm.server.entities.PipelineEntity;
-import com.ebay.logstorm.server.entities.PipelineExecutionEntity;
+import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import java.util.Properties;
+import java.util.concurrent.Future;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -21,10 +20,41 @@ import java.util.Properties;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public interface ExecutionPlatform {
-    void init(Properties properties);
-    String getTypeName();
-    void start(PipelineEntity entity) throws Exception;
-    void stop(PipelineEntity entity) throws Exception;
-    void status(PipelineEntity entity) throws Exception;
+public class TaskExecutor extends Thread {
+    private Future future;
+    public TaskExecutor(Runnable runnable){
+        super(runnable);
+    }
+
+    public TaskExecutor(){}
+
+    @JsonIgnore
+    public Future getFuture() {
+        return future;
+    }
+
+    @JsonIgnore
+    @Override
+    public ClassLoader getContextClassLoader() {
+        return super.getContextClassLoader();
+    }
+
+    @JsonIgnore
+    @Override
+    public UncaughtExceptionHandler getUncaughtExceptionHandler() {
+        return super.getUncaughtExceptionHandler();
+    }
+
+    public void setFuture(Future future) {
+        this.future = future;
+    }
+
+    public void shutdown(){
+        this.interrupt();
+    }
+
+    public void restart(){
+        this.interrupt();
+        this.start();
+    }
 }

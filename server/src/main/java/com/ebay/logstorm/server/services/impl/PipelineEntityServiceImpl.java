@@ -11,6 +11,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.List;
 import java.util.Optional;
 
 /**
@@ -41,6 +42,11 @@ public class PipelineEntityServiceImpl implements PipelineEntityService {
 
     public Page<PipelineEntity> findAll(Pageable pageable) {
        return this.pipelineEntityRepository.findAll(pageable);
+    }
+
+    @Override
+    public List<PipelineEntity> findAll() {
+        return pipelineEntityRepository.findAll();
     }
 
     public Page<PipelineEntity> searchPipelines(PipelineSearchCriteria searchCriteria, Pageable pageable) {

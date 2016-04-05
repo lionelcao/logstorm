@@ -1,12 +1,16 @@
 package com.ebay.logstorm.server.controllers;
 
 import com.ebay.logstorm.core.compiler.proxy.RubyRuntimeFactory;
+import com.ebay.logstorm.server.platform.ExecutionManager;
+import com.ebay.logstorm.server.platform.TaskExecutor;
 import org.jruby.management.BeanManager;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
+
+import java.util.Collection;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -31,5 +35,11 @@ public class SystemController extends BaseController {
     public @ResponseBody
     ResponseEntity<RestResponse<BeanManager>> getEngineStatus(){
         return RestResponse.async(()-> RubyRuntimeFactory.getSingletonRuntime().getBeanManager()).get();
+    }
+
+    @RequestMapping(path = "/executor",method = RequestMethod.GET)
+    public @ResponseBody
+    ResponseEntity<RestResponse<Collection<TaskExecutor>>> getExecutors(){
+        return RestResponse.async(() -> ExecutionManager.getInstance().getWorkerMap().values()).get();
     }
 }

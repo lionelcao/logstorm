@@ -38,7 +38,7 @@ public class PipelineEntity extends BaseEntity {
     @Column(nullable = false)
     private String pipeline;
 
-    @Column(nullable = true)
+    @Column(nullable = true,length = 10000)
     private Properties properties;
 
     @OneToOne
@@ -46,7 +46,7 @@ public class PipelineEntity extends BaseEntity {
 
     @Column
     @Enumerated(EnumType.ORDINAL)
-    private LogStormConstants.DeployMode mode = LogStormConstants.DeployMode.CLUSTER;
+    private LogStormConstants.DeployMode mode = LogStormConstants.DEFAULT_DEPLOY_MODE;
 
     @OneToOne
     private ClusterEntity cluster;
@@ -89,6 +89,13 @@ public class PipelineEntity extends BaseEntity {
 
     public void setProperties(Properties properties) {
         this.properties = properties;
+    }
+
+    public void setProperty(String key, String value) {
+        if(this.properties == null){
+            this.properties = new Properties();
+        }
+        this.properties.setProperty(key,value);
     }
 
     public String getUuid() {

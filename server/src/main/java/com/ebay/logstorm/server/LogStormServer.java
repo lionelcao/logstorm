@@ -1,28 +1,23 @@
 package com.ebay.logstorm.server;
 
 import com.ebay.logstorm.core.compiler.proxy.RubyRuntimeFactory;
-import org.jruby.Ruby;
+import com.ebay.logstorm.server.platform.ExecutionManager;
+import com.ebay.logstorm.server.platform.PipelineExecutionStatusUpdater;
+import com.ebay.logstorm.server.services.PipelineStatusSyncService;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.SpringApplication;
-import org.springframework.boot.autoconfigure.EnableAutoConfiguration;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
-import org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration;
 import org.springframework.boot.builder.SpringApplicationBuilder;
 import org.springframework.boot.context.embedded.ServletContextInitializer;
 import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
-import org.springframework.context.annotation.Configuration;
-import org.springframework.web.WebApplicationInitializer;
-import org.springframework.web.context.WebApplicationContext;
-import org.springframework.web.filter.CharacterEncodingFilter;
 
-import javax.servlet.DispatcherType;
 import javax.servlet.ServletContext;
 import javax.servlet.ServletException;
-import java.util.EnumSet;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -45,15 +40,14 @@ import java.util.EnumSet;
 public class LogStormServer  extends SpringBootServletInitializer {
     private final static Logger LOG = LoggerFactory.getLogger(LogStormServer.class);
 
+    @Autowired
+    PipelineStatusSyncService statusSyncService;
+
     @Bean
     public ServletContextInitializer servletContextInitializer() {
         return (ServletContext servletContext) -> {
-            new Thread() {
-                @Override
-                public void run() {
-                    RubyRuntimeFactory.getSingletonRuntime();
-                }
-            }.start();
+            ExecutionManager.getInstance().submit(RubyRuntimeFactory::getSingletonRuntime);
+            ExecutionManager.getInstance().submit(PipelineExecutionStatusUpdater.WORKER_NAME,new PipelineExecutionStatusUpdater(statusSyncService));
         };
     }
 

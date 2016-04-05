@@ -23,6 +23,7 @@ import org.springframework.web.servlet.ModelAndView;
  */
 @Controller
 @RequestMapping("/")
+@Deprecated
 public class UIController {
     @RequestMapping("/ui")
     public ModelAndView home(){

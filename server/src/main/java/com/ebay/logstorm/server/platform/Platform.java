@@ -1,10 +1,5 @@
 package com.ebay.logstorm.server.platform;
 
-import com.ebay.logstorm.server.entities.PipelineEntity;
-import com.ebay.logstorm.server.entities.PipelineExecutionEntity;
-
-import java.util.Properties;
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -21,10 +16,6 @@ import java.util.Properties;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public interface ExecutionPlatform {
-    void init(Properties properties);
-    String getTypeName();
-    void start(PipelineEntity entity) throws Exception;
-    void stop(PipelineEntity entity) throws Exception;
-    void status(PipelineEntity entity) throws Exception;
+public @interface Platform {
+    String value();
 }
