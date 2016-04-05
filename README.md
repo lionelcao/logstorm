@@ -7,6 +7,11 @@ Prerequisites
 * [Apache Maven](https://maven.apache.org/)
 * [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 
+Documentation
+-------------
+You can find the more documentation on [docs](/docs). This README file only contains basic setup instructions.
+
+
 Getting Started
 ---------------
 Bootstrap from source code and run examples
