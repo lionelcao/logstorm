@@ -6,7 +6,7 @@ echo "RUN: mvn clean install -DskipTests"
 mvn clean install -DskipTests
 
 echo "RUN: mvn exec:java -pl server -Dexec.mainClass=\"com.ebay.logstorm.server.LogStormServer\""
-mvn exec:java -pl server -Dexec.mainClass="com.ebay.logstorm.server.LogStormServer" 1>/dev/null 2>&1 &
+mvn exec:java -pl server -Dexec.mainClass="com.ebay.logstorm.server.LogStormServer" -Dserver.port=8080 1>/dev/null 2>&1 &
 export SERVER_PORT=$!
 echo "Sever is running at PORT: $SERVER_PORT"
 

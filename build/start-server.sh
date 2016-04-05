@@ -6,4 +6,4 @@ if [ ! -e server/target ];then
 	mvn clean install -DskipTests
 fi
 
-mvn exec:java -pl server -Dexec.mainClass="com.ebay.logstorm.server.LogStormServer"
+mvn exec:java -pl server -Dexec.mainClass="com.ebay.logstorm.server.LogStormServer" -Dserver.port=8080
