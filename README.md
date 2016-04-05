@@ -35,7 +35,11 @@ Test
 * Test single test, for example TestStormPipelineRunner
 
 		mvn test -Dtest=com.ebay.logstorm.runner.storm.TestStormPipelineRunner -DfailIfNoTests=false
- 
+
+* Test sample pipeline through REST API
+	
+		./examples/scripts/run-sample-pipeline.sh
+
 Contact
 -------
 
