@@ -94,7 +94,6 @@
                     <artifactId>logback-access</artifactId>
                 </exclusion>
             </exclusions>
-            <!--<scope>provided</scope>-->
         </dependency>
     </dependencies>
     <build>
