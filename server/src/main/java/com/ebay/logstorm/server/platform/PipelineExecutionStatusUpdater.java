@@ -36,7 +36,7 @@ public class PipelineExecutionStatusUpdater extends TaskExecutor {
     public void run() {
         while(!stopped){
             try {
-                statusSyncService.doCheck();
+                statusSyncService.doUpdate();
             } catch (Exception e) {
                 LOG.error(e.getMessage(),e);
             } finally {

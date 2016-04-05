@@ -21,17 +21,11 @@ import java.util.concurrent.Future;
  * limitations under the License.
  */
 public class TaskExecutor extends Thread {
-    private Future future;
     public TaskExecutor(Runnable runnable){
         super(runnable);
     }
 
     public TaskExecutor(){}
-
-    @JsonIgnore
-    public Future getFuture() {
-        return future;
-    }
 
     @JsonIgnore
     @Override
@@ -43,10 +37,6 @@ public class TaskExecutor extends Thread {
     @Override
     public UncaughtExceptionHandler getUncaughtExceptionHandler() {
         return super.getUncaughtExceptionHandler();
-    }
-
-    public void setFuture(Future future) {
-        this.future = future;
     }
 
     public void shutdown(){

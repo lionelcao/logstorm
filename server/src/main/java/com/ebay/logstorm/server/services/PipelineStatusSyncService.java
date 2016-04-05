@@ -17,5 +17,5 @@ package com.ebay.logstorm.server.services;
  * limitations under the License.
  */
 public interface PipelineStatusSyncService {
-    void doCheck();
+    void doUpdate();
 }

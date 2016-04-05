@@ -42,7 +42,7 @@ public class PipelineStatusSyncServiceImpl implements PipelineStatusSyncService 
     }
 
     @Override
-    public void doCheck() {
+    public void doUpdate() {
         List<PipelineEntity> allPipelineEntities = entityService.findAll();
         LOG.info("Checking status of {} pipelines",allPipelineEntities.size());
         for (PipelineEntity pipelineEntity : allPipelineEntities) {

@@ -46,7 +46,9 @@ public class LogStormServer  extends SpringBootServletInitializer {
     @Bean
     public ServletContextInitializer servletContextInitializer() {
         return (ServletContext servletContext) -> {
-            ExecutionManager.getInstance().submit(RubyRuntimeFactory::getSingletonRuntime);
+            Thread thread = new Thread(RubyRuntimeFactory::getSingletonRuntime);
+            thread.setDaemon(true);
+            thread.start();
             ExecutionManager.getInstance().submit(PipelineExecutionStatusUpdater.WORKER_NAME,new PipelineExecutionStatusUpdater(statusSyncService));
         };
     }

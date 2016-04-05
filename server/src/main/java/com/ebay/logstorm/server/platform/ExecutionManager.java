@@ -2,6 +2,8 @@ package com.ebay.logstorm.server.platform;
 
 import com.ebay.logstorm.server.entities.PipelineExecutionStatus;
 import com.google.common.base.Preconditions;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.TreeMap;
@@ -26,6 +28,8 @@ import java.util.concurrent.ScheduledThreadPoolExecutor;
  * limitations under the License.
  */
 public class ExecutionManager {
+    private static final Logger LOG = LoggerFactory.getLogger(ExecutionManager.class);
+
     private final ExecutorService executorService;
     private final Map<Object,TaskExecutor> workerMap;
     private static ExecutionManager instance;
@@ -57,13 +61,20 @@ public class ExecutionManager {
 
     public TaskExecutor submit(Object id, Runnable runnable){
         if(workerMap.containsKey(id)){
-            throw new IllegalArgumentException("Duplicated id '"+id+"'");
+            TaskExecutor executor = workerMap.get(id);
+            if(!executor.isAlive() || executor.getState() == Thread.State.TERMINATED){
+                LOG.info("Replacing dead executor: {}",executor);
+                workerMap.remove(id);
+            }else {
+                throw new IllegalArgumentException("Duplicated id '" + id + "'");
+            }
         }
+
         TaskExecutor worker = new TaskExecutor(runnable);
+        LOG.info("Registering new executor {}: {}",id,worker);
         workerMap.put(id,worker);
         worker.setName(id.toString());
         worker.setDaemon(true);
-        worker.setFuture(executorService.submit(worker));
         worker.start();
         return worker;
     }
