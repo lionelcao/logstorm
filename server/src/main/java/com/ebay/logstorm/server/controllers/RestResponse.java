@@ -24,7 +24,6 @@ public class RestResponse<T>{
     private T data;
     private Long time;
     private String path;
-    private Class<?> type;
 
     public T getData() {
         return data;
@@ -90,14 +89,6 @@ public class RestResponse<T>{
         this.exception = exception;
     }
 
-    public Class<?> getType() {
-        return type;
-    }
-
-    public void setType(Class<?> type) {
-        this.type = type;
-    }
-
     public String getPath() {
         return path;
     }
@@ -151,7 +142,6 @@ public class RestResponse<T>{
 
         public RestResponseBuilder<E> data(E data){
             this.current.setData(data);
-            if(data!=null) this.current.setType(data.getClass());
             return this;
         }
 
@@ -161,12 +151,10 @@ public class RestResponse<T>{
         }
         public RestResponseBuilder<E> exception(Throwable exception){
             this.current.setThrowable(exception);
-            this.current.setType(exception.getClass());
             return this;
         }
 
         public RestResponseBuilder<E> type(Class<?> clazz){
-            this.current.setType(clazz);
             return this;
         }
 

@@ -4,6 +4,7 @@ import com.ebay.logstorm.core.compiler.proxy.RubyRuntimeFactory;
 import com.ebay.logstorm.server.platform.ExecutionManager;
 import com.ebay.logstorm.server.platform.PipelineExecutionStatusUpdater;
 import com.ebay.logstorm.server.services.PipelineStatusSyncService;
+import com.ebay.logstorm.server.utils.EagleBanner;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -35,7 +36,7 @@ import javax.servlet.ServletException;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@ComponentScan
+@ComponentScan({"com.ebay.logstorm"})
 @SpringBootApplication
 public class LogStormServer  extends SpringBootServletInitializer {
     private final static Logger LOG = LoggerFactory.getLogger(LogStormServer.class);
@@ -53,15 +54,16 @@ public class LogStormServer  extends SpringBootServletInitializer {
         };
     }
 
-    @Override
-    protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
-        return builder.sources(LogStormServer.class);
+    @Bean
+    public SpringBootServletInitializer springBootServletInitializer(){
+        return new SpringBootServletInitializer(){
+            @Override
+            protected SpringApplicationBuilder configure(SpringApplicationBuilder builder) {
+                return builder.banner(new EagleBanner()).sources(LogStormServer.class);
+            }
+        };
     }
 
-    @Override
-    public void onStartup(ServletContext servletContext) throws ServletException {
-        super.onStartup(servletContext);
-    }
 
     public static void start(String[] args){
         ApplicationContext context = SpringApplication.run(LogStormServer.class,args);

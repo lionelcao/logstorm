@@ -112,11 +112,13 @@ public class PipelineEntity extends BaseEntity {
 
     public void setExecution(PipelineExecutionEntity executionContext) {
         this.execution = executionContext;
+        if(this.execution!=null) {
+            this.execution.setPipeline(this);
+        }
     }
 
     @Override
     public String toString() {
-        return String.format("Pipeline[uuid=%s, name=%s, pipeline=%s]",this.getUuid(),this.getName(),this.getPipeline());
+        return String.format("Pipeline[uuid=%s, name=%s]",this.getUuid(),this.getName());
     }
-
 }

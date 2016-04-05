@@ -16,7 +16,10 @@ TODO
 * Finalize the project name currently using "LogStorm", including:
     * Rename package name to `org.apache.projectName`
     * Rename `PipelineContext` to `ProjectNameContext`
-* Support to use LogStash as multi-stages pipeline instead of simple input-filter-output
+* Support to use LogStash as multi-stages dataflow instead of single input-filter-output pipeline
+    * https://github.com/the-grid/the-graph
+* Non-downtime hot-deploy
+* Topology HA
 
 Done
 ----

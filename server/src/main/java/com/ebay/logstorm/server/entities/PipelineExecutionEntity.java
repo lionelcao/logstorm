@@ -1,5 +1,9 @@
 package com.ebay.logstorm.server.entities;
 
+import com.ebay.logstorm.core.compiler.Pipeline;
+import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+
 import javax.persistence.*;
 import java.util.Properties;
 
@@ -26,6 +30,10 @@ public class PipelineExecutionEntity extends BaseEntity {
 
     @Column(nullable = true,length = 10000)
     private Properties properties;
+
+    @JsonIgnore
+    @Transient
+    private PipelineEntity pipeline;
 
     @Column
     private long createdTimestamp;
@@ -108,6 +116,7 @@ public class PipelineExecutionEntity extends BaseEntity {
         this.createdTimestamp = System.currentTimeMillis();
         return this;
     }
+
     public PipelineExecutionEntity updateModifiedTimestamp() {
         this.modifiedTimestamp = System.currentTimeMillis();
         return this;
@@ -119,5 +128,14 @@ public class PipelineExecutionEntity extends BaseEntity {
 
     public void setUrl(String url) {
         this.url = url;
+    }
+
+    @JsonIgnore
+    public PipelineEntity getPipeline() {
+        return pipeline;
+    }
+
+    public void setPipeline(PipelineEntity pipeline) {
+        this.pipeline = pipeline;
     }
 }

@@ -1,4 +1,4 @@
-package com.ebay.logstorm.server.platform;
+package com.ebay.logstorm.server.platform.storm;
 
 import com.ebay.logstorm.core.LogStormConstants;
 import com.ebay.logstorm.core.compiler.PipelineCompiler;
@@ -6,9 +6,13 @@ import com.ebay.logstorm.core.exception.PipelineException;
 import com.ebay.logstorm.runner.storm.StormPipelineRunner;
 import com.ebay.logstorm.server.entities.PipelineEntity;
 import com.ebay.logstorm.server.entities.PipelineExecutionStatus;
+import com.ebay.logstorm.server.platform.ExecutionManager;
+import com.ebay.logstorm.server.platform.ExecutionPlatform;
+import com.ebay.logstorm.server.platform.TaskExecutor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.util.Arrays;
 import java.util.Properties;
 
 /**
@@ -52,16 +56,17 @@ public class StormExecutionPlatform implements ExecutionPlatform {
                 }
             });
             entity.getExecution().setDescription("Running inside "+worker.toString()+" in "+entity.getMode()+" mode");
-            entity.getExecution().setProperty("worker.id",String.valueOf(worker.getId()));
-            entity.getExecution().setProperty("worker.name",worker.getName());
-            entity.getExecution().setProperty("worker.thread",worker.toString());
-            entity.getExecution().setProperty("worker.state",worker.getState().toString());
-            entity.getExecution().setProperty("worker.stackTrace",worker.getStackTrace().toString());
+            entity.getExecution().setProperty("executor.id",String.valueOf(worker.getId()));
+            entity.getExecution().setProperty("executor.name",worker.getName());
+            entity.getExecution().setProperty("executor.thread",worker.toString());
+            entity.getExecution().setProperty("executor.state",worker.getState().toString());
+            entity.getExecution().setProperty("executor.stackTrace", Arrays.toString(worker.getStackTrace()));
+            entity.getExecution().setUrl("/api/executor/"+buildExecutorId(entity));
         }
     }
 
     private String buildExecutorId(PipelineEntity entity){
-        return "PipelineWorker["+entity.getName()+"]";
+        return "pipeline:"+entity.getName()+",execution:"+entity.getExecution().getUuid();
     }
 
     @Override

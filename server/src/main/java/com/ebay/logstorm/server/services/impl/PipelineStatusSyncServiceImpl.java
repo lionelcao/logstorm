@@ -10,6 +10,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
+import org.springframework.stereotype.Service;
 
 import java.util.List;
 
@@ -30,6 +31,7 @@ import java.util.List;
  * limitations under the License.
  */
 @Component("pipelineStatusSyncService")
+@Service
 public class PipelineStatusSyncServiceImpl implements PipelineStatusSyncService {
     private final static Logger LOG = LoggerFactory.getLogger(PipelineStatusSyncServiceImpl.class);
     private final PipelineEntityService entityService;
