@@ -11,7 +11,7 @@ Getting Started
 ---------------
 Bootstrap from source code and run examples
 	
-	    ./build/bootstrap-example.sh
+    ./build/bootstrap-example.sh
 
 Development
 -----------
