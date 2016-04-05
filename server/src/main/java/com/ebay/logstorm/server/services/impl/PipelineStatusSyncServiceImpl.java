@@ -2,7 +2,6 @@ package com.ebay.logstorm.server.services.impl;
 
 import com.ebay.logstorm.server.entities.PipelineEntity;
 import com.ebay.logstorm.server.entities.PipelineExecutionStatus;
-import com.ebay.logstorm.server.platform.ExecutionManager;
 import com.ebay.logstorm.server.services.PipelineEntityService;
 import com.ebay.logstorm.server.services.PipelineExecutionService;
 import com.ebay.logstorm.server.services.PipelineStatusSyncService;
@@ -12,7 +11,6 @@ import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
-import java.util.Iterator;
 import java.util.List;
 
 /**
@@ -46,11 +44,11 @@ public class PipelineStatusSyncServiceImpl implements PipelineStatusSyncService 
     @Override
     public void doCheck() {
         List<PipelineEntity> allPipelineEntities = entityService.findAll();
-        LOG.info("Starting to check status of {} pipelines",allPipelineEntities.size());
+        LOG.info("Checking status of {} pipelines",allPipelineEntities.size());
         for (PipelineEntity pipelineEntity : allPipelineEntities) {
             if (pipelineEntity.getExecution() != null) {
                 try {
-                    LOG.info("'{}' checking status", pipelineEntity.getName());
+                    LOG.info("Checking status of '{}'", pipelineEntity.getName());
                     pipelineEntity.getCluster().getPlatformInstance().status(pipelineEntity);
                 } catch (Exception e) {
                     LOG.error(e.getMessage(), e);
@@ -58,12 +56,12 @@ public class PipelineStatusSyncServiceImpl implements PipelineStatusSyncService 
                     pipelineEntity.getExecution().setDescription(ExceptionUtils.getStackTrace(e));
                 } finally {
                     executionService.updateExecutionEntity(pipelineEntity.getExecution());
-                    LOG.info("'{}' status updated",pipelineEntity.getName());
+                    LOG.info("Updated status of '{}'",pipelineEntity.getName());
                 }
             } else {
                 LOG.info("'{}'  has not been deployed yet, skipped status checking",pipelineEntity.getName());
             }
         }
-        LOG.info("Finished updating status of {} pipelines",allPipelineEntities.size());
+        LOG.info("Updated status of {} pipelines",allPipelineEntities.size());
     }
 }
