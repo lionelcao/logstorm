@@ -4,39 +4,38 @@ LogStorm
 Prerequisites
 -------------
 
-* [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 * [Apache Maven](https://maven.apache.org/)
+* [Java 8](http://www.oracle.com/technetwork/java/javase/downloads/jdk8-downloads-2133151.html)
 
-Build
------
+Getting Started
+---------------
+Bootstrap from source code and run examples
+	
+	    ./build/bootstrap-example.sh
 
-    git clone git@github.corp.ebay.com:hchen9/logstorm.git
-    cd logstorm
-    mvn install
-  
+Development
+-----------
+
+* Build with source code
+
+		git clone git@github.corp.ebay.com:hchen9/logstorm.git
+        cd logstorm
+        mvn install
+
+* Start LogStorm Server: 
+	
+		mvn exec:java -pl server -Dexec.mainClass="com.ebay.logstorm.server.LogStormServer" -Dserver.port=8080
+
 Test
 ----
-
-* Getting started
-
-		mvn test -Dtest=com.ebay.logstorm.runner.storm.TestStormPipelineRunner -DfailIfNoTests=false
-
 * Run all unit tests 
 	
 		mvn test
+		
+* Test single test, for example TestStormPipelineRunner
 
-Backlog
--------
-
-1. Pipeline Server and Management UI
-2. LogStash Siddhi Filter Plugin (https://github.com/wso2/siddhi) 
-3. More Pipeline Runner Support
-    * Apache Spark Runner (http://spark.apache.org/)
-    * Apache Flink Runner (http://flink.apache.org/)
-    * Apache Beam Runner (http://beam.incubator.apache.org/)
-    * High Performance Local Runner
-4. Replace default logstash message queue with [Disruptor](https://github.com/LMAX-Exchange/disruptor)
-
+		mvn test -Dtest=com.ebay.logstorm.runner.storm.TestStormPipelineRunner -DfailIfNoTests=false
+ 
 Contact
 -------
 
