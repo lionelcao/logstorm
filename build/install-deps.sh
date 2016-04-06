@@ -32,20 +32,19 @@ if [ -e ${logstash_dir} ];then
 	exit 0
 fi
 
-$(which wget 1>/dev/null 2>&1)
+$(which curl 1>/dev/null 2>&1)
 if [ "$?" != "0" ];then
-    echo "[ERROR] Failed to install logstash because command 'wget'(https://www.gnu.org/software/wget/) is not found" 1>&2
-    echo "[ERROR] To resolve the problem, you could install 'wget' which is compatible with your operation system, "
-    echo "[ERROR] or download logstash from ${logstash_download_link} and unpackage into `pwd`/${logstash_dir} manually" 1>&2
+    echo "[ERROR] Failed to install logstash because command 'curl' (https://curl.haxx.se/) is not found" 1>&2
+    echo "[ERROR] To resolve the problem, you must install 'curl' compatible with your operation system, " 1>&2
+    echo "[ERROR] or manually download logstash from ${logstash_download_link} and extract into `pwd`/${logstash_dir}" 1>&2
+    echo "[ERROR] then retry to build again" 1>&2
     exit 1
 fi
 
 if [ ! -e ${logstash_package} ];then
     echo "[INFO] Installing ${logstash_download_link} into build/vendor/${logstash_dir}"
-	wget ${logstash_download_link}
+	curl ${logstash_download_link} | tar xz
 fi
-
-tar xzvf ${logstash_package}
 
 if [ -e ${logstash_dir} ];then
     echo "[INFO] Successfully installed logstash into build/vendor/${logstash_dir}"
