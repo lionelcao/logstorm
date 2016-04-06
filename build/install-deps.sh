@@ -36,7 +36,7 @@ $(which curl 1>/dev/null 2>&1)
 if [ "$?" != "0" ];then
     echo "[ERROR] Failed to install logstash because command 'curl' (https://curl.haxx.se/) is not found" 1>&2
     echo "[ERROR] To resolve the problem, you must install 'curl' compatible with your operation system, " 1>&2
-    echo "[ERROR] or manually download logstash from ${logstash_download_link} and extract into `pwd`/${logstash_dir}" 1>&2
+    echo "[ERROR] or manually download logstash (version: $logstash_version) from ${logstash_download_link} and extract into `pwd`/${logstash_dir}" 1>&2
     echo "[ERROR] then retry to build again" 1>&2
     exit 1
 fi
