@@ -11,7 +11,6 @@ Documentation
 -------------
 You can find the more documentation on [docs](/docs). This README file only contains basic setup instructions.
 
-
 Getting Started
 ---------------
 Bootstrap from source code and run examples

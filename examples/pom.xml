@@ -14,7 +14,7 @@
 
     <modules>
         <module>jruby-examples</module>
-        <module>logstorm-samples</module>
+        <module>logstorm-examples</module>
     </modules>
 
     <dependencies>
