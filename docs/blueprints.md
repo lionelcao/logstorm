@@ -20,6 +20,7 @@ TODO
     * https://github.com/the-grid/the-graph
 * Non-downtime hot-deploy
 * Topology HA
+* Kryo serializer 
 
 Done
 ----
