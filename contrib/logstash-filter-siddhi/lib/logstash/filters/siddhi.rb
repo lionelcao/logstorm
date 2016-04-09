@@ -5,10 +5,6 @@ require "java"
 
 java_import "com.ebay.logstorm.contrib.logstash.LogStashSiddhiFilter"
 
-# This example filter will replace the contents of the default
-# message field with whatever you specify in the configuration.
-#
-# It is only intended to be used as an example.
 class LogStash::Filters::Siddhi < LogStash::Filters::Base
 
   # Setting the config_name here is required. This is how you
@@ -16,7 +12,8 @@ class LogStash::Filters::Siddhi < LogStash::Filters::Base
   #
   # filter {
   #   siddhi {
-  #     message => "My message..."
+  #     plan => "Siddhi Execution Plan SQL",
+  #     expect => ["Expected output stream names"]
   #   }
   # }
   #
@@ -29,7 +26,7 @@ class LogStash::Filters::Siddhi < LogStash::Filters::Base
   public
   def register
     # Add instance variables
-    @java_siddhi_filter = LogStashSiddhiFilterImpl.new(@plan,@callback)
+    @java_siddhi_filter = LogStashSiddhiFilterImpl.new(@plan,@expect)
   end # def register
 
   public

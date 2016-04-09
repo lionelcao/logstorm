@@ -38,11 +38,12 @@ public class LogStashSiddhiFilterImpl implements LogStashSiddhiFilter{
     private Map<String, AbstractDefinition> definitionMap;
     private Map<String, InputHandler> streamInputHandlerMap;
 
-    public LogStashSiddhiFilterImpl(String executionPlan, List<String> callbackStreams){
+    public LogStashSiddhiFilterImpl(String executionPlan, List<String> expectedStreams){
         this.executionPlan = "define stream StockStream (symbol string, price float, volume long);" +
                 "from StockStream[price + 0.0 > 0.0] " +
                 "select symbol, price " +
                 "insert into outputStream;";
+        // TODO this.callbackStreams = expectedStreams
         this.callbackStreams = Collections.emptyList();
         this.callbackStreams.add("outputStream");
     }
