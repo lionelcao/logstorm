@@ -3,6 +3,7 @@ package com.ebay.logstorm.server.entities;
 import com.ebay.logstorm.server.platform.ExecutionPlatform;
 import com.ebay.logstorm.server.platform.ExecutionPlatformFactory;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.google.common.base.Preconditions;
 
 import javax.persistence.*;
@@ -48,7 +49,7 @@ public class ClusterEntity extends BaseEntity{
 
     public String getType() {
         if(getPlatformInstance()!=null){
-            return getPlatformInstance().getTypeName();
+            return getPlatformInstance().getType();
         }else {
             return null;
         }
@@ -70,7 +71,7 @@ public class ClusterEntity extends BaseEntity{
         this.uuid = uuid;
     }
 
-    @JsonIgnore
+    @Transient @JsonIgnore
     public ExecutionPlatform getPlatformInstance() {
         if(perInstanceCache == null && getAdapterClass()!=null) {
             perInstanceCache = ExecutionPlatformFactory.newPlatformInstance(getAdapterClass(), this.getProperties());
@@ -91,7 +92,6 @@ public class ClusterEntity extends BaseEntity{
         this.adapterClass = adapterClass;
     }
 
-    @JsonIgnore
-    @Transient
+    @JsonIgnoreProperties @Transient
     private ExecutionPlatform perInstanceCache;
 }

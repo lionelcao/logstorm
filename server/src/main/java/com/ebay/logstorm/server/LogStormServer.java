@@ -2,7 +2,7 @@ package com.ebay.logstorm.server;
 
 import com.ebay.logstorm.core.compiler.proxy.RubyRuntimeFactory;
 import com.ebay.logstorm.server.platform.ExecutionManager;
-import com.ebay.logstorm.server.platform.PipelineExecutionStatusUpdater;
+import com.ebay.logstorm.server.platform.ExecutionStatusUpdater;
 import com.ebay.logstorm.server.services.PipelineStatusSyncService;
 import com.ebay.logstorm.server.utils.EagleBanner;
 import org.slf4j.Logger;
@@ -18,7 +18,6 @@ import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
 
 import javax.servlet.ServletContext;
-import javax.servlet.ServletException;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -50,7 +49,7 @@ public class LogStormServer  extends SpringBootServletInitializer {
             Thread thread = new Thread(RubyRuntimeFactory::getSingletonRuntime);
             thread.setDaemon(true);
             thread.start();
-            ExecutionManager.getInstance().submit(PipelineExecutionStatusUpdater.WORKER_NAME,new PipelineExecutionStatusUpdater(statusSyncService));
+            ExecutionManager.getInstance().submit(ExecutionStatusUpdater.WORKER_NAME,new ExecutionStatusUpdater(statusSyncService));
         };
     }
 

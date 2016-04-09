@@ -23,8 +23,9 @@ import java.util.Properties;
  */
 public interface ExecutionPlatform {
     void init(Properties properties);
-    String getTypeName();
-    void start(PipelineEntity entity) throws Exception;
-    void stop(PipelineEntity entity) throws Exception;
-    void status(PipelineEntity entity) throws Exception;
+    void start(final PipelineExecutionEntity entity) throws Exception;
+    void stop(final PipelineExecutionEntity entity) throws Exception;
+    void status(final PipelineExecutionEntity entity) throws Exception;
+    String getType();
+    String getVersion();
 }

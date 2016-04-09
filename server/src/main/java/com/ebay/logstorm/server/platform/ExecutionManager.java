@@ -7,9 +7,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 import java.util.TreeMap;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Future;
-import java.util.concurrent.ScheduledThreadPoolExecutor;
+import java.util.concurrent.*;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -33,8 +31,12 @@ public class ExecutionManager {
     private final ExecutorService executorService;
     private final Map<Object,TaskExecutor> workerMap;
     private static ExecutionManager instance;
+    private final static int threadPoolCoreSize = 10;
+    private final static int threadPoolMaxSize = 20;
+    private final static long threadPoolShrinkTime = 60000L;
+
     private ExecutionManager(){
-        executorService = new ScheduledThreadPoolExecutor(100);
+        executorService = new ThreadPoolExecutor(threadPoolCoreSize, threadPoolMaxSize, threadPoolShrinkTime, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
         workerMap = new TreeMap<>();
     }
 
@@ -113,5 +115,14 @@ public class ExecutionManager {
             }
         }
         return false;
+    }
+
+    public void remove(Object id) {
+        TaskExecutor executor = this.get(id);
+        if(executor.isAlive()){
+            throw new RuntimeException("Failed to remove alive executor '"+id+"'");
+        }else{
+            this.workerMap.remove(id);
+        }
     }
 }

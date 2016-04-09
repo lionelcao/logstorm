@@ -1,14 +1,11 @@
 package com.ebay.logstorm.server.entities;
 
 import com.ebay.logstorm.core.LogStormConstants;
-import com.ebay.logstorm.core.compiler.Pipeline;
-import com.ebay.logstorm.core.compiler.PipelineCompiler;
-import com.ebay.logstorm.core.exception.PipelineException;
-import com.ebay.logstorm.server.platform.ExecutionPlatform;
-import com.ebay.logstorm.server.platform.ExecutionPlatformFactory;
-import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import javax.persistence.*;
+import java.util.Collection;
+import java.util.Collections;
+import java.util.List;
 import java.util.Properties;
 
 /**
@@ -41,8 +38,8 @@ public class PipelineEntity extends BaseEntity {
     @Column(nullable = true,length = 10000)
     private Properties properties;
 
-    @OneToOne
-    private PipelineExecutionEntity execution;
+    @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
+    private Collection<PipelineExecutionEntity> executors;
 
     @Column
     @Enumerated(EnumType.ORDINAL)
@@ -50,6 +47,9 @@ public class PipelineEntity extends BaseEntity {
 
     @OneToOne
     private ClusterEntity cluster;
+
+    @Column
+    private int parallelism = 1;
 
     public String getName() {
         return name;
@@ -106,19 +106,43 @@ public class PipelineEntity extends BaseEntity {
         this.uuid = uuid;
     }
 
-    public PipelineExecutionEntity getExecution() {
-        return execution;
-    }
-
-    public void setExecution(PipelineExecutionEntity executionContext) {
-        this.execution = executionContext;
-        if(this.execution!=null) {
-            this.execution.setPipeline(this);
-        }
-    }
+//    public PipelineExecutionEntity getExecution() {
+//        return execution;
+//    }
+//
+//    public void setExecution(PipelineExecutionEntity executionContext) {
+//        this.execution = executionContext;
+//        if(this.execution!=null) {
+//            this.execution.setPipeline(this);
+//        }
+//    }
 
     @Override
     public String toString() {
         return String.format("Pipeline[uuid=%s, name=%s]",this.getUuid(),this.getName());
+    }
+
+    public Collection<PipelineExecutionEntity> getExecutors() {
+        return executors;
+    }
+
+    public void setExecutors(Collection<PipelineExecutionEntity> executions) {
+        this.executors = executions;
+    }
+
+    public int getParallelism() {
+        return parallelism;
+    }
+
+    public void setParallelism(int parallelism) {
+        this.parallelism = parallelism;
+    }
+
+    @Override
+    public void ensureDefault() {
+        super.ensureDefault();
+        if(this.getExecutors()==null) {
+            this.setExecutors(Collections.emptyList());
+        }
     }
 }

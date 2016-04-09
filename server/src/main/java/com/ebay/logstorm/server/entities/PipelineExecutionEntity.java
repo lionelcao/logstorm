@@ -1,8 +1,6 @@
 package com.ebay.logstorm.server.entities;
 
-import com.ebay.logstorm.core.compiler.Pipeline;
 import com.fasterxml.jackson.annotation.JsonIgnore;
-import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 
 import javax.persistence.*;
 import java.util.Properties;
@@ -28,11 +26,17 @@ public class PipelineExecutionEntity extends BaseEntity {
     @Id
     private String uuid;
 
+    @Column(unique = true)
+    private String name;
+
+    @Column(unique = false)
+    private int number;
+
     @Column(nullable = true,length = 10000)
     private Properties properties;
 
     @JsonIgnore
-    @Transient
+    @OneToOne
     private PipelineEntity pipeline;
 
     @Column
@@ -137,5 +141,21 @@ public class PipelineExecutionEntity extends BaseEntity {
 
     public void setPipeline(PipelineEntity pipeline) {
         this.pipeline = pipeline;
+    }
+
+    public String getName() {
+        return name;
+    }
+
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    public int getNumber() {
+        return number;
+    }
+
+    public void setNumber(int number) {
+        this.number = number;
     }
 }

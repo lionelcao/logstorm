@@ -19,6 +19,7 @@ import org.springframework.stereotype.Controller;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.Collection;
 import java.util.List;
 
 /**
@@ -107,11 +108,11 @@ public class PipelineController extends BaseController{
         return RestResponse.async(()-> PipelineCompiler.compileConfigString(entityService.getPipelineByUuidOrNameOrThrow(uuidOrName,uuidOrName).getPipeline())).get();
     }
 
-    @RequestMapping(path = "/{uuidOrName}/execution",method= RequestMethod.GET)
+    @RequestMapping(path = "/{uuidOrName}/executor",method= RequestMethod.GET)
     @Transactional(readOnly = true)
     public @ResponseBody
-    ResponseEntity<RestResponse<PipelineExecutionEntity>> getPipelineExecution(@PathVariable String uuidOrName) {
-        return RestResponse.async(()-> entityService.getPipelineByUuidOrNameOrThrow(uuidOrName,uuidOrName).getExecution()).get();
+    ResponseEntity<RestResponse<Collection<PipelineExecutionEntity>>> getPipelineExecution(@PathVariable String uuidOrName) {
+        return RestResponse.async(()-> entityService.getPipelineByUuidOrNameOrThrow(uuidOrName,uuidOrName).getExecutors()).get();
     }
 
     @RequestMapping(path = "/start",method = RequestMethod.POST)

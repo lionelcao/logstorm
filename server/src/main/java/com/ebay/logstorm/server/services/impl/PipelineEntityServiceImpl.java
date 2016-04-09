@@ -5,6 +5,7 @@ import com.ebay.logstorm.server.entities.PipelineEntity;
 import com.ebay.logstorm.server.services.PipelineEntityRepository;
 import com.ebay.logstorm.server.services.PipelineEntityService;
 import com.ebay.logstorm.server.services.PipelineSearchCriteria;
+import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

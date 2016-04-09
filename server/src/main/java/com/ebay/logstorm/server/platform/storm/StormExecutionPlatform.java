@@ -5,6 +5,7 @@ import com.ebay.logstorm.core.compiler.PipelineCompiler;
 import com.ebay.logstorm.core.exception.PipelineException;
 import com.ebay.logstorm.runner.storm.StormPipelineRunner;
 import com.ebay.logstorm.server.entities.PipelineEntity;
+import com.ebay.logstorm.server.entities.PipelineExecutionEntity;
 import com.ebay.logstorm.server.entities.PipelineExecutionStatus;
 import com.ebay.logstorm.server.platform.ExecutionManager;
 import com.ebay.logstorm.server.platform.ExecutionPlatform;
@@ -41,52 +42,54 @@ public class StormExecutionPlatform implements ExecutionPlatform {
     }
 
     @Override
-    public String getTypeName() {
-        return "storm";
-    }
-
-    @Override
-    public void start(PipelineEntity entity) throws Exception {
-        if(entity.getMode().equals(LogStormConstants.DeployMode.LOCAL)) {
-            TaskExecutor worker = ExecutionManager.getInstance().submit(buildExecutorId(entity), () -> {
+    public void start(final PipelineExecutionEntity entity) throws Exception {
+        if(entity.getPipeline().getMode().equals(LogStormConstants.DeployMode.LOCAL)) {
+            TaskExecutor worker = ExecutionManager.getInstance().submit(entity.getName(), () -> {
                 try {
-                    runner.run(PipelineCompiler.compileConfigString(entity.getPipeline()));
+                    runner.run(PipelineCompiler.compileConfigString(entity.getPipeline().getPipeline()));
                 } catch (PipelineException e) {
                     throw new RuntimeException(e);
                 }
             });
-            entity.getExecution().setDescription("Running inside "+worker.toString()+" in "+entity.getMode()+" mode");
-            entity.getExecution().setProperty("executor.id",String.valueOf(worker.getId()));
-            entity.getExecution().setProperty("executor.name",worker.getName());
-            entity.getExecution().setProperty("executor.thread",worker.toString());
-            entity.getExecution().setProperty("executor.state",worker.getState().toString());
-            entity.getExecution().setProperty("executor.stackTrace", Arrays.toString(worker.getStackTrace()));
-            entity.getExecution().setUrl("/api/executor/"+buildExecutorId(entity));
+            entity.setDescription("Running inside " + worker.toString() + " in " + entity.getPipeline().getMode() + " mode");
+            entity.setProperty("executor.id", String.valueOf(worker.getId()));
+            entity.setProperty("executor.name", worker.getName());
+            entity.setProperty("executor.thread", worker.toString());
+            entity.setProperty("executor.state", worker.getState().toString());
+            entity.setUrl("/api/executor/" + entity.getName());
         }
     }
 
-    private String buildExecutorId(PipelineEntity entity){
-        return "pipeline:"+entity.getName()+",execution:"+entity.getExecution().getUuid();
-    }
-
     @Override
-    public void stop(PipelineEntity entity) throws Exception {
-        if(entity.getMode().equals(LogStormConstants.DeployMode.LOCAL)) {
+    public void stop(final PipelineExecutionEntity entity) throws Exception {
+        if(entity.getPipeline().getMode().equals(LogStormConstants.DeployMode.LOCAL)) {
             ExecutionManager.getInstance().stop(entity.getName());
-            entity.getExecution().setDescription("Stopped");
+            entity.setDescription("Stopped");
+            entity.setStatus(PipelineExecutionStatus.STOPPED);
+            ExecutionManager.getInstance().remove(entity.getName());
         }
     }
 
     @Override
-    public void status(PipelineEntity entity) throws Exception {
-        if(entity.getMode().equals(LogStormConstants.DeployMode.LOCAL)) {
-            PipelineExecutionStatus currentStatus = entity.getExecution().getStatus();
-            PipelineExecutionStatus newStatus = ExecutionManager.getWorkerStatus(ExecutionManager.getInstance().get(buildExecutorId(entity)).getState());
-            if(!currentStatus.equals(newStatus)){
-                LOG.info("Status of pipeline: {} changed from {} to {}",entity,currentStatus,newStatus);
-                entity.getExecution().setStatus(newStatus);
-                entity.getExecution().setDescription(String.format("Status of pipeline: %s changed from %s to %s",entity,currentStatus,newStatus));
+    public void status(final PipelineExecutionEntity entity) throws Exception {
+        if (LogStormConstants.DeployMode.LOCAL.equals(entity.getPipeline().getMode())) {
+            PipelineExecutionStatus currentStatus = entity.getStatus();
+            PipelineExecutionStatus newStatus = ExecutionManager.getWorkerStatus(ExecutionManager.getInstance().get(entity.getName()).getState());
+            if (!currentStatus.equals(newStatus)) {
+                LOG.info("Status of pipeline: {} changed from {} to {}", entity, currentStatus, newStatus);
+                entity.setStatus(newStatus);
+                entity.setDescription(String.format("Status of pipeline: %s changed from %s to %s", entity, currentStatus, newStatus));
             }
         }
+    }
+
+    @Override
+    public String getType() {
+        return "storm";
+    }
+
+    @Override
+    public String getVersion() {
+        return "v0.8";
     }
 }

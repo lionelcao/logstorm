@@ -32,13 +32,13 @@ import java.util.List;
  */
 @Component("pipelineStatusSyncService")
 @Service
-public class PipelineStatusSyncServiceImpl implements PipelineStatusSyncService {
-    private final static Logger LOG = LoggerFactory.getLogger(PipelineStatusSyncServiceImpl.class);
+public class StatusSyncServiceImpl implements PipelineStatusSyncService {
+    private final static Logger LOG = LoggerFactory.getLogger(StatusSyncServiceImpl.class);
     private final PipelineEntityService entityService;
     private final PipelineExecutionService executionService;
 
     @Autowired
-    public PipelineStatusSyncServiceImpl(PipelineEntityService entityService, PipelineExecutionService executionService){
+    public StatusSyncServiceImpl(PipelineEntityService entityService, PipelineExecutionService executionService){
         this.entityService = entityService;
         this.executionService =executionService;
     }
@@ -48,18 +48,20 @@ public class PipelineStatusSyncServiceImpl implements PipelineStatusSyncService 
         List<PipelineEntity> allPipelineEntities = entityService.findAll();
         LOG.info("Checking status of {} pipelines",allPipelineEntities.size());
         for (PipelineEntity pipelineEntity : allPipelineEntities) {
-            if (pipelineEntity.getExecution() != null) {
-                try {
-                    LOG.info("Checking status of '{}'", pipelineEntity.getName());
-                    pipelineEntity.getCluster().getPlatformInstance().status(pipelineEntity);
-                } catch (Exception e) {
-                    LOG.error(e.getMessage(), e);
-                    pipelineEntity.getExecution().setStatus(PipelineExecutionStatus.UNKNOWN);
-                    pipelineEntity.getExecution().setDescription(ExceptionUtils.getStackTrace(e));
-                } finally {
-                    executionService.updateExecutionEntity(pipelineEntity.getExecution());
-                    LOG.info("Updated status of '{}'",pipelineEntity.getName());
-                }
+            if (pipelineEntity.getExecutors() != null) {
+                pipelineEntity.getExecutors().forEach((executor) ->{
+                    try {
+                        LOG.info("Checking status of '{}'", pipelineEntity.getName());
+                        pipelineEntity.getCluster().getPlatformInstance().status(executor);
+                    } catch (Exception e) {
+                        LOG.error(e.getMessage(), e);
+                        executor.setStatus(PipelineExecutionStatus.UNKNOWN);
+                        executor.setDescription(ExceptionUtils.getStackTrace(e));
+                    } finally {
+                        executionService.updateExecutionEntity(executor);
+                        LOG.info("Updated status of '{}'",pipelineEntity.getName());
+                    }
+                });
             } else {
                 LOG.info("'{}'  has not been deployed yet, skipped status checking",pipelineEntity.getName());
             }

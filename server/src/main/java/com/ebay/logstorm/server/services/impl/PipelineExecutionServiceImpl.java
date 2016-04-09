@@ -4,16 +4,22 @@ import com.ebay.logstorm.core.exception.PipelineExecutionException;
 import com.ebay.logstorm.server.entities.PipelineEntity;
 import com.ebay.logstorm.server.entities.PipelineExecutionEntity;
 import com.ebay.logstorm.server.entities.PipelineExecutionStatus;
+import com.ebay.logstorm.server.platform.ExecutionManager;
 import com.ebay.logstorm.server.services.PipelineEntityService;
 import com.ebay.logstorm.server.services.PipelineExecutionRepository;
 import com.ebay.logstorm.server.services.PipelineExecutionService;
 import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.exception.ExceptionUtils;
+import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.ExecutionException;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -48,34 +54,54 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
         Preconditions.checkNotNull(pipeline,"pipeline is null: "+pipeline);
         Preconditions.checkNotNull(pipeline.getCluster(),"cluster is null: "+ pipeline);
         Preconditions.checkNotNull(pipeline.getCluster().getPlatformInstance(),"platform instance is null: "+pipeline);
-        if(pipeline.getExecution() == null) {
-            LOG.info("{} has not been deployed yet, deploying now",pipeline);
-            pipeline.setExecution(this.createExecutionEntity(new PipelineExecutionEntity()));
+        if(pipeline.getExecutors() == null || pipeline.getExecutors().size() == 0) {
+            LOG.info("{} has not been deployed yet, deploying now", pipeline);
+            List<PipelineExecutionEntity> executors = new ArrayList<>(pipeline.getParallelism());
+            for(int i =0;i<pipeline.getParallelism();i++) {
+                PipelineExecutionEntity instance = new PipelineExecutionEntity();
+                instance.setNumber(i);
+                instance.setName(String.format("%s_%s",pipeline.getName(),instance.getNumber()));
+                instance.setPipeline(pipeline);
+                executors.add(this.createExecutionEntity(instance));
+            }
+            pipeline.setExecutors(executors);
             entityService.updatePipeline(pipeline);
+            LOG.info("Initialized [] executors for pipeline {}", executors.size(),pipeline);
         }
     }
 
     @Override
     public PipelineEntity start(PipelineEntity pipeline) throws Exception {
         checkInitExecutionContext(pipeline);
-        if(PipelineExecutionStatus.isReadyToStart(pipeline.getExecution().getStatus())){
-            try {
-                pipeline.getExecution().setStatus(PipelineExecutionStatus.STARTING);
-                updateExecutionEntity(pipeline.getExecution());
-                pipeline.getCluster().getPlatformInstance().start(pipeline);
-                pipeline.getExecution().setStatus(PipelineExecutionStatus.RUNNING);
-                updateExecutionEntity(pipeline.getExecution());
-            } catch (Exception ex){
-                pipeline.getExecution().setStatus(PipelineExecutionStatus.FAILED);
-                pipeline.getExecution().setDescription(ExceptionUtils.getStackTrace(ex));
-                updateExecutionEntity(pipeline.getExecution());
-                LOG.error(ex.getMessage(),ex);
-                throw ex;
+        for(PipelineExecutionEntity executor: pipeline.getExecutors()){
+            boolean readyToStart = PipelineExecutionStatus.isReadyToStart(executor.getStatus());
+            if(!readyToStart){
+                throw new PipelineExecutionException(pipeline+" is not ready to start, executor "+executor.getName()+" is still running");
             }
-            return pipeline;
-        } else {
-            throw new PipelineExecutionException(pipeline+" is not ready to start, current status is "+pipeline.getExecution().getStatus());
         }
+        pipeline.getExecutors().stream().map((executor) -> ExecutionManager.getInstance().submit(()-> {
+            try {
+                executor.setStatus(PipelineExecutionStatus.STARTING);
+                updateExecutionEntity(executor);
+                pipeline.getCluster().getPlatformInstance().start(executor);
+                executor.setStatus(PipelineExecutionStatus.RUNNING);
+                updateExecutionEntity(executor);
+            } catch (Exception ex) {
+                executor.setStatus(PipelineExecutionStatus.FAILED);
+                executor.setDescription(ExceptionUtils.getStackTrace(ex));
+                updateExecutionEntity(executor);
+                LOG.error(ex.getMessage(), ex);
+                throw new RuntimeException(ex);
+            }
+        })).forEach((future -> {
+            try {
+                future.get();
+            } catch (InterruptedException | ExecutionException e) {
+                LOG.error(e.getMessage(),e);
+                throw new RuntimeException(e);
+            }
+        }));
+        return pipeline;
     }
 
     @Override
