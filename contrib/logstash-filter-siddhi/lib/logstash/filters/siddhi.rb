@@ -1,6 +1,9 @@
 # encoding: utf-8
 require "logstash/filters/base"
 require "logstash/namespace"
+require "java"
+
+java_import "com.ebay.logstorm.contrib.logstash.LogStashSiddhiFilter"
 
 # This example filter will replace the contents of the default
 # message field with whatever you specify in the configuration.
@@ -20,22 +23,26 @@ class LogStash::Filters::Siddhi < LogStash::Filters::Base
   config_name "siddhi"
 
   # Replace the message with this value.
-  config :message, :validate => :string, :default => ""
+  config :plan, :validate => :string, :default => nil
+  config :expect, :validate => :array, :default => nil
 
   public
   def register
     # Add instance variables
+    @java_siddhi_filter = LogStashSiddhiFilterImpl.new(@plan,@callback)
   end # def register
 
   public
   def filter(event)
-    if @message
-      # Replace the event message with our message as configured in the
-      # config file.
-      event["message"] = @message
-    end
+    @java_siddhi_filter.filter(event)
 
     # filter_matched should go in the last line of our successful code
     filter_matched(event)
   end # def filter
+
+  public
+  def close()
+    @java_siddhi_filter.close
+  end
+
 end # class LogStash::Filters::Example

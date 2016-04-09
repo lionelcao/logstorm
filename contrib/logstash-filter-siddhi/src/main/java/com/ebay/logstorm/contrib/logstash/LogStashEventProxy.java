@@ -1,7 +1,7 @@
 package com.ebay.logstorm.contrib.logstash;
 
-import org.jruby.RubyArray;
 import org.jruby.runtime.builtin.IRubyObject;
+import org.wso2.siddhi.query.api.definition.AbstractDefinition;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -19,9 +19,33 @@ import org.jruby.runtime.builtin.IRubyObject;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public interface LogStashSiddhiFilter {
-    void register();
-    void filter(IRubyObject event);
-    RubyArray multi_filter(RubyArray events);
-    void close();
+public class LogStashEventProxy {
+
+    public LogStashEventProxy(IRubyObject eventRubyObject){
+
+    }
+
+    public <T> T getValue(String fieldName){
+        throw new RuntimeException("Not implemented yet");
+    }
+
+    public boolean isCanceled(){
+        throw new RuntimeException("Not implemented yet");
+    }
+
+    public void setCancel(boolean cancel){
+        throw new RuntimeException("Not implemented yet");
+    }
+
+    public void verifyDefinition(AbstractDefinition streamDefinition){
+        // do nothing;
+    }
+
+    public long getTimestamp() {
+        throw new RuntimeException("Not implemented yet");
+    }
+
+    public Object[] getDatas(AbstractDefinition definition) {
+        throw new RuntimeException("Not implemented yet");
+    }
 }

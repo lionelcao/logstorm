@@ -7,9 +7,9 @@ describe LogStash::Filters::Siddhi do
     let(:config) do <<-CONFIG
       filter {
         siddhi {
-          query =>
-            "define stream StockExchangeStream (symbol string, price int, volume float );
+          plan => "define stream StockExchangeStream (symbol string, price int, volume float );
               from StockExchangeStream[price >= 20 and price < 100] select symbol,volume insert into StockQuote;"
+          expect => ["StockQuote"]
         }
       }
     CONFIG
