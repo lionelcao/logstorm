@@ -47,7 +47,7 @@ public class ExecutionPlatformFactory {
     public static ExecutionPlatform newPlatformInstance(String adapterClassName, Properties properties) {
         try {
             ExecutionPlatform instance = ((Class<? extends ExecutionPlatform>) Class.forName(adapterClassName)).newInstance();
-            instance.init(properties);
+            instance.prepare(properties);
             return instance;
         } catch (InstantiationException | IllegalAccessException |ClassNotFoundException e) {
             throw new RuntimeException(e);

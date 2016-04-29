@@ -2,9 +2,13 @@ package com.ebay.logstorm.runner.storm;
 
 import backtype.storm.Config;
 import backtype.storm.LocalCluster;
+import backtype.storm.StormSubmitter;
+import backtype.storm.generated.AlreadyAliveException;
+import backtype.storm.generated.InvalidTopologyException;
 import backtype.storm.topology.BoltDeclarer;
 import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.tuple.Fields;
+import com.ebay.logstorm.core.LogStormConstants;
 import com.ebay.logstorm.core.PipelineContext;
 import com.ebay.logstorm.core.compiler.FilterPlugin;
 import com.ebay.logstorm.core.compiler.InputPlugin;
@@ -71,8 +75,17 @@ public class StormPipelineRunner implements PipelineRunner {
         }
 
         LOG.info("Submitting topology '{}': {}",context.getPipelineName(),pipeline);
-
-        LocalCluster cluster = new LocalCluster();
-        cluster.submitTopology(context.getPipelineName(), stormConfig, builder.createTopology());
+        if(pipeline.getContext().getDeployMode() == LogStormConstants.DeployMode.LOCAL) {
+            LOG.info("Submitting topology '{}': {} in local mode",context.getPipelineName(),pipeline);
+            LocalCluster cluster = new LocalCluster();
+            cluster.submitTopology(context.getPipelineName(), stormConfig, builder.createTopology());
+        } else {
+            LOG.info("Submitting topology '{}': {} in remote mode",context.getPipelineName(),pipeline);
+            try {
+                StormSubmitter.submitTopologyWithProgressBar(context.getPipelineName(),stormConfig,builder.createTopology());
+            } catch (AlreadyAliveException | InvalidTopologyException e) {
+                LOG.error(e.getMessage(),e);
+            }
+        }
     }
 }

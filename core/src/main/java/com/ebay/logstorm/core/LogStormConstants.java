@@ -43,7 +43,7 @@ public class LogStormConstants {
     }
 
     public enum DeployMode implements Serializable {
-        LOCAL("standalone"), CLUSTER("cluster");
+        LOCAL("local"), CLUSTER("cluster");
 
         private final String mode;
 

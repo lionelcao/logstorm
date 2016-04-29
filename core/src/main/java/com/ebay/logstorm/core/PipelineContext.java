@@ -28,6 +28,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.Serializable;
 import java.net.URL;
+import java.util.Properties;
 import java.util.UUID;
 
 /**
@@ -123,5 +124,9 @@ public class PipelineContext implements Serializable{
 
     public void setDeployMode(String mode) {
         this.setDeployMode(LogStormConstants.DeployMode.locate(mode));
+    }
+
+    public void setConfig(Properties properties) {
+        this.config = ConfigFactory.parseProperties(properties);
     }
 }

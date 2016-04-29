@@ -1,19 +1,19 @@
 package com.ebay.logstorm.server.platform.storm;
 
 import com.ebay.logstorm.core.LogStormConstants;
+import com.ebay.logstorm.core.PipelineContext;
+import com.ebay.logstorm.core.compiler.Pipeline;
 import com.ebay.logstorm.core.compiler.PipelineCompiler;
-import com.ebay.logstorm.core.exception.PipelineException;
 import com.ebay.logstorm.runner.storm.StormPipelineRunner;
-import com.ebay.logstorm.server.entities.PipelineEntity;
 import com.ebay.logstorm.server.entities.PipelineExecutionEntity;
 import com.ebay.logstorm.server.entities.PipelineExecutionStatus;
 import com.ebay.logstorm.server.platform.ExecutionManager;
 import com.ebay.logstorm.server.platform.ExecutionPlatform;
 import com.ebay.logstorm.server.platform.TaskExecutor;
+import com.typesafe.config.ConfigFactory;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.Arrays;
 import java.util.Properties;
 
 /**
@@ -37,27 +37,44 @@ public class StormExecutionPlatform implements ExecutionPlatform {
 
     private StormPipelineRunner runner;
     @Override
-    public void init(Properties properties) {
+    public void prepare(Properties properties) {
+        String pipelineJar = ConfigFactory.load().getString("pipeline.jar");
+        LOG.info("Setting storm.jar as {}",pipelineJar);
+        System.setProperty("storm.jar",pipelineJar);
         runner = new StormPipelineRunner();
     }
 
     @Override
     public void start(final PipelineExecutionEntity entity) throws Exception {
-        if(entity.getPipeline().getMode().equals(LogStormConstants.DeployMode.LOCAL)) {
-            TaskExecutor worker = ExecutionManager.getInstance().submit(entity.getName(), () -> {
-                try {
-                    runner.run(PipelineCompiler.compileConfigString(entity.getPipeline().getPipeline()));
-                } catch (PipelineException e) {
-                    throw new RuntimeException(e);
-                }
-            });
-            entity.setDescription("Running inside " + worker.toString() + " in " + entity.getPipeline().getMode() + " mode");
-            entity.setProperty("executor.id", String.valueOf(worker.getId()));
-            entity.setProperty("executor.name", worker.getName());
-            entity.setProperty("executor.thread", worker.toString());
-            entity.setProperty("executor.state", worker.getState().toString());
-            entity.setUrl("/api/executor/" + entity.getName());
+        PipelineContext context = new PipelineContext(entity.getPipeline().getPipeline());
+
+        context.setConfig(entity.getPipeline().getProperties());
+        context.setDeployMode(entity.getPipeline().getMode());
+        context.setPipelineName(entity.getPipeline().getName());
+        Pipeline pipeline = PipelineCompiler.compile(context);
+
+        switch (entity.getPipeline().getMode()){
+            case LOCAL:
+                TaskExecutor worker = startInLocalMode(pipeline);
+                entity.setDescription("Running inside " + worker.toString() + " in " + entity.getPipeline().getMode() + " mode");
+                entity.setProperty("executor.id", String.valueOf(worker.getId()));
+                entity.setProperty("executor.name", worker.getName());
+                entity.setProperty("executor.thread", worker.toString());
+                entity.setUrl("/api/executor/" + entity.getName());
+            case CLUSTER:
+                startInRemoteMode(pipeline);
+         //   throw new IllegalStateException("State of "+entity.getPipeline().getName()+" is illegal: "+ entity.getPipeline().getMode());
         }
+    }
+
+    private void startInRemoteMode(Pipeline pipeline) {
+        runner.run(pipeline);
+    }
+
+    private TaskExecutor startInLocalMode(Pipeline pipeline) {
+        return ExecutionManager.getInstance().submit(pipeline.getContext().getPipelineName(), () -> {
+                runner.run(pipeline);
+        });
     }
 
     @Override

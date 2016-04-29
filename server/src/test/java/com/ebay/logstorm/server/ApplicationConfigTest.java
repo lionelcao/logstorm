@@ -1,9 +1,9 @@
-package com.ebay.logstorm.server.platform;
+package com.ebay.logstorm.server;
 
-import com.ebay.logstorm.server.entities.PipelineEntity;
-import com.ebay.logstorm.server.entities.PipelineExecutionEntity;
-
-import java.util.Properties;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
+import org.junit.Assert;
+import org.junit.Test;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -21,11 +21,11 @@ import java.util.Properties;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public interface ExecutionPlatform {
-    void prepare(Properties properties);
-    void start(final PipelineExecutionEntity entity) throws Exception;
-    void stop(final PipelineExecutionEntity entity) throws Exception;
-    void status(final PipelineExecutionEntity entity) throws Exception;
-    String getType();
-    String getVersion();
+public class ApplicationConfigTest {
+    @Test
+    public void testConfig(){
+        Config config = ConfigFactory.load();
+        Assert.assertNotNull(config);
+        Assert.assertEquals(8080,config.getInt("server.port"));
+    }
 }
