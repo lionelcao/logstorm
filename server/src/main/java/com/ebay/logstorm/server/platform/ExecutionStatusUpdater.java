@@ -30,7 +30,7 @@ public class ExecutionStatusUpdater extends TaskExecutor {
 
     private final static Logger LOG = LoggerFactory.getLogger(ExecutionStatusUpdater.class);
     private volatile Boolean stopped = false;
-    private static Long periodMillis = 30* 1000l;
+    private static Long periodMillis = 5 * 1000l;
 
     @Override
     public void run() {
