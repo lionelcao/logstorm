@@ -37,6 +37,7 @@
         <maven-assembly.version>2.5.5</maven-assembly.version>
         <maven-source.version>2.5</maven-source.version>
         <maven-compiler.version>2.3.2</maven-compiler.version>
+        <maven-shade.version>2.4.1</maven-shade.version>
 
         <common-lang3.version>3.4</common-lang3.version>
         <common-io.version>2.4</common-io.version>
@@ -202,6 +203,12 @@
                     <groupId>org.apache.maven.plugins</groupId>
                     <artifactId>maven-resources-plugin</artifactId>
                     <version>${maven-source.version}</version>
+                </plugin>
+
+                <plugin>
+                    <groupId>org.apache.maven.plugins</groupId>
+                    <artifactId>maven-shade-plugin</artifactId>
+                    <version>${maven-shade.version}</version>
                 </plugin>
             </plugins>
         </pluginManagement>
