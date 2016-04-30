@@ -5,7 +5,6 @@ import com.ebay.logstorm.core.LogStormConstants;
 import javax.persistence.*;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.List;
 import java.util.Properties;
 
 /**
@@ -39,7 +38,7 @@ public class PipelineEntity extends BaseEntity {
     private Properties properties;
 
     @OneToMany(fetch = FetchType.EAGER, cascade = CascadeType.ALL)
-    private Collection<PipelineExecutionEntity> executors;
+    private Collection<PipelineExecutionEntity> instances;
 
     @Column
     @Enumerated(EnumType.ORDINAL)
@@ -122,12 +121,12 @@ public class PipelineEntity extends BaseEntity {
         return String.format("Pipeline[uuid=%s, name=%s]",this.getUuid(),this.getName());
     }
 
-    public Collection<PipelineExecutionEntity> getExecutors() {
-        return executors;
+    public Collection<PipelineExecutionEntity> getInstances() {
+        return instances;
     }
 
-    public void setExecutors(Collection<PipelineExecutionEntity> executions) {
-        this.executors = executions;
+    public void setInstances(Collection<PipelineExecutionEntity> executions) {
+        this.instances = executions;
     }
 
     public int getParallelism() {
@@ -141,8 +140,8 @@ public class PipelineEntity extends BaseEntity {
     @Override
     public void ensureDefault() {
         super.ensureDefault();
-        if(this.getExecutors()==null) {
-            this.setExecutors(Collections.emptyList());
+        if(this.getInstances()==null) {
+            this.setInstances(Collections.emptyList());
         }
     }
 }

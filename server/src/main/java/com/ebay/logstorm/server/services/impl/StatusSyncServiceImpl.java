@@ -48,8 +48,8 @@ public class StatusSyncServiceImpl implements PipelineStatusSyncService {
         List<PipelineEntity> allPipelineEntities = entityService.findAll();
         LOG.info("Checking status of {} pipelines",allPipelineEntities.size());
         for (PipelineEntity pipelineEntity : allPipelineEntities) {
-            if (pipelineEntity.getExecutors() != null) {
-                pipelineEntity.getExecutors().forEach((executor) ->{
+            if (pipelineEntity.getInstances() != null) {
+                pipelineEntity.getInstances().forEach((executor) ->{
                     try {
                         LOG.info("Checking status of '{}'", pipelineEntity.getName());
                         pipelineEntity.getCluster().getPlatformInstance().status(executor);

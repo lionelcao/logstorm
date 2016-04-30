@@ -112,7 +112,7 @@ public class PipelineController extends BaseController{
     @Transactional(readOnly = true)
     public @ResponseBody
     ResponseEntity<RestResponse<Collection<PipelineExecutionEntity>>> getPipelineExecution(@PathVariable String uuidOrName) {
-        return RestResponse.async(()-> entityService.getPipelineByUuidOrNameOrThrow(uuidOrName,uuidOrName).getExecutors()).get();
+        return RestResponse.async(()-> entityService.getPipelineByUuidOrNameOrThrow(uuidOrName,uuidOrName).getInstances()).get();
     }
 
     @RequestMapping(path = "/start",method = RequestMethod.POST)

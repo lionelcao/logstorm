@@ -10,7 +10,6 @@ import com.ebay.logstorm.server.services.PipelineExecutionRepository;
 import com.ebay.logstorm.server.services.PipelineExecutionService;
 import com.google.common.base.Preconditions;
 import org.apache.commons.lang3.exception.ExceptionUtils;
-import org.hibernate.Hibernate;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -54,7 +53,7 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
         Preconditions.checkNotNull(pipeline,"pipeline is null: "+pipeline);
         Preconditions.checkNotNull(pipeline.getCluster(),"cluster is null: "+ pipeline);
         Preconditions.checkNotNull(pipeline.getCluster().getPlatformInstance(),"platform instance is null: "+pipeline);
-        if(pipeline.getExecutors() == null || pipeline.getExecutors().size() == 0) {
+        if(pipeline.getInstances() == null || pipeline.getInstances().size() == 0) {
             LOG.info("{} has not been deployed yet, deploying now", pipeline);
             List<PipelineExecutionEntity> executors = new ArrayList<>(pipeline.getParallelism());
             for(int i =0;i<pipeline.getParallelism();i++) {
@@ -64,7 +63,7 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
                 instance.setPipeline(pipeline);
                 executors.add(this.createExecutionEntity(instance));
             }
-            pipeline.setExecutors(executors);
+            pipeline.setInstances(executors);
             entityService.updatePipeline(pipeline);
             LOG.info("Initialized [] executors for pipeline {}", executors.size(),pipeline);
         }
@@ -73,13 +72,13 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
     @Override
     public PipelineEntity start(PipelineEntity pipeline) throws Exception {
         checkInitExecutionContext(pipeline);
-        for(PipelineExecutionEntity executor: pipeline.getExecutors()){
+        for(PipelineExecutionEntity executor: pipeline.getInstances()){
             boolean readyToStart = PipelineExecutionStatus.isReadyToStart(executor.getStatus());
             if(!readyToStart){
                 throw new PipelineExecutionException(pipeline+" is not ready to start, executor "+executor.getName()+" is still running");
             }
         }
-        pipeline.getExecutors().stream().map((executor) -> ExecutionManager.getInstance().submit(()-> {
+        pipeline.getInstances().stream().map((executor) -> ExecutionManager.getInstance().submit(()-> {
             try {
                 executor.setStatus(PipelineExecutionStatus.STARTING);
                 updateExecutionEntity(executor);
@@ -111,17 +110,41 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
 
     @Override
     public PipelineEntity stop(PipelineEntity pipeline) {
-        return null;
+        pipeline.getInstances().stream().map((instance)-> ExecutionManager.getInstance().submit(()->{
+            if(PipelineExecutionStatus.isReadyToStop(instance.getStatus())) {
+                try {
+                    instance.setStatus(PipelineExecutionStatus.STOPPING);
+                    updateExecutionEntity(instance);
+                    pipeline.getCluster().getPlatformInstance().stop(instance);
+                    instance.setStatus(PipelineExecutionStatus.STOPPED);
+                    updateExecutionEntity(instance);
+                } catch (Exception e) {
+                    instance.setStatus(PipelineExecutionStatus.FAILED);
+                    instance.setDescription(ExceptionUtils.getStackTrace(e));
+                    updateExecutionEntity(instance);
+                    LOG.error(e.getMessage(), e);
+                    throw new RuntimeException(e);
+                }
+            }
+        })).forEach(future -> {
+            try {
+                future.get();
+            } catch (InterruptedException | ExecutionException e) {
+                LOG.error(e.getMessage(),e);
+                throw new RuntimeException(e);
+            }
+        });
+        return pipeline;
     }
 
     @Override
     public PipelineEntity rescale(PipelineEntity instance) {
-        return null;
+        throw new RuntimeException("Not implemented yet");
     }
 
     @Override
     public PipelineEntity restart(PipelineEntity instance) {
-        return null;
+        throw new RuntimeException("Not implemented yet");
     }
 
     @Override
