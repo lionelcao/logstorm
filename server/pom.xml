@@ -93,6 +93,10 @@
                     <groupId>ch.qos.logback</groupId>
                     <artifactId>logback-access</artifactId>
                 </exclusion>
+                <exclusion>
+                    <groupId>javax.servlet</groupId>
+                    <artifactId>servlet-api</artifactId>
+                </exclusion>
             </exclusions>
         </dependency>
     </dependencies>
