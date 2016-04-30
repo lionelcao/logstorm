@@ -1,6 +1,17 @@
 package com.ebay.logstorm.server;
 
+import org.apache.commons.io.FileUtils;
+import org.apache.commons.io.filefilter.IOFileFilter;
+import org.apache.commons.io.filefilter.TrueFileFilter;
+import org.apache.commons.io.filefilter.WildcardFileFilter;
+import org.apache.commons.io.filefilter.WildcardFilter;
 import org.junit.Test;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+
+import java.io.File;
+import java.util.Collection;
+import java.util.Properties;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -19,8 +30,27 @@ import org.junit.Test;
  * limitations under the License.
  */
 public class LogStormServerTest {
+    private final static Logger LOG = LoggerFactory.getLogger(LogStormServerTest.class);
+    private static File findAssemblyJarFile(){
+        String projectRootDir = System.getProperty("user.dir")+"/../";
+        String assemblyModuleTargeDirPath=projectRootDir+"/assembly/target/";
+        File assemblyTargeDirFile = new File(assemblyModuleTargeDirPath);
+        if(!assemblyTargeDirFile.exists()) {
+            throw new IllegalStateException(assemblyModuleTargeDirPath + " not found, please execute 'mvn install -DskipTests' under " + projectRootDir + " to build the project firstly and retry");
+        }
+        String jarFileNameWildCard="logstorm-assembly-*.jar";
+        Collection<File> jarFiles = FileUtils.listFiles(assemblyTargeDirFile,new WildcardFileFilter(jarFileNameWildCard),TrueFileFilter.INSTANCE);
+        if(jarFiles.size() == 0){
+            throw new IllegalStateException("jar is not found, please execute 'mvn install -DskipTests' under " + projectRootDir + " to build the project firstly and retry");
+        }
+        File jarFile = jarFiles.iterator().next();
+        LOG.info("Found pipeline.jar: {}",jarFile.getAbsolutePath());
+        return jarFile;
+    }
+
     @Test
-    public void testRun(){
-//        LogStormServer.start(new String[]{});
+    public void testStartServer(){
+        System.setProperty("storm.jar",findAssemblyJarFile().getAbsolutePath());
+        LogStormServer.start(new String[]{});
     }
 }

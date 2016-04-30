@@ -46,9 +46,11 @@ public class StormExecutionPlatform implements ExecutionPlatform {
     private StormPipelineRunner runner;
 
     static {
-        String pipelineJar = ConfigFactory.load().getString("pipeline.jar");
-        LOG.info("Setting storm.jar as {}",pipelineJar);
-        System.setProperty("storm.jar",pipelineJar);
+        if(System.getProperty("storm.jar") == null) {
+            String pipelineJar = ConfigFactory.load().getString("pipeline.jar");
+            LOG.info("Setting storm.jar as {}", pipelineJar);
+            System.setProperty("storm.jar", pipelineJar);
+        }
     }
 
     @Override
