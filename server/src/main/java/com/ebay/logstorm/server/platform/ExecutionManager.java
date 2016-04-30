@@ -29,7 +29,7 @@ public class ExecutionManager {
     private static final Logger LOG = LoggerFactory.getLogger(ExecutionManager.class);
 
     private final ExecutorService executorService;
-    private final Map<Object,TaskExecutor> workerMap;
+    private final Map<Object,TaskExecutor> executorMap;
     private static ExecutionManager instance;
     private final static int threadPoolCoreSize = 10;
     private final static int threadPoolMaxSize = 20;
@@ -37,11 +37,11 @@ public class ExecutionManager {
 
     private ExecutionManager(){
         executorService = new ThreadPoolExecutor(threadPoolCoreSize, threadPoolMaxSize, threadPoolShrinkTime, TimeUnit.MILLISECONDS, new LinkedBlockingQueue<>());
-        workerMap = new TreeMap<>();
+        executorMap = new TreeMap<>();
     }
 
-    public Map<Object,TaskExecutor> getWorkerMap(){
-        return workerMap;
+    public Map<Object,TaskExecutor> getExecutorMap(){
+        return executorMap;
     }
 
     public static ExecutionManager getInstance(){
@@ -62,11 +62,11 @@ public class ExecutionManager {
     }
 
     public TaskExecutor submit(Object id, Runnable runnable){
-        if(workerMap.containsKey(id)){
-            TaskExecutor executor = workerMap.get(id);
+        if(executorMap.containsKey(id)){
+            TaskExecutor executor = executorMap.get(id);
             if(!executor.isAlive() || executor.getState() == Thread.State.TERMINATED){
                 LOG.info("Replacing dead executor: {}",executor);
-                workerMap.remove(id);
+                executorMap.remove(id);
             }else {
                 throw new IllegalArgumentException("Duplicated id '" + id + "'");
             }
@@ -74,7 +74,7 @@ public class ExecutionManager {
 
         TaskExecutor worker = new TaskExecutor(runnable);
         LOG.info("Registering new executor {}: {}",id,worker);
-        workerMap.put(id,worker);
+        executorMap.put(id,worker);
         worker.setName(id.toString());
         worker.setDaemon(true);
         worker.start();
@@ -82,14 +82,14 @@ public class ExecutionManager {
     }
 
     public TaskExecutor get(Object id){
-        Preconditions.checkArgument(workerMap.containsKey(id),"Worker ID '"+id+"' not found");
-        return workerMap.get(id);
+        Preconditions.checkArgument(executorMap.containsKey(id),"Executor '"+id+"' not found");
+        return executorMap.get(id);
     }
 
     public TaskExecutor stop(Object id) throws Exception{
         TaskExecutor worker = get(id);
         worker.interrupt();
-        this.workerMap.remove(id);
+        this.executorMap.remove(id);
         return worker;
     }
 
@@ -122,7 +122,7 @@ public class ExecutionManager {
         if(executor.isAlive()){
             throw new RuntimeException("Failed to remove alive executor '"+id+"'");
         }else{
-            this.workerMap.remove(id);
+            this.executorMap.remove(id);
         }
     }
 }

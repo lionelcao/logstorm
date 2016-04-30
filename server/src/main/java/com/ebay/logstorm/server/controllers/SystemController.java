@@ -41,7 +41,7 @@ public class SystemController extends BaseController {
     @RequestMapping(path = "/executor",method = RequestMethod.GET)
     public @ResponseBody
     ResponseEntity<RestResponse<Collection<TaskExecutor>>> getExecutors(){
-        return RestResponse.async(() -> ExecutionManager.getInstance().getWorkerMap().values()).get();
+        return RestResponse.async(() -> ExecutionManager.getInstance().getExecutorMap().values()).get();
     }
 
     @RequestMapping(path = "/executor/{name}",method = RequestMethod.GET)

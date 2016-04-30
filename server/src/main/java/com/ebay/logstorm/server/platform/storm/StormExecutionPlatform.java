@@ -67,14 +67,17 @@ public class StormExecutionPlatform implements ExecutionPlatform {
 
         switch (entity.getPipeline().getMode()){
             case LOCAL:
-                TaskExecutor worker = startInLocalMode(pipeline);
+                TaskExecutor worker = startInLocalMode(entity.getName(),pipeline);
                 entity.setDescription("Running inside " + worker.toString() + " in " + entity.getPipeline().getMode() + " mode");
                 entity.setProperty("executor.id", String.valueOf(worker.getId()));
                 entity.setProperty("executor.name", worker.getName());
                 entity.setProperty("executor.thread", worker.toString());
                 entity.setUrl("/api/executor/" + entity.getName());
+                break;
             case CLUSTER:
                 startInRemoteMode(pipeline);
+                break;
+            default:
                 status(entity);
          //   throw new IllegalStateException("State of "+entity.getPipeline().getName()+" is illegal: "+ entity.getPipeline().getMode());
         }
@@ -84,8 +87,8 @@ public class StormExecutionPlatform implements ExecutionPlatform {
         runner.run(pipeline);
     }
 
-    private TaskExecutor startInLocalMode(Pipeline pipeline) {
-        return ExecutionManager.getInstance().submit(pipeline.getContext().getPipelineName(), () -> {
+    private TaskExecutor startInLocalMode(String instanceName,Pipeline pipeline) {
+        return ExecutionManager.getInstance().submit(instanceName, () -> {
                 runner.run(pipeline);
         });
     }

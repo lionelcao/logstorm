@@ -1,10 +1,9 @@
 package com.ebay.logstorm.server.services;
 
-import com.ebay.logstorm.core.exception.PipelineExecutionException;
 import com.ebay.logstorm.server.entities.PipelineEntity;
 import com.ebay.logstorm.server.entities.PipelineExecutionEntity;
-
-import java.util.Optional;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -54,4 +53,6 @@ public interface PipelineExecutionService {
 
     PipelineExecutionEntity updateExecutionEntity(PipelineExecutionEntity executionEntity);
     PipelineExecutionEntity createExecutionEntity(PipelineExecutionEntity executionEntity);
+
+    Page<PipelineExecutionEntity> searchExecutionEntities(Pageable pageable);
 }

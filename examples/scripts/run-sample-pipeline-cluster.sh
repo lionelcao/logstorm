@@ -38,7 +38,7 @@ curl --silent -H 'Content-Type:application/json' -XPOST http://localhost:8080/ap
 echo '\n'
 echo "[STEP 4] View created pipeline by GET http://localhost:8080/api/pipeline/test_pipeline_cluster"
 sleep 1
-curl --silent -XGET http://localhost:8080/api/pipeline/test_pipeline
+curl --silent -XGET http://localhost:8080/api/pipeline/test_pipeline_cluster
 
 echo '\n'
 echo "[STEP 5] Start pipeline through POST http://localhost:8080/api/pipeline/start"
@@ -50,7 +50,7 @@ curl --silent -H 'Content-Type:application/json' -XPOST http://localhost:8080/ap
 echo '\n'
 sleep 1
 echo "[STEP 6] Check pipeline status through GET http://localhost:8080/api/pipeline/test_pipeline_cluster"
-curl --silent -XGET http://localhost:8080/api/pipeline/test_pipeline
+curl --silent -XGET http://localhost:8080/api/pipeline/test_pipeline_cluster
 
 echo '\n'
 echo "---------------------------------------"

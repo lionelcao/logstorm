@@ -61,6 +61,14 @@ public class PipelineController extends BaseController{
         return RestResponse.async(()-> entityService.searchPipelines(searchCriteria,pageable).getContent()).get();
     }
 
+    @RequestMapping(path = "/instance",method= RequestMethod.GET)
+    @Transactional(readOnly = true)
+    public @ResponseBody
+    ResponseEntity<RestResponse<List<PipelineExecutionEntity>>> listAllPipelineInstances(
+            @PageableDefault(value = 50) Pageable pageable) {
+        return RestResponse.async(()-> executionService.searchExecutionEntities(pageable).getContent()).get();
+    }
+
     @RequestMapping(method= RequestMethod.POST)
     public @ResponseBody
     ResponseEntity<RestResponse<PipelineEntity>> createPipeline(@RequestBody PipelineEntity pipelineEntity) {
@@ -132,4 +140,6 @@ public class PipelineController extends BaseController{
     ResponseEntity<RestResponse<PipelineEntity>> restartPipeline(@RequestBody PipelineEntity pipeline){
         return RestResponse.async(()-> executionService.restart(entityService.getPipelineOrThrow(pipeline))).get();
     }
+
+
 }
