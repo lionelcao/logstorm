@@ -12,6 +12,7 @@ import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
 
+import java.io.IOException;
 import java.io.NotSerializableException;
 import java.util.ArrayList;
 import java.util.List;
@@ -40,12 +41,12 @@ public class TestLogStashPipelineProxy {
             "output { stdout { codec => rubydebug } }";
 
     @Before
-    public void setUp() throws PipelineException {
+    public void setUp() throws PipelineException, IOException {
         proxy = new LogStashPipelineProxy(configStr);
     }
 
     @Test
-    public void testSingleInputProxy() throws PipelineException {
+    public void testSingleInputProxy() throws PipelineException, IOException {
         InputPlugin input = proxy.getInputs().get(0);
         Assert.assertEquals(1,proxy.getInputsProxy().size());
         Assert.assertEquals(0,input.getIndex());
