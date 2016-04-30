@@ -20,15 +20,15 @@ import org.slf4j.LoggerFactory;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class ExecutionStatusUpdater extends TaskExecutor {
-    public final static String WORKER_NAME = ExecutionStatusUpdater.class.getSimpleName();
+public class PipelineStatusChecker extends TaskExecutor {
+    public final static String WORKER_NAME = PipelineStatusChecker.class.getSimpleName();
     private PipelineStatusSyncService statusSyncService;
 
-    public ExecutionStatusUpdater(PipelineStatusSyncService statusSyncService){
+    public PipelineStatusChecker(PipelineStatusSyncService statusSyncService){
         this.statusSyncService = statusSyncService;
     }
 
-    private final static Logger LOG = LoggerFactory.getLogger(ExecutionStatusUpdater.class);
+    private final static Logger LOG = LoggerFactory.getLogger(PipelineStatusChecker.class);
     private volatile Boolean stopped = false;
     private static Long periodMillis = 5 * 1000l;
 

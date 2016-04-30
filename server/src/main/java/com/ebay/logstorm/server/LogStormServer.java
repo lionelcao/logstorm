@@ -2,7 +2,7 @@ package com.ebay.logstorm.server;
 
 import com.ebay.logstorm.core.compiler.proxy.RubyRuntimeFactory;
 import com.ebay.logstorm.server.platform.ExecutionManager;
-import com.ebay.logstorm.server.platform.ExecutionStatusUpdater;
+import com.ebay.logstorm.server.platform.PipelineStatusChecker;
 import com.ebay.logstorm.server.services.PipelineStatusSyncService;
 import com.ebay.logstorm.server.utils.EagleBanner;
 import org.slf4j.Logger;
@@ -49,7 +49,7 @@ public class LogStormServer  extends SpringBootServletInitializer {
             Thread thread = new Thread(RubyRuntimeFactory::getSingletonRuntime);
             thread.setDaemon(true);
             thread.start();
-            ExecutionManager.getInstance().submit(ExecutionStatusUpdater.WORKER_NAME,new ExecutionStatusUpdater(statusSyncService));
+            ExecutionManager.getInstance().submit(PipelineStatusChecker.WORKER_NAME,new PipelineStatusChecker(statusSyncService));
         };
     }
 

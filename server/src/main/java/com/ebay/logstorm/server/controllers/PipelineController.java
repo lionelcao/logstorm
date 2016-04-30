@@ -140,6 +140,4 @@ public class PipelineController extends BaseController{
     ResponseEntity<RestResponse<PipelineEntity>> restartPipeline(@RequestBody PipelineEntity pipeline){
         return RestResponse.async(()-> executionService.restart(entityService.getPipelineOrThrow(pipeline))).get();
     }
-
-
 }
