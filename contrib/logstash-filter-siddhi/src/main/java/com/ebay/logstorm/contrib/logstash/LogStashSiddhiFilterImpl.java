@@ -1,6 +1,7 @@
 package com.ebay.logstorm.contrib.logstash;
 
 import org.jruby.RubyArray;
+import org.jruby.RubyString;
 import org.jruby.runtime.builtin.IRubyObject;
 import org.wso2.siddhi.core.ExecutionPlanRuntime;
 import org.wso2.siddhi.core.SiddhiManager;
@@ -48,6 +49,16 @@ public class LogStashSiddhiFilterImpl implements LogStashSiddhiFilter{
         this.callbackStreams.add("outputStream");
     }
 
+    public LogStashSiddhiFilterImpl(RubyString executionPlan, RubyArray expectedStreams){
+        this.executionPlan = "define stream StockStream (symbol string, price float, volume long);" +
+                "from StockStream[price + 0.0 > 0.0] " +
+                "select symbol, price " +
+                "insert into outputStream;";
+        // TODO this.callbackStreams = expectedStreams
+        this.callbackStreams = Collections.emptyList();
+        this.callbackStreams.add("outputStream");
+    }
+
     @Override
     public void register(){
         siddhiManager = new SiddhiManager();
@@ -58,6 +69,7 @@ public class LogStashSiddhiFilterImpl implements LogStashSiddhiFilter{
                 EventPrinter.print(events);
             }
         });
+
         this.definitionMap= executionPlanRuntime.getStreamDefinitionMap();
         this.streamInputHandlerMap = new HashMap<>();
         for(String streamId: this.definitionMap.keySet()){

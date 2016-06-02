@@ -2,10 +2,13 @@
 require "logstash/filters/base"
 require "logstash/namespace"
 require "java"
+require "logstash-filter-siddhi_jars.rb"
 
-java_import "com.ebay.logstorm.contrib.logstash.LogStashSiddhiFilter"
+
 
 class LogStash::Filters::Siddhi < LogStash::Filters::Base
+
+  java_import "com.ebay.logstorm.contrib.logstash.LogStashSiddhiFilterImpl"
 
   # Setting the config_name here is required. This is how you
   # configure this filter from your Logstash config.

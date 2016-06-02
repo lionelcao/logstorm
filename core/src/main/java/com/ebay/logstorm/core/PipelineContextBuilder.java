@@ -49,7 +49,7 @@ public class PipelineContextBuilder{
      */
     public final void submit() throws PipelineException {
         if(this.runner == null){
-            LOG.info("No runner set, use default runner: "+ LogStormConstants.DEFAULT_RUNNER_CLASS_NAME);
+            LOG.info("Using default runner: "+ LogStormConstants.DEFAULT_RUNNER_CLASS_NAME);
             this.runner(LogStormConstants.DEFAULT_RUNNER_CLASS_NAME);
         }
         validate();
