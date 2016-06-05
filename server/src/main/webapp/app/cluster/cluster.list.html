@@ -1,27 +1,50 @@
 <ol class="breadcrumb">
     <li><a href="#/">Home</a></li>
-    <li><a href="#/streaming">Streaming</a></li>
+    <li><a href="#/cluster">Cluster</a></li>
 </ol>
 
-<div class="row">
-    <div class="col-md-8">
-        <ul class="nav nav-pills">
-            <li role="presentation" class="active"><a href="#">Running</a></li>
-            <li role="presentation" class="disabled"><a href="#">Stopped</a></li>
-            <li role="presentation"><a href="#">Failed</a></li>
-        </ul>
-    </div>
-    <div class="col-md-4">
-        <a class="btn btn-sm btn-primary pull-right" href="#/streaming/create">New Pipeline</a>
-    </div>
-</div>
-
 <div style="margin-top: 20px">
-
+    <div class="alert"
+         ng-class="{hidden: !message, 'alert-danger': message.level=='error','alert-warning': message.level=='warning','alert-info': message.level == 'info'}"
+         role="alert">
+        <span class="glyphicon"
+              ng-class="{'glyphicon-exclamation-sign': message.level=='error', 'glyphicon-info-sign':message.level=='info', 'glyphicon-warning-sign': message.level=='warning'}"
+              aria-hidden="true"></span>
+        {{ message.text }}
+    </div>
     <div class="panel panel-default">
-        <!--<div class="panel-heading">Streaming</div>-->
         <div class="panel-body">
-            <p>There is not streaming pipeline yet, start to <a href="#/streaming/create">create</a> one now</p>
+            <div class="btn-group pull-right" role="group">
+                <a class="btn btn-default btn-sm" ng-class="{hidden: clusters.length == 0}" ng-click="loadClusters()"><i class="glyphicon glyphicon-refresh"></i> Reload</a>
+                <a class="btn btn-default btn-sm" href="#/cluster/create"><i class="glyphicon glyphicon-plus"></i> Register</a>
+            </div>
+            <div ng-class="{hidden: clusters.length > 0}" class="center-block">
+                <p>There is no cluster yet, start to <a href="#/cluster/create">register</a> one now</p>
+            </div>
+        </div>
+        <div class="panel-body">
+            <table class="table table-condensed table-hover" ng-class="{hidden: clusters.length == 0}">
+                <thead>
+                <tr>
+                    <th>Id</th>
+                    <th>Name</th>
+                    <th>Type</th>
+                    <th>Adapter</th>
+                    <th>Actions</th>
+                </tr>
+                </thead>
+                <tbody>
+                <tr ng-repeat="cluster in clusters">
+                    <td scope="row">{{cluster.uuid}}</td>
+                    <td scope="row">{{cluster.name}}</td>
+                    <td scope="row"><span class="label label-default">{{cluster.type}}</span></td>
+                    <td scope="row">{{cluster.adapterClass}}</td>
+                    <td>
+                        <a href="#" title="Remove {{cluster.name}}"><i class="glyphicon glyphicon-trash"></i></a>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
         </div>
     </div>
 </div>

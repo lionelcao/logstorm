@@ -6,9 +6,9 @@
 <div class="row">
     <div class="col-md-8">
         <ul class="nav nav-pills">
-            <li role="presentation" class="active"><a href="#">Running</a></li>
-            <li role="presentation" class="disabled"><a href="#">Stopped</a></li>
-            <li role="presentation"><a href="#">Failed</a></li>
+            <li role="presentation" class="active"><a href="#/streaming?status=running">Running</a></li>
+            <li role="presentation" class="disabled"><a href="#/streaming?status=stopped">Stopped</a></li>
+            <li role="presentation"><a href="#/streaming?status=failed">Failed</a></li>
         </ul>
     </div>
     <div class="col-md-4">
@@ -17,67 +17,67 @@
 </div>
 
 <div style="margin-top: 20px">
-
     <div class="panel panel-default">
         <!--<div class="panel-heading">Streaming</div>-->
         <div class="panel-body">
             <p>There is not streaming pipeline yet, start to <a href="#/streaming/create">create</a> one now</p>
         </div>
-
-        <!--<table class="table">-->
-            <!--<thead>-->
-            <!--<tr>-->
-                <!--<th>#</th>-->
-                <!--<th>First Name</th>-->
-                <!--<th>Last Name</th>-->
-                <!--<th>Username</th>-->
-                <!--<th>Operation</th>-->
-            <!--</tr>-->
-            <!--</thead>-->
-            <!--<tbody>-->
-            <!--<tr>-->
-                <!--<th scope="row">1</th>-->
-                <!--<td>Mark</td>-->
-                <!--<td>Otto</td>-->
-                <!--<td>@mdo</td>-->
-                <!--<td>-->
-                    <!--<div class="dropdown">-->
-                        <!--<button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">-->
-                            <!--Dropdown-->
-                            <!--<span class="caret"></span>-->
-                        <!--</button>-->
-                        <!--<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">-->
-                            <!--<li><a href="#">Action</a></li>-->
-                            <!--<li><a href="#">Another action</a></li>-->
-                            <!--<li><a href="#">Something else here</a></li>-->
-                            <!--<li role="separator" class="divider"></li>-->
-                            <!--<li><a href="#">Separated link</a></li>-->
-                        <!--</ul>-->
-                    <!--</div>-->
-                <!--</td>-->
-            <!--</tr>-->
-            <!--<tr>-->
-                <!--<th scope="row">2</th>-->
-                <!--<td>Jacob</td>-->
-                <!--<td>Thornton</td>-->
-                <!--<td>@fat</td>-->
-                <!--<td>-->
-                    <!--<div class="dropdown">-->
-                        <!--<button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">-->
-                            <!--Dropdown-->
-                            <!--<span class="caret"></span>-->
-                        <!--</button>-->
-                        <!--<ul class="dropdown-menu" aria-labelledby="dropdownMenu1">-->
-                            <!--<li><a href="#">Action</a></li>-->
-                            <!--<li><a href="#">Another action</a></li>-->
-                            <!--<li><a href="#">Something else here</a></li>-->
-                            <!--<li role="separator" class="divider"></li>-->
-                            <!--<li><a href="#">Separated link</a></li>-->
-                        <!--</ul>-->
-                    <!--</div>-->
-                <!--</td>-->
-            <!--</tr>-->
-            <!--</tbody>-->
-        <!--</table>-->
+        <div class="panel-body">
+        <table class="table table-condensed table-hover">
+            <thead>
+            <tr>
+                <th>#</th>
+                <th>First Name</th>
+                <th>Last Name</th>
+                <th>Username</th>
+                <th>Operation</th>
+            </tr>
+            </thead>
+            <tbody>
+            <tr>
+                <th scope="row">1</th>
+                <td>Mark</td>
+                <td>Otto</td>
+                <td>@mdo</td>
+                <td>
+                    <div class="dropdown">
+                        <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            Dropdown
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li><a href="#">Action</a></li>
+                            <li><a href="#">Another action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#">Separated link</a></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            <tr>
+                <th scope="row">2</th>
+                <td>Jacob</td>
+                <td>Thornton</td>
+                <td>@fat</td>
+                <td>
+                    <div class="dropdown">
+                        <button class="btn btn-default btn-xs dropdown-toggle" type="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                            Dropdown
+                            <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                            <li><a href="#">Action</a></li>
+                            <li><a href="#">Another action</a></li>
+                            <li><a href="#">Something else here</a></li>
+                            <li role="separator" class="divider"></li>
+                            <li><a href="#">Separated link</a></li>
+                        </ul>
+                    </div>
+                </td>
+            </tr>
+            </tbody>
+        </table>
+        </div>
     </div>
 </div>

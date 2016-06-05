@@ -1,5 +1,5 @@
 <!DOCTYPE html>
-<html lang="en" ng-app="app">
+<html lang="en">
     <head>
         <meta charset="utf-8">
         <title>LOGGing - Distributed Log Streaming</title>
@@ -49,16 +49,31 @@
         <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
         <!-- Morris.js charts -->
         <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+
         <script src="app.config.js"></script>
         <script src="app.module.js"></script>
         <script src="home/home.ctrl.js"></script>
+        <script src="streaming/streaming.service.js"></script>
         <script src="streaming/streaming.ctrl.js"></script>
+        <script src="cluster/cluster.service.js"></script>
         <script src="cluster/cluster.ctrl.js"></script>
         <script src="management/management.ctrl.js"></script>
         <script src="configuration/configuration.ctrl.js"></script>
+
+        <!--<script type="application/javascript">-->
+            <!--angular.element(document).ready(function(){-->
+                <!--$.get('config.json', function (configData) {-->
+                    <!--console.log(configData);-->
+                    <!--angular.module('app').config(['configServiceProvider', function (configServiceProvider) {-->
+                        <!--configServiceProvider.init(configData);-->
+                    <!--}]);-->
+                    <!--angular.bootstrap(document,['app']);-->
+                <!--});-->
+            <!--});-->
+        <!--</script>-->
     </head>
 
-    <body role="document">
+    <body role="document" ng-app="app">
         <div ng-controller="TopNavController">
             <!-- Fixed navbar -->
             <nav class="navbar navbar-inverse navbar-fixed-top">
@@ -75,14 +90,14 @@
                     </div>
                     <div id="navbar" class="navbar-collapse collapse" collapse="isCollapsed">
                         <ul class="nav navbar-nav">
-                            <li ng-class="{active: isActive('/')}"><a href="#/">Home</a></li>
-                            <li ng-class="{active: isPrefixWith('/streaming')}"><a href="#/streaming">Streamings</a></li>
-                            <li ng-class="{active: isPrefixWith('/cluster')}"><a href="#/cluster">Clusters</a></li>
+                            <li ng-class="{active: isActive('/')}"><a href="#/"><i class="glyphicon glyphicon-home"></i> Home</a></li>
+                            <li ng-class="{active: isPrefixWith('/streaming')}"><a href="#/streaming"><i class="glyphicon glyphicon-th"></i> Streamings</a></li>
+                            <li ng-class="{active: isPrefixWith('/cluster')}"><a href="#/cluster"><i class="glyphicon glyphicon-th-list"></i> Clusters</a></li>
                             <!--<li><a href="#/management">Management</a></li>-->
-                            <li ng-class="{active: isActive('/configuration')}"><a href="#/configuration">Configuration</a></li>
+                            <li ng-class="{active: isActive('/configuration')}"><a href="#/configuration"><i class="glyphicon glyphicon-cog"></i> Configuration</a></li>
                             <li class="dropdown" ng-class="{active: isPrefixWith('/help')}">
                                 <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true"
-                                   aria-expanded="false">Help <span class="caret"></span></a>
+                                   aria-expanded="false"><i class="glyphicon glyphicon-folder-open"></i> Help <span class="caret"></span></a>
                                 <ul class="dropdown-menu">
                                     <li><a href="#/help/action">Action</a></li>
                                     <li><a href="#/help/action">Another action</a></li>

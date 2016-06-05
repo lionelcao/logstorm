@@ -1,0 +1,55 @@
+<ol class="breadcrumb">
+    <li><a href="#/">Home</a></li>
+    <li><a href="#/cluster">Cluster</a></li>
+    <li><a href="#/cluster/create">Register</a></li>
+</ol>
+
+<div style="margin-top: 20px">
+    <div class="alert"
+         ng-class="{hidden: !message, 'alert-danger': message.level=='error','alert-warning': message.level=='warning','alert-info': message.level == 'info'}"
+         role="alert">
+        <span class="glyphicon"
+              ng-class="{'glyphicon-exclamation-sign': message.level=='error', 'glyphicon-info-sign':message.level=='info', 'glyphicon-warning-sign': message.level=='warning'}"
+              aria-hidden="true"></span>
+        {{ message.text }}
+    </div>
+    <div class="panel panel-default">
+        <div class="panel-body">
+            <div class="btn-group pull-right" role="group">
+                <a class="btn btn-default btn-sm" href="#/cluster"><i class="glyphicon glyphicon-th-list"></i> All Clusters</a>
+            </div>
+        </div>
+        <div class="panel-body">
+            <form class="form-horizontal" ng-submit="addCluster()">
+                <div class="form-group">
+                    <label for="name" class="col-sm-2 control-label">Cluster Name</label>
+                    <div class="col-sm-10">
+                        <input type="text" class="form-control" id="name" placeholder="Cluster Name" ng-model="clusterName">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="type" class="col-sm-2 control-label">Cluster Type</label>
+                    <div class="col-sm-10">
+                        <select id="type" class="form-control" ng-model="clusterType">
+                            <option value="">-- Select Type --</option>
+                            <option value="com.ebay.logstorm.server.platform.storm.StormExecutionPlatform">Storm (com.ebay.logstorm.server.platform.storm.StormExecutionPlatform)</option>
+                            <!--<option value="spark">Spark (com.ebay.logstorm.server.platform.spark.SparkExecutionPlatform	)</option>-->
+                            <!--<option value="Beam">Beam (com.ebay.logstorm.server.platform.beam.BeamExecutionPlatform	)</option>-->
+                        </select>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label for="properties" class="col-sm-2 control-label">Cluster Properties</label>
+                    <div class="col-sm-10">
+                        <textarea name="properties" id="properties" class="form-control" ng-model="clusterProps"></textarea>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <div class="col-sm-offset-2 col-sm-10">
+                        <input type="submit" class="btn btn-primary" value="Submit"/>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>

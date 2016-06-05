@@ -8,23 +8,23 @@
 
     // ========================
 
-    StreamingListController.$inject=["$scope","$log"];
-    function StreamingListController($scope,$log){
-        $log.info("Loading streaming");
+    StreamingListController.$inject=["$scope","$log","streamingAPIService"];
+    function StreamingListController($scope,$log,streamingAPIService){
+        $log.info("Loading streaming list");
     }
 
-    StreamingViewController.$inject=["$scope","$log"];
-    function StreamingViewController($scope,$log){
-        $log.info("Loading streaming");
+    StreamingViewController.$inject=["$scope","$log","streamingAPIService"];
+    function StreamingViewController($scope,$log,streamingAPIService){
+        $log.info("Loading streaming view");
     }
 
-    StreamingCreateController.$inject=["$scope","$log"];
-    function StreamingCreateController($scope,$log){
-        $log.info("Loading streaming");
+    StreamingCreateController.$inject=["$scope","$log","streamingAPIService"];
+    function StreamingCreateController($scope,$log,streamingAPIService){
+        $log.info("Loading streaming create");
     }
 
-    StreamingEditController.$inject=["$scope","$log"];
-    function StreamingEditController($scope,$log){
-        $log.info("Loading streaming");
+    StreamingEditController.$inject=["$scope","$log","streamingAPIService"];
+    function StreamingEditController($scope,$log,streamingAPIService){
+        $log.info("Loading streaming edit");
     }
 })();

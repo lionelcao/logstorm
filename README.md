@@ -43,6 +43,12 @@ Test
 * Test sample pipeline through REST API
 	
 		./examples/scripts/run-sample-pipeline.sh
+		
+		
+Code Style
+----------
+* Java Style: [https://google.github.io/styleguide/javaguide.html](https://google.github.io/styleguide/javaguide.html)
+* Angular Style: [https://github.com/johnpapa/angular-styleguide/blob/master/a1/README.md](https://github.com/johnpapa/angular-styleguide/blob/master/a1/README.md)
 
 Contact
 -------

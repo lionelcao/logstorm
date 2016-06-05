@@ -40,6 +40,7 @@ import java.util.List;
  */
 @Controller
 @RequestMapping("/api/pipeline")
+@CrossOrigin
 public class PipelineController extends BaseController{
     private final static Logger LOG = LoggerFactory.getLogger(PipelineController.class);
     @Autowired

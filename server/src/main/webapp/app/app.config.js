@@ -2,8 +2,10 @@
     'use strict';
     angular.module('app', ['ngRoute'])
         .value('$routerRootComponent', 'app')
-        .value("current_module","home")
-        .config(routeConfig);
+        .config(routeConfig)
+        .constant("API_BASE_URL","http://localhost:8080");
+
+    // ---------
 
     routeConfig.$inject=["$locationProvider", "$routeProvider"];
     function routeConfig($locationProvider, $routeProvider) {
@@ -40,6 +42,9 @@
             .when('/configuration', {
                 templateUrl: "configuration/configuration.html",
                 controller: "ConfigurationController"
+            })
+            .otherwise({
+                template: 'Not Found'
             });
     }
 })();

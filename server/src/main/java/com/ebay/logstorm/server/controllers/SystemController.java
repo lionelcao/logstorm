@@ -6,10 +6,7 @@ import com.ebay.logstorm.server.platform.TaskExecutor;
 import org.jruby.management.BeanManager;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RequestMethod;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
 
@@ -31,6 +28,7 @@ import java.util.Collection;
  */
 @Controller
 @RequestMapping("/api")
+@CrossOrigin
 public class SystemController extends BaseController {
     @RequestMapping(path = "/ruby",method = RequestMethod.GET)
     public @ResponseBody

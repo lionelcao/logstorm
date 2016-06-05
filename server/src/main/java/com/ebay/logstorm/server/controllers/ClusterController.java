@@ -29,6 +29,7 @@ import java.util.List;
 
 @Controller
 @RequestMapping("/api/cluster")
+@CrossOrigin
 public class ClusterController extends BaseController {
 
     @Autowired
