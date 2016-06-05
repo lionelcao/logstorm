@@ -27,7 +27,7 @@ import org.springframework.web.servlet.ModelAndView;
 public class UIController {
     @RequestMapping("/ui")
     public ModelAndView home(){
-        return listPipelines();
+        return new ModelAndView("home/index");
     }
 
     @RequestMapping("/pipeline")

@@ -36,3 +36,5 @@ build/vendor
 build/target
 
 assembly/dependency-reduced-pom.xml
+
+out/
