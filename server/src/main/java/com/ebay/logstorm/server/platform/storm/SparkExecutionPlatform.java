@@ -5,13 +5,22 @@ import com.ebay.logstorm.core.PipelineContext;
 import com.ebay.logstorm.core.compiler.Pipeline;
 import com.ebay.logstorm.core.compiler.PipelineCompiler;
 import com.ebay.logstorm.server.entities.PipelineExecutionEntity;
+import com.ebay.logstorm.server.entities.PipelineExecutionStatus;
 import com.ebay.logstorm.server.platform.ExecutionPlatform;
 import com.ebay.logstream.runner.spark.SparkPipelineRunner;
+import com.typesafe.config.Config;
+import com.typesafe.config.ConfigFactory;
+import org.json.simple.JSONArray;
+import org.json.simple.JSONObject;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.InputStreamReader;
+import java.net.URL;
 import java.util.List;
 import java.util.Properties;
+import org.json.simple.parser.JSONParser;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -33,10 +42,12 @@ import java.util.Properties;
 public class SparkExecutionPlatform implements ExecutionPlatform {
     private final static Logger LOG = LoggerFactory.getLogger(SparkExecutionPlatform.class);
     private SparkPipelineRunner runner;
+    private Config config;
 
     @Override
     public void prepare(Properties properties) {
         runner = new SparkPipelineRunner();
+        config = ConfigFactory.load();
     }
 
     @Override
@@ -50,6 +61,7 @@ public class SparkExecutionPlatform implements ExecutionPlatform {
         List<String> result = runner.run(pipeline);
         String applicationId = result.get(0);
         entity.setProperty("applicationId", applicationId);
+        entity.setStatus(PipelineExecutionStatus.STARTING);
     }
 
     @Override
@@ -67,7 +79,33 @@ public class SparkExecutionPlatform implements ExecutionPlatform {
         String applicationId = entity.getProperties().getProperty("applicationId");
 
         if (LogStormConstants.DeployMode.CLUSTER.equals(entity.getPipeline().getMode())) {
-            //TODO
+            try {
+                URL url = new URL(config.getString("sparkRest") + applicationId);
+                BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
+                String statusStr = "";
+                String line;
+                while (null != (line = br.readLine())) {
+                    statusStr += line + "\n";
+                }
+                br.close();
+
+                entity.setDescription(statusStr);
+                //parse more json fields later, just work now
+                JSONParser parser = new JSONParser();
+                Object obj = parser.parse(statusStr);
+                JSONObject jsonObject = (JSONObject)obj;
+                JSONArray a = (JSONArray)jsonObject.get("attempts");
+                for (int i = 0; i < a.size(); i++) {
+                    boolean finished = (boolean)((JSONObject)a.get(i)).get("completed");
+                    if (!finished) {
+                        entity.setStatus(PipelineExecutionStatus.RUNNING);
+                    }
+                }
+
+                entity.setStatus(PipelineExecutionStatus.STOPPED);
+            } catch (Exception e) {
+                LOG.warn("get status for application {} failed: ", applicationId, e);
+            }
         } else {
             LOG.warn("spark only supports cluster mode");
         }
