@@ -1,17 +1,5 @@
 package com.ebay.logstream.runner.spark;
 
-import com.ebay.logstorm.core.PipelineContext;
-import com.ebay.logstorm.core.compiler.OutputPlugin;
-import com.ebay.logstorm.core.event.Event;
-import org.apache.spark.api.java.JavaRDD;
-import org.apache.spark.api.java.function.Function2;
-import org.apache.spark.api.java.function.VoidFunction;
-import org.apache.spark.streaming.Time;
-import org.slf4j.Logger;
-import org.slf4j.LoggerFactory;
-
-import java.util.Iterator;
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -28,6 +16,17 @@ import java.util.Iterator;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+
+import com.ebay.logstorm.core.PipelineContext;
+import com.ebay.logstorm.core.compiler.OutputPlugin;
+import com.ebay.logstorm.core.event.Event;
+import org.apache.spark.api.java.JavaRDD;
+import org.apache.spark.api.java.function.Function2;
+import org.apache.spark.api.java.function.VoidFunction;
+import org.apache.spark.streaming.Time;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
+import java.util.Iterator;
 
 public class ForEachFunction implements Function2<JavaRDD<byte[]>, Time, Void> {
     private final static Logger LOG = LoggerFactory.getLogger(ForEachFunction.class);

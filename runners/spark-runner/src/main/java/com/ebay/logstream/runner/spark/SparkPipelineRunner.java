@@ -16,15 +16,14 @@ package com.ebay.logstream.runner.spark;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 import com.ebay.logstorm.core.LogStormConstants;
 import com.ebay.logstorm.core.PipelineContext;
-import com.ebay.logstorm.core.compiler.FilterPlugin;
-import com.ebay.logstorm.core.compiler.InputPlugin;
-import com.ebay.logstorm.core.compiler.OutputPlugin;
-import com.ebay.logstorm.core.compiler.Pipeline;
+import com.ebay.logstorm.core.compiler.*;
 import com.ebay.logstorm.core.runner.PipelineRunner;
+import com.google.common.collect.Maps;
 import org.apache.spark.SparkConf;
+import org.apache.spark.launcher.SparkAppHandle;
+import org.apache.spark.launcher.SparkLauncher;
 import org.apache.spark.streaming.Duration;
 import org.apache.spark.streaming.api.java.JavaDStream;
 import org.apache.spark.streaming.api.java.JavaStreamingContext;
@@ -33,48 +32,93 @@ import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 public class SparkPipelineRunner implements PipelineRunner {
     private final static Logger LOG = LoggerFactory.getLogger(SparkPipelineRunner.class);
 
     @Override
-    public void run(Pipeline pipeline) {
-        PipelineContext context = pipeline.getContext();
-        List<InputPlugin> inputs = pipeline.getInputs();
-        List<FilterPlugin> filters = pipeline.getFilters();
-        List<OutputPlugin> outputs = pipeline.getOutputs();
+    public List<String> run(Pipeline pipeline) {
+        List<String> result = new ArrayList<>();
+        Map<String, String> env = Maps.newHashMap();
+        env.put("SPARK_PRINT_LAUNCH_COMMAND", "1");
+        SparkLauncher launcher = new SparkLauncher(env);
+        launcher.setAppResource(pipeline.getContext().getJarPath());
+        launcher.setAppName(pipeline.getContext().getPipelineName());
+        launcher.setMainClass("com.ebay.logstream.runner.spark.SparkPipelineRunner");
+        launcher.setSparkHome(pipeline.getContext().getSparkHome());
+        launcher.setJavaHome(pipeline.getContext().getJavaHome());
+        //set app args
+        launcher.addAppArgs(pipeline.getContext().getPipeline());
+        launcher.addAppArgs(pipeline.getContext().getPipelineName());
+        launcher.addAppArgs(pipeline.getContext().getDeployMode().toString());
 
-        SparkConf conf = new SparkConf();
+        launcher.setVerbose(true);
+        launcher.addSparkArg("--verbose");
+
         if (pipeline.getContext().getDeployMode() == LogStormConstants.DeployMode.LOCAL) {
-            conf.setMaster("local[10]").setAppName(pipeline.getContext().getPipelineName());
+            launcher.setMaster("local[*]");
         } else {
-
+            launcher.setMaster(pipeline.getContext().getSparkMaster());
         }
 
-        JavaStreamingContext sc = new JavaStreamingContext(conf, new Duration(15000));
-        List<JavaDStream<byte[]>> streams = new ArrayList<>();
-        for (InputPlugin inputPlugin : inputs) {
-            for (int i = 0; i < inputPlugin.getParallelism() + 1; i++) {
-                LogStashSparkReceiver receiver = new LogStashSparkReceiver(i, inputPlugin, context);
-                streams.add(sc.receiverStream(receiver));
+        try {
+            SparkAppHandle handle = launcher.startApplication();
+            while (handle.getAppId() == null) {
+                Thread.sleep(1000);
             }
+            result.add(handle.getAppId());
+            LOG.info("generate spark applicationId " + handle.getAppId());
+        } catch (Exception e) {
+            LOG.error("failed to start as a spark application, ", e);
         }
+        return result;
+    }
 
-        JavaDStream<byte[]> stream = sc.union(streams.get(0), streams.subList(1, streams.size()));
-        JavaDStream<byte[]> filterStream = stream;
-        for (FilterPlugin filterPlugin : filters) {
-            filterStream = filterStream
-                    .repartition((int)filterPlugin.getParallelism() + 3)
-                    .map(new FilterFunction(filterPlugin, context));
+    public static void main(String[] args) {
+        String pipeLine = args[0];
+        String pipeLineName = args[1];
+        String mode = args[2];
+
+        try {
+            PipelineContext context = new PipelineContext(pipeLine);
+            context.setDeployMode(mode);
+            context.setPipelineName(pipeLineName);
+            Pipeline pipeline = PipelineCompiler.compile(context);
+
+            List<InputPlugin> inputs = pipeline.getInputs();
+            List<FilterPlugin> filters = pipeline.getFilters();
+            List<OutputPlugin> outputs = pipeline.getOutputs();
+
+
+            SparkConf conf = new SparkConf();
+            JavaStreamingContext jsc = new JavaStreamingContext(conf, new Duration(15000));
+            List<JavaDStream<byte[]>> streams = new ArrayList<>();
+            for (InputPlugin inputPlugin : inputs) {
+                for (int i = 0; i < inputPlugin.getParallelism() + 1; i++) {
+                    LogStashSparkReceiver receiver = new LogStashSparkReceiver(i, inputPlugin, context);
+                    streams.add(jsc.receiverStream(receiver));
+                }
+            }
+
+            JavaDStream<byte[]> stream = jsc.union(streams.get(0), streams.subList(1, streams.size()));
+            JavaDStream<byte[]> filterStream = stream;
+            for (FilterPlugin filterPlugin : filters) {
+                filterStream = filterStream
+                        .repartition((int) filterPlugin.getParallelism() + 3)
+                        .map(new FilterFunction(filterPlugin, context));
+            }
+
+            for (OutputPlugin output : outputs) {
+                filterStream
+                        .repartition((int) output.getParallelism() + 6)
+                        .foreach(new ForEachFunction(output, context));
+            }
+
+            jsc.start();
+            jsc.awaitTermination();
+        } catch (Exception e) {
+            LOG.error("failed to run spark application");
         }
-
-        for (OutputPlugin output : outputs) {
-            filterStream
-                    .repartition((int)output.getParallelism() + 10)
-                    .foreach(new ForEachFunction(output, context));
-        }
-
-        sc.start();
-        sc.awaitTermination();
     }
 }

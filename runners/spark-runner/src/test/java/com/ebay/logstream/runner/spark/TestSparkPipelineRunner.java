@@ -23,14 +23,13 @@ import java.io.IOException;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-
 public class TestSparkPipelineRunner {
     @Test
     public void testSparkResourcePipelineTopologyBuilder() throws IOException, PipelineException {
         PipelineContext.pipelineResource("/simple-generator-stdout.txt")
                 .name("simple-generator-stdout-pipeline")
                 .runner(SparkPipelineRunner.class)
-                .deploy(LogStormConstants.DeployMode.LOCAL)
+                .deploy(LogStormConstants.DeployMode.CLUSTER)
                 .submit();
     }
 }
