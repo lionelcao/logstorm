@@ -1,78 +1,127 @@
 <!DOCTYPE html>
-<html lang="en">
-    <head>
-        <meta charset="utf-8">
-        <title>LOGGing - Distributed Log Streaming</title>
-        <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap.min.css">
-        <link rel="stylesheet" href="vendor/bootstrap/dist/css/bootstrap-theme.min.css">
+<html ng-app="logStormApp" ng-controller="MainCtrl">
+<head>
+	<meta http-equiv="X-UA-Compatible" content="IE=Edge" />
+	<meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+	<meta charset="UTF-8">
+	<meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 
-        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-        <link ref="stylesheet" href="common/ie10-viewport-bug-workaround.css" rel="stylesheet">
+	<title>LogStorm</title>
 
-        <link rel="stylesheet" href="app.css">
+	<!-- ref:css public/css/styles.min.css -->
+	<link href="public/css/main.css" rel="stylesheet" type="text/css" media="screen">
+	<link href="public/css/animation.css" rel="stylesheet" type="text/css" media="screen">
+	<link href="node_modules/bootstrap/dist/css/bootstrap.css" rel="stylesheet" type="text/css" media="screen">
+	<link href="node_modules/zombiej-bootstrap-components/bootstrap-components/css/bootstrap-components.css" rel="stylesheet" type="text/css" media="screen">
+	<link href="node_modules/zombiej-nvd3/build/nv.d3.css" rel="stylesheet" type="text/css" />
+	<link href="node_modules/font-awesome/css/font-awesome.css" rel="stylesheet" type="text/css" />
+	<link href="node_modules/admin-lte/dist/css/AdminLTE.css" rel="stylesheet" type="text/css" />
+	<link href="node_modules/admin-lte/dist/css/skins/skin-blue.css" rel="stylesheet" type="text/css" />
+	<!-- endref -->
+</head>
+<body class="skin-blue sidebar-mini">
+<!-- Site wrapper -->
+<div class="wrapper">
+	<header class="main-header">
+		<a href="#/" class="logo">
+			<span class="logo-mini">LS</span>
+			<span class="logo-lg">LogStorm</span>
+		</a>
+		<!-- Header Navbar: style can be found in header.less -->
+		<nav class="navbar navbar-static-top" role="navigation">
+			<!-- Sidebar toggle button-->
+			<a ng-hide="PageConfig.hideSidebar" class="sidebar-toggle" data-toggle="offcanvas" role="button">
+				<span class="sr-only">Toggle navigation</span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+				<span class="icon-bar"></span>
+			</a>
 
-        <!-- Font Awesome -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.5.0/css/font-awesome.min.css">
-        <!-- Ionicons -->
-        <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/ionicons/2.0.1/css/ionicons.min.css">
+			<div class="navbar-custom-menu">
+				<ul class="nav navbar-nav">
+				</ul>
+			</div>
+		</nav>
+	</header>
 
-        <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
-        <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
-        <!--[if lt IE 9]>
-        <script src="https://oss.maxcdn.com/html5shiv/3.7.3/html5shiv.min.js"></script>
-        <script src="https://oss.maxcdn.com/respond/1.4.2/respond.min.js"></script>
-        <![endif]-->
+	<!-- =============================================== -->
+	<aside class="main-sidebar">
+		<section class="sidebar">
+			<ul class="sidebar-menu">
+				<!--li ng-repeat="page in PageConfig.navConfig.pageList track by $index" ng-class="getNavClass(page)" ng-show="getNavVisible(page)">
+					<a href="{{page.url}}">
+						<i class="fa fa-{{page.icon}}"></i> <span>{{page.title}}</span>
+					</a>
+				</li-->
+			</ul>
+		</section>
+	</aside>
 
-        <!-- Bootstrap core JavaScript
-        ================================================== -->
-        <!-- Placed at the end of the document so the pages load faster -->
-        <script src="vendor/jquery/dist/jquery.min.js"></script>
-        <!-- IE10 viewport hack for Surface/desktop Windows 8 bug -->
-        <script src="common/ie10-viewport-bug-workaround.js"></script>
-        <script src="vendor/jquery/dist/jquery.js"></script>
+	<!-- =============================================== -->
+	<!-- Right side column. Contains the navbar and content of the page -->
+	<div class="content-wrapper">
+		<!--section class="content-header" ng-hide="PageConfig.hideSidebar">
+			<h1>
+				<span class="pageTitle">{{PageConfig.pageTitle}}</span>
+				<small class="pageSubTitle">{{PageConfig.pageSubTitle}}</small>
+			</h1>
 
-        <!-- jQuery 2.2.0 -->
-        <!--<script src="plugins/jQuery/jQuery-2.2.0.min.js"></script>-->
-        <!-- jQuery UI 1.11.4 -->
-        <script src="https://code.jquery.com/ui/1.11.4/jquery-ui.min.js"></script>
-        <!-- Resolve conflict in jQuery UI tooltip with Bootstrap tooltip -->
-        <script>
-            $.widget.bridge('uibutton', $.ui.button);
-        </script>
+			<ol class="breadcrumb">
+				<li ng-repeat="navPath in PageConfig.navPath">
+					<a ng-href="#{{navPath.path}}">
+						<span class="fa fa-home" ng-if="$first"></span>
+						{{navPath.title || navPath.path}}
+					</a>
+				</li>
+			</ol>
+		</section>
 
-        <script src="vendor/angular/angular.js"></script>
-        <script src="vendor/angular-animate/angular-animate.js"></script>
-        <script src="vendor/angular-route/angular-route.js"></script>
-        <script src="vendor/angular-resource/angular-resource.js"></script>
+		<section class="content">
+			<div id="content">
+				<div ui-view></div>
+			</div>
+		</section-->
+		<div ui-view></div>
+	</div><!-- /.content-wrapper -->
 
-        <!-- Bootstrap 3.3.6 -->
-        <script src="vendor/bootstrap/dist/js/bootstrap.min.js"></script>
-        <!-- Morris.js charts -->
-        <script src="https://cdnjs.cloudflare.com/ajax/libs/raphael/2.1.0/raphael-min.js"></script>
+	<!--footer class="main-footer">
+		<div class="pull-right hidden-xs">
+			<b>License</b>
+			<a href="http://www.apache.org/licenses/LICENSE-2.0" class="text-muted">Apache-2.0</a>
+		</div>
+		<strong>
+			Apache Eagle
+			<a target="_blank" href="https://eagle.incubator.apache.org/">Home</a> /
+			<a target="_blank" href="https://eagle.incubator.apache.org/docs/community.html">Community</a> /
+			<a target="_blank" href="https://cwiki.apache.org/confluence/display/EAG/FAQ">FAQ</a>
+		</strong>
+	</footer-->
+</div><!-- ./wrapper -->
 
-        <script src="app.config.js"></script>
-        <script src="app.module.js"></script>
-        <script src="home/home.ctrl.js"></script>
-        <script src="streaming/streaming.service.js"></script>
-        <script src="streaming/streaming.ctrl.js"></script>
-        <script src="cluster/cluster.service.js"></script>
-        <script src="cluster/cluster.ctrl.js"></script>
-        <script src="management/management.ctrl.js"></script>
-        <script src="configuration/configuration.ctrl.js"></script>
+<!-- ref:js public/js/doc.js -->
+<script src="node_modules/jquery/dist/jquery.js"></script>
+<script src="node_modules/jquery-slimscroll/jquery.slimscroll.min.js"></script>
+<script src="node_modules/bootstrap/dist/js/bootstrap.min.js"></script>
+<script src="node_modules/zombiej-bootstrap-components/bootstrap-components/js/bootstrap-components.min.js"></script>
+<script src="node_modules/moment/min/moment-with-locales.min.js"></script>
+<script src="node_modules/moment-timezone/builds/moment-timezone-with-data.min.js"></script>
+<script src="node_modules/admin-lte/dist/js/app.min.js"></script>
+<script src="node_modules/angular/angular.js"></script>
+<script src="node_modules/angular-resource/angular-resource.js"></script>
+<script src="node_modules/angular-route/angular-route.js"></script>
+<script src="node_modules/angular-animate/angular-animate.js"></script>
+<script src="node_modules/angular-ui-bootstrap/dist/ui-bootstrap-tpls.js"></script>
+<script src="node_modules/angular-ui-router/release/angular-ui-router.js"></script>
+<script src="node_modules/d3/d3.js"></script>
+<script src="node_modules/zombiej-nvd3/build/nv.d3.js"></script>
 
-        <!--<script type="application/javascript">-->
-            <!--angular.element(document).ready(function(){-->
-                <!--$.get('config.json', function (configData) {-->
-                    <!--console.log(configData);-->
-                    <!--angular.module('app').config(['configServiceProvider', function (configServiceProvider) {-->
-                        <!--configServiceProvider.init(configData);-->
-                    <!--}]);-->
-                    <!--angular.bootstrap(document,['app']);-->
-                <!--});-->
-            <!--});-->
-        <!--</script>-->
-    </head>
+<!-- Application -->
+<script src="public/js/app.js" type="text/javascript" charset="utf-8"></script>
+<script src="public/js/srv/api.js" type="text/javascript" charset="utf-8"></script>
+<script src="public/js/srv/uiSrv.js" type="text/javascript" charset="utf-8"></script>
+<script src="public/js/ctrl/logStormCtrl.js" type="text/javascript" charset="utf-8"></script>
 
+<<<<<<< ff080d2f89325b09f50a50d30bbb7a53396107c8
     <body role="document" ng-app="app">
         <div ng-controller="TopNavController">
             <!-- Fixed navbar -->
@@ -113,9 +162,38 @@
                 </div>
             </nav>
         </div>
+=======
+<!-- Service -->
+<!--script src="public/js/srv/main.js" type="text/javascript" charset="utf-8"></script>
+<script src="public/js/srv/applicationSrv.js" type="text/javascript" charset="utf-8"></script>
+<script src="public/js/srv/authorizationSrv.js" type="text/javascript" charset="utf-8"></script>
+<script src="public/js/srv/entitiesSrv.js" type="text/javascript" charset="utf-8"></script>
+<script src="public/js/srv/siteSrv.js" type="text/javascript" charset="utf-8"></script>
+<script src="public/js/srv/pageSrv.js" type="text/javascript" charset="utf-8"></script>
+<script src="public/js/srv/wrapStateSrv.js" type="text/javascript" charset="utf-8"></script>
+<script src="public/js/srv/uiSrv.js" type="text/javascript" charset="utf-8"></script>
+>>>>>>> refact web
 
-        <!-- NG-VIEW -->
-        <div class="container" role="main" ng-view class="view-frame"></div>
-        <!-- /container -->
-    </body>
+<!-- Misc -->
+<!--script src="public/js/app.ui.js" type="text/javascript" charset="utf-8"></script>
+<script src="public/js/app.time.js" type="text/javascript" charset="utf-8"></script>
+<script src="public/js/app.config.js" type="text/javascript" charset="utf-8"></script>
+
+<script-- src="public/js/common.js" type="text/javascript" charset="utf-8"></script-->
+
+<!-- Components -->
+<!--script src="public/js/components/main.js" type="text/javascript" charset="utf-8"></script>
+<script src="public/js/components/sortTable.js" type="text/javascript" charset="utf-8"></script>
+<script src="public/js/components/tabs.js" type="text/javascript" charset="utf-8"></script>
+<script src="public/js/components/file.js" type="text/javascript" charset="utf-8"></script>
+<script src="public/js/components/charts/line3d.js" type="text/javascript" charset="utf-8"></script>
+<script src="public/js/components/nvd3.js" type="text/javascript" charset="utf-8"></script>
+<script src="public/js/components/sortable.js" type="text/javascript" charset="utf-8"></script-->
+
+<!-- Controllers -->
+<!--script src="public/js/ctrl/main.js" type="text/javascript" charset="utf-8"></script>
+<script src="public/js/ctrl/authController.js" type="text/javascript" charset="utf-8"></script>
+<script-- src="public/js/ctrl/configurationController.js" type="text/javascript" charset="utf-8"></script-->
+<!-- endref -->
+</body>
 </html>

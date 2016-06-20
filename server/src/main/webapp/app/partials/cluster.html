@@ -1,0 +1,32 @@
+<section class="content">
+	<div class="box box-success">
+		<div class="box-header with-border">
+			<h3 class="box-title">Cluster</h3>
+		</div>
+		<div class="box-body">
+			<table class="table table-bordered">
+				<thead>
+					<tr>
+						<th>Name</th>
+						<th>Type</th>
+						<th>UUID</th>
+						<th>Adapter Class</th>
+						<th width="5"></th>
+					</tr>
+				</thead>
+				<tbody>
+					<tr ng-repeat="cluster in clusterList track by $index">
+						<td>{{cluster.name}}</td>
+						<td>{{cluster.type}}</td>
+						<td>{{cluster.uuid}}</td>
+						<td>{{cluster.adapterClass}}</td>
+						<td><a class="fa fa-trash" ng-click="deleteCluster(cluster)"></a></td>
+					</tr>
+				</tbody>
+			</table>
+		</div>
+		<div class="box-footer text-right">
+			<button class="btn btn-primary" ng-click="createCluster()">+ New Cluster</button>
+		</div>
+	</div>
+</section>
