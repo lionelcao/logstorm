@@ -58,6 +58,7 @@ public class SparkExecutionPlatform implements ExecutionPlatform {
         context.setDeployMode(entity.getPipeline().getMode());
         context.setPipelineName(entity.getPipeline().getName());
         Pipeline pipeline = PipelineCompiler.compile(context);
+        pipeline.getContext().setConfig(config);
         List<String> result = runner.run(pipeline);
         String applicationId = result.get(0);
         String driverPid = result.get(1);
@@ -70,22 +71,19 @@ public class SparkExecutionPlatform implements ExecutionPlatform {
     public void stop(final PipelineExecutionEntity entity) throws Exception {
         String applicationId = entity.getProperties().getProperty("applicationId");
         String driverPid = entity.getProperties().getProperty("driverPid");
-        if (LogStormConstants.DeployMode.CLUSTER.equals(entity.getPipeline().getMode())) {
-            String cmd = "kill -9 " + driverPid;
-            Process process = Runtime.getRuntime().exec(new String[] { "/bin/sh", "-c", cmd});
-            synchronized (process) {
-                try {
-                    process.wait();
-                } catch (Exception e) {
-                    LOG.warn("failed to kill the application {}, driver pid {}", applicationId, driverPid, e);
-                    return;
-                }
+
+        String cmd = "kill -9 " + driverPid;
+        Process process = Runtime.getRuntime().exec(new String[] { "/bin/sh", "-c", cmd});
+        synchronized (process) {
+            try {
+                process.wait();
+            } catch (Exception e) {
+                LOG.warn("failed to kill the application {}, driver pid {}", applicationId, driverPid, e);
+                return;
             }
-            LOG.info("kill the application {}, driver pid {}", applicationId, driverPid);
-            entity.setStatus(PipelineExecutionStatus.STOPPED);
-        } else {
-            LOG.warn("spark only supports cluster mode");
         }
+        LOG.info("kill the application {}, driver pid {}", applicationId, driverPid);
+        entity.setStatus(PipelineExecutionStatus.STOPPED);
     }
 
     @Override
