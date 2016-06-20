@@ -3,9 +3,8 @@ package com.ebay.logstorm.server;
 import com.ebay.logstorm.core.LogStormConstants;
 import com.ebay.logstorm.server.entities.PipelineEntity;
 import com.ebay.logstorm.server.entities.PipelineExecutionEntity;
-import com.ebay.logstorm.server.platform.storm.SparkExecutionPlatform;
+import com.ebay.logstorm.server.platform.spark.SparkExecutionPlatform;
 import org.junit.Test;
-
 import java.util.Properties;
 
 /**
@@ -35,7 +34,7 @@ public class TestSparkExecutionPlatform {
         PipelineEntity pipelineEntity = new PipelineEntity();
         entity.setPipeline(pipelineEntity);
 
-        pipelineEntity.setMode(LogStormConstants.DeployMode.LOCAL);
+        pipelineEntity.setMode(LogStormConstants.DeployMode.CLUSTER);
         pipelineEntity.setName("simple-generator-stdout-pipeline");
         pipelineEntity.setPipeline("input {\n" +
                 "\tgenerator {\n" +

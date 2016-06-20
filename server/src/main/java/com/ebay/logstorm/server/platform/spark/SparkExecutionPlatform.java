@@ -1,4 +1,4 @@
-package com.ebay.logstorm.server.platform.storm;
+package com.ebay.logstorm.server.platform.spark;
 
 import com.ebay.logstorm.core.LogStormConstants;
 import com.ebay.logstorm.core.PipelineContext;
@@ -12,6 +12,7 @@ import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
+import org.json.simple.parser.JSONParser;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
@@ -20,7 +21,6 @@ import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
 import java.util.Properties;
-import org.json.simple.parser.JSONParser;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
