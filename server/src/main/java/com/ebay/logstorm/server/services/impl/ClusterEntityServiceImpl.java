@@ -58,9 +58,8 @@ public class ClusterEntityServiceImpl implements ClusterEntityService {
 
     @Override
     public Integer deleteClusterByUuid(String uuid) {
-        return entityRepository.deleteByUuid(uuid);
+        return entityRepository.delete(uuid);
     }
-
 
     @Override
     public ClusterEntity getClusterByUuidOrName(String uuid, String name) throws Exception {
