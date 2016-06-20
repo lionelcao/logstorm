@@ -29,17 +29,18 @@
                     <th>Id</th>
                     <th>Name</th>
                     <th>Type</th>
-                    <th>Adapter</th>
+                    <th>Platform</th>
                     <th>Actions</th>
                 </tr>
                 </thead>
                 <tbody>
                 <tr ng-repeat="cluster in clusters">
-                    <td scope="row">{{cluster.uuid}}</td>
-                    <td scope="row">{{cluster.name}}</td>
+                    <td scope="row"><a href="#/cluster/{{cluster.uuid}}">{{cluster.uuid}}</a></td>
+                    <td scope="row"><a href="#/cluster/{{cluster.uuid}}">{{cluster.name}}</a></td>
                     <td scope="row"><span class="label label-default">{{cluster.type}}</span></td>
                     <td scope="row">{{cluster.adapterClass}}</td>
                     <td>
+                        <a href="#" title="View {{cluster.name}}"><i class="glyphicon glyphicon-eye-open"></i></a>
                         <a href="#" title="Remove {{cluster.name}}"><i class="glyphicon glyphicon-trash"></i></a>
                     </td>
                 </tr>

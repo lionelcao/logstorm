@@ -1,7 +1,7 @@
 {
   "version": "0.0.0",
   "private": true,
-  "name": "LogStormApp",
+  "name": "logstorm",
   "description": "The web application for log storm",
   "repository": "https://github.corp.ebay.com/hchen9/logstorm",
   "license": "Apache License V2",

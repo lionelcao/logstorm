@@ -11,6 +11,15 @@
     StreamingListController.$inject=["$scope","$log","streamingAPIService"];
     function StreamingListController($scope,$log,streamingAPIService){
         $log.info("Loading streaming list");
+        $scope.pipelines = [];
+        $scope.loadAll = function() {
+            streamingAPIService.findAll(function (pipelines) {
+                $scope.pipelines = pipelines;
+            }, function (response) {
+                $log.error(response);
+            })
+        };
+        $scope.loadAll();
     }
 
     StreamingViewController.$inject=["$scope","$log","streamingAPIService"];

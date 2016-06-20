@@ -13,7 +13,8 @@
         return {
             version: getVersion,
             all: listAllClusters,
-            create: createCluster
+            create: createCluster,
+            remove: deleteCluster
         };
 
         // ------------
@@ -41,6 +42,10 @@
                     "Content-Type":"application/json"
                 }
             }).then(success,fail)
+        }
+
+        function deleteCluster(){
+
         }
     }
 })();
