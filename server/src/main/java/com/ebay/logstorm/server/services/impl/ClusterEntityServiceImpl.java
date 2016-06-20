@@ -57,6 +57,12 @@ public class ClusterEntityServiceImpl implements ClusterEntityService {
     }
 
     @Override
+    public Integer deleteClusterByUuid(String uuid) {
+        return entityRepository.deleteByUuid(uuid);
+    }
+
+
+    @Override
     public ClusterEntity getClusterByUuidOrName(String uuid, String name) throws Exception {
         Preconditions.checkArgument(uuid!=null || name!=null,"uuid and name are both null");
         return entityRepository.findOneByUuidOrName(uuid,name).orElseThrow(()-> new PipelineException("No cluster found for uuid = "+uuid+" or name = '"+name+"'"));
