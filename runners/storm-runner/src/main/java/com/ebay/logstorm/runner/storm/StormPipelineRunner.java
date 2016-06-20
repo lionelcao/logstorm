@@ -20,7 +20,9 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -40,7 +42,7 @@ import java.util.List;
  */
 public class StormPipelineRunner implements PipelineRunner {
     private final static Logger LOG = LoggerFactory.getLogger(StormPipelineRunner.class);
-    public List<String> run(Pipeline pipeline) {
+    public Map<String, Object> run(Pipeline pipeline) {
         PipelineContext context = pipeline.getContext();
         List<InputPlugin> inputs = pipeline.getInputs();
         List<FilterPlugin> filters = pipeline.getFilters();
@@ -87,6 +89,6 @@ public class StormPipelineRunner implements PipelineRunner {
                 LOG.error(e.getMessage(),e);
             }
         }
-        return null;
+        return new HashMap<>();
     }
 }

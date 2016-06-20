@@ -33,25 +33,22 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.InputStream;
 import java.io.InputStreamReader;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Map;
-import java.util.UUID;
+import java.util.*;
 
 public class SparkPipelineRunner implements PipelineRunner {
     private final static Logger LOG = LoggerFactory.getLogger(SparkPipelineRunner.class);
 
     @Override
-    public List<String> run(Pipeline pipeline) {
-        List<String> result = new ArrayList<>();
+    public Map<String, Object> run(Pipeline pipeline) {
+        Map<String, Object> result = new HashMap<>();
         Map<String, String> env = Maps.newHashMap();
         env.put("SPARK_PRINT_LAUNCH_COMMAND", "1");
         SparkLauncher launcher = new SparkLauncher(env);
-        launcher.setAppResource(pipeline.getContext().getJarPath());
+        launcher.setAppResource(pipeline.getContext().getConfig().getString("JarPath"));
         launcher.setAppName(pipeline.getContext().getPipelineName());
         launcher.setMainClass("com.ebay.logstream.runner.spark.SparkPipelineRunner");
-        launcher.setSparkHome(pipeline.getContext().getSparkHome());
-        launcher.setJavaHome(pipeline.getContext().getJavaHome());
+        launcher.setSparkHome(pipeline.getContext().getConfig().getString("SparkHome"));
+        launcher.setJavaHome(pipeline.getContext().getConfig().getString("JavaHome"));
         //set app args
         launcher.addAppArgs(pipeline.getContext().getPipeline());
         launcher.addAppArgs(pipeline.getContext().getPipelineName());
@@ -63,18 +60,14 @@ public class SparkPipelineRunner implements PipelineRunner {
         launcher.setVerbose(true);
         launcher.addSparkArg("--verbose");
 
-        if (pipeline.getContext().getDeployMode() == LogStormConstants.DeployMode.LOCAL) {
-            launcher.setMaster("local[*]");
-        } else {
-            launcher.setMaster(pipeline.getContext().getSparkMaster());
-        }
+        launcher.setMaster(pipeline.getContext().getConfig().getString("SparkMaster"));
 
         try {
             SparkAppHandle handle = launcher.startApplication();
             while (handle.getAppId() == null) {
                 Thread.sleep(1000);
             }
-            result.add(handle.getAppId());
+            result.put("applicationId", handle.getAppId());
             LOG.info("generate spark applicationId " + handle.getAppId());
             //get driver pid
             String cmd = "ps -ef | grep " + uuid + " | grep -v grep | awk '{print $2}'";
@@ -91,16 +84,14 @@ public class SparkPipelineRunner implements PipelineRunner {
             BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
             String pid;
             while ((pid = bufferedReader.readLine()) != null) {
-                result.add(pid);
+                result.put("driverPid", pid);
+                System.out.println(pid);
             }
             bufferedReader.close();
-
-            for (String item : result) {
-                System.out.println(item);
-            }
         } catch (Exception e) {
             LOG.error("failed to start as a spark application, ", e);
         }
+
         return result;
     }
 
@@ -121,7 +112,7 @@ public class SparkPipelineRunner implements PipelineRunner {
 
 
             SparkConf conf = new SparkConf();
-            JavaStreamingContext jsc = new JavaStreamingContext(conf, new Duration(15000));
+            JavaStreamingContext jsc = new JavaStreamingContext(conf, new Duration(5000));
             List<JavaDStream<byte[]>> streams = new ArrayList<>();
             for (InputPlugin inputPlugin : inputs) {
                 for (int i = 0; i < inputPlugin.getParallelism() + 1; i++) {

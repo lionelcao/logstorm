@@ -34,7 +34,7 @@ public class TestSparkExecutionPlatform {
         PipelineEntity pipelineEntity = new PipelineEntity();
         entity.setPipeline(pipelineEntity);
 
-        pipelineEntity.setMode(LogStormConstants.DeployMode.CLUSTER);
+        pipelineEntity.setMode(LogStormConstants.DeployMode.LOCAL);
         pipelineEntity.setName("simple-generator-stdout-pipeline");
         pipelineEntity.setPipeline("input {\n" +
                 "\tgenerator {\n" +
@@ -69,8 +69,12 @@ public class TestSparkExecutionPlatform {
         pipelineEntity.setProperties(new Properties());
         try {
             sparkExecutionPlatform.start(entity);
-            sparkExecutionPlatform.status(entity);
-            sparkExecutionPlatform.stop(entity);
+
+            while (true) {
+                sparkExecutionPlatform.status(entity);
+                Thread.sleep(2000);
+            }
+
         } catch (Exception e) {
             System.out.println(e);
         }

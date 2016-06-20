@@ -2,7 +2,8 @@ package com.ebay.logstorm.core.runner.local;
 
 import com.ebay.logstorm.core.runner.PipelineRunner;
 import com.ebay.logstorm.core.compiler.Pipeline;
-import java.util.List;
+import java.util.Map;
+
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -22,7 +23,7 @@ import java.util.List;
 public class LocalLogStashRunner implements PipelineRunner {
 
     @Override
-    public List<String> run(Pipeline pipeline) {
+    public Map<String, Object> run(Pipeline pipeline) {
         throw new RuntimeException("not implemented yet");
     }
 }

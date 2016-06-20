@@ -20,6 +20,7 @@ import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.List;
+import java.util.Map;
 import java.util.Properties;
 
 /**
@@ -43,15 +44,15 @@ public class SparkExecutionPlatform implements ExecutionPlatform {
     private final static Logger LOG = LoggerFactory.getLogger(SparkExecutionPlatform.class);
     private SparkPipelineRunner runner;
     private Config config;
-
+    private int minRestPort = 4040;
+    private int maxRestPort = 4100;
     @Override
     public void prepare(Properties properties) {
         runner = new SparkPipelineRunner();
         config = ConfigFactory.load();
     }
 
-    @Override
-    public void start(final PipelineExecutionEntity entity) throws Exception {
+    private void startPipeLine(final PipelineExecutionEntity entity) throws Exception {
         PipelineContext context = new PipelineContext(entity.getPipeline().getPipeline());
 
         context.setConfig(entity.getPipeline().getProperties());
@@ -59,12 +60,16 @@ public class SparkExecutionPlatform implements ExecutionPlatform {
         context.setPipelineName(entity.getPipeline().getName());
         Pipeline pipeline = PipelineCompiler.compile(context);
         pipeline.getContext().setConfig(config);
-        List<String> result = runner.run(pipeline);
-        String applicationId = result.get(0);
-        String driverPid = result.get(1);
+        Map<String, Object> result = runner.run(pipeline);
+        String applicationId = (String)result.get("applicationId");
+        String driverPid = (String)result.get("driverPid");
         entity.setProperty("applicationId", applicationId);
         entity.setProperty("driverPid", driverPid);
         entity.setStatus(PipelineExecutionStatus.STARTING);
+    }
+    @Override
+    public void start(final PipelineExecutionEntity entity) throws Exception {
+        startPipeLine(entity);
     }
 
     @Override
@@ -89,10 +94,11 @@ public class SparkExecutionPlatform implements ExecutionPlatform {
     @Override
     public void status(final PipelineExecutionEntity entity) throws Exception {
         String applicationId = entity.getProperties().getProperty("applicationId");
-
-        if (LogStormConstants.DeployMode.CLUSTER.equals(entity.getPipeline().getMode())) {
+        int beginPort = minRestPort;
+        while (beginPort++ < maxRestPort) {
+            String restURL = config.getString("sparkRest").replace(new String("?"), beginPort + "") + applicationId;
             try {
-                URL url = new URL(config.getString("sparkRest") + applicationId);
+                URL url = new URL(restURL);
                 BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
                 String statusStr = "";
                 String line;
@@ -102,13 +108,21 @@ public class SparkExecutionPlatform implements ExecutionPlatform {
                 br.close();
 
                 entity.setDescription(statusStr);
+                LOG.info(statusStr);
                 //parse more json fields later, just work now
                 JSONParser parser = new JSONParser();
                 Object obj = parser.parse(statusStr);
-                JSONObject jsonObject = (JSONObject)obj;
-                JSONArray a = (JSONArray)jsonObject.get("attempts");
+                JSONObject jsonObject = (JSONObject) obj;
+                if (applicationId.equals(jsonObject.get("id"))) {
+                    LOG.info("find application {} rest url {}", applicationId, restURL);
+                } else {
+                    LOG.warn("wrong application {} rest url {}", applicationId, restURL);
+                    continue;
+                }
+
+                JSONArray a = (JSONArray) jsonObject.get("attempts");
                 for (int i = 0; i < a.size(); i++) {
-                    boolean finished = (boolean)((JSONObject)a.get(i)).get("completed");
+                    boolean finished = (boolean) ((JSONObject) a.get(i)).get("completed");
                     if (!finished) {
                         entity.setStatus(PipelineExecutionStatus.RUNNING);
                         return;
@@ -116,13 +130,12 @@ public class SparkExecutionPlatform implements ExecutionPlatform {
                 }
 
                 entity.setStatus(PipelineExecutionStatus.STOPPED);
+                return;
             } catch (Exception e) {
-                LOG.warn("get status for application {} failed: ", applicationId, e);
             }
-        } else {
-            LOG.warn("spark only supports cluster mode");
         }
-
+        entity.setStatus(PipelineExecutionStatus.STOPPED);
+        LOG.warn("get status for application {} failed, assume stopped", applicationId);
     }
 
     @Override
