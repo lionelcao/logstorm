@@ -6,6 +6,10 @@
 	// ===========================================================
 	// =                        Controller                       =
 	// ===========================================================
+	logStormControllers.controller('homeCtrl', function($scope, API, UI){});
+	logStormControllers.controller('applicationCtrl', function($scope, API, UI){});
+	logStormControllers.controller('configurationCtrl', function($scope, API, UI){});
+	
 	logStormControllers.controller('clusterCtrl', function($scope, API, UI) {
 		$scope.clusterList = API.get("api/cluster");
 

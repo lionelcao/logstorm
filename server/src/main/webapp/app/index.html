@@ -36,7 +36,6 @@
 				<span class="icon-bar"></span>
 				<span class="icon-bar"></span>
 			</a>
-
 			<div class="navbar-custom-menu">
 				<ul class="nav navbar-nav">
 				</ul>
@@ -53,6 +52,40 @@
 						<i class="fa fa-{{page.icon}}"></i> <span>{{page.title}}</span>
 					</a>
 				</li-->
+				<li class="treeview">
+					<a href="#/">
+						<i class="glyphicon glyphicon-home"></i>
+						<span>Home</span>
+					</a>
+				</li>
+				<li class="treeview">
+					<a href="#/application">
+						<i class="glyphicon glyphicon-random"></i>
+						<span>Applications</span>
+						<i class="fa fa-angle-left pull-right"></i>
+						<ul class="treeview-menu">
+							<li><a href="#/application"><i class="fa fa-circle-o"></i>Manage Applications</a></li>
+							<li><a href="#/application/new"><i class="fa fa-circle-o"></i>Create Application</a></li>
+						</ul>
+					</a>
+				</li>
+				<li class="treeview">
+					<a href="#/cluster">
+						<i class="glyphicon glyphicon-th-large"></i>
+						<span>Clusters</span>
+						<i class="fa fa-angle-left pull-right"></i>
+						<ul class="treeview-menu">
+							<li><a href="#/cluster"><i class="fa fa-circle-o"></i>Manage Clusters</a></li>
+							<li><a href="#/cluster/new"><i class="fa fa-circle-o"></i>Add Cluster</a></li>
+						</ul>
+					</a>
+				</li>
+				<li class="treeview">
+					<a href="#/configuration">
+						<i class="glyphicon glyphicon-cog"></i>
+						<span>Configuration</span>
+					</a>
+				</li>
 			</ul>
 		</section>
 	</aside>
