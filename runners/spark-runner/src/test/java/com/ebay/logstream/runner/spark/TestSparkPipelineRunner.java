@@ -1,8 +1,12 @@
-package com.ebay.logstorm.core.runner.local;
+package com.ebay.logstream.runner.spark;
 
-import com.ebay.logstorm.core.runner.PipelineRunner;
-import com.ebay.logstorm.core.compiler.Pipeline;
-import java.util.List;
+import com.ebay.logstorm.core.LogStormConstants;
+import com.ebay.logstorm.core.PipelineContext;
+import com.ebay.logstorm.core.exception.PipelineException;
+import org.junit.Test;
+
+import java.io.IOException;
+
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -19,10 +23,13 @@ import java.util.List;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class LocalLogStashRunner implements PipelineRunner {
-
-    @Override
-    public List<String> run(Pipeline pipeline) {
-        throw new RuntimeException("not implemented yet");
+public class TestSparkPipelineRunner {
+    @Test
+    public void testSparkResourcePipelineTopologyBuilder() throws IOException, PipelineException {
+        PipelineContext.pipelineResource("/simple-generator-stdout.txt")
+                .name("simple-generator-stdout-pipeline")
+                .runner(SparkPipelineRunner.class)
+                .deploy(LogStormConstants.DeployMode.CLUSTER)
+                .submit();
     }
 }

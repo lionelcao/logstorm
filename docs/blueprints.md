@@ -3,9 +3,10 @@ Blueprint
 
 TODO
 ----
+* Pipeline CLI Submitter
 * Pipeline Server and Management UI
-* LogStash Siddhi Filter Plugin (https://github.com/wso2/siddhi) 
-* Dynamic topology/lifecycle management 
+* LogStash Siddhi Filter Plugin (https://github.com/wso2/siddhi)
+* Dynamic topology/lifecycle management
 * More Pipeline Runner Support
     * Apache Spark Runner (http://spark.apache.org/)
     * Apache Flink Runner (http://flink.apache.org/)

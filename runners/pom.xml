@@ -13,5 +13,6 @@
     <packaging>pom</packaging>
     <modules>
         <module>storm-runner</module>
+        <module>spark-runner</module>
     </modules>
 </project>

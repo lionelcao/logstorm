@@ -40,7 +40,7 @@ import java.util.List;
  */
 public class StormPipelineRunner implements PipelineRunner {
     private final static Logger LOG = LoggerFactory.getLogger(StormPipelineRunner.class);
-    public void run(Pipeline pipeline) {
+    public List<String> run(Pipeline pipeline) {
         PipelineContext context = pipeline.getContext();
         List<InputPlugin> inputs = pipeline.getInputs();
         List<FilterPlugin> filters = pipeline.getFilters();
@@ -87,5 +87,6 @@ public class StormPipelineRunner implements PipelineRunner {
                 LOG.error(e.getMessage(),e);
             }
         }
+        return null;
     }
 }

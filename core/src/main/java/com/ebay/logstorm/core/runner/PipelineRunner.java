@@ -19,7 +19,8 @@ package com.ebay.logstorm.core.runner;
 import com.ebay.logstorm.core.compiler.Pipeline;
 
 import java.io.Serializable;
+import java.util.List;
 
 public interface PipelineRunner extends Serializable{
-    void run(Pipeline pipeline);
+    List<String> run(Pipeline pipeline);
 }

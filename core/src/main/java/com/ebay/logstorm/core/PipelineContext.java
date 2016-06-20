@@ -129,4 +129,9 @@ public class PipelineContext implements Serializable{
     public void setConfig(Properties properties) {
         this.config = ConfigFactory.parseProperties(properties);
     }
+
+    public String getSparkHome() { return this.config.getString("SparkHome");}
+    public String getJavaHome() { return this.config.getString("JavaHome");}
+    public String getSparkMaster() { return this.config.getString("SparkMaster");}
+    public String getJarPath() { return this.config.getString("JarPath"); }
 }

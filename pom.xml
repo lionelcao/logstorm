@@ -25,6 +25,7 @@
     <properties>
         <!-- General Properties -->
         <java.version>1.8</java.version>
+        <json.version>1.1</json.version>
         <scala.version>2.10</scala.version>
         <scala-lang.version>2.10.4</scala-lang.version>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
@@ -64,7 +65,7 @@
         <!-- Front-end -->
         <bootstrap.version>3.0.3</bootstrap.version>
         <jquery.version>2.0.3-1</jquery.version>
-
+        <spark.version>1.6.1</spark.version>
 
     </properties>
 
@@ -218,4 +219,5 @@
             </plugins>
         </pluginManagement>
     </build>
+
 </project>
