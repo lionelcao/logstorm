@@ -30,9 +30,13 @@ import org.apache.spark.streaming.api.java.JavaStreamingContext;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
+import java.io.BufferedReader;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
+import java.util.UUID;
 
 public class SparkPipelineRunner implements PipelineRunner {
     private final static Logger LOG = LoggerFactory.getLogger(SparkPipelineRunner.class);
@@ -52,7 +56,10 @@ public class SparkPipelineRunner implements PipelineRunner {
         launcher.addAppArgs(pipeline.getContext().getPipeline());
         launcher.addAppArgs(pipeline.getContext().getPipelineName());
         launcher.addAppArgs(pipeline.getContext().getDeployMode().toString());
-
+        //work around(for get driver pid)
+        String uuid = UUID.randomUUID().toString();
+        launcher.addAppArgs(uuid);
+        launcher.addAppArgs();
         launcher.setVerbose(true);
         launcher.addSparkArg("--verbose");
 
@@ -69,6 +76,28 @@ public class SparkPipelineRunner implements PipelineRunner {
             }
             result.add(handle.getAppId());
             LOG.info("generate spark applicationId " + handle.getAppId());
+            //get driver pid
+            String cmd = "ps -ef | grep " + uuid + " | grep -v grep | awk '{print $2}'";
+            LOG.info("cmd {}", cmd);
+            Process process = Runtime.getRuntime().exec(new String[] { "/bin/sh", "-c", cmd});
+            synchronized (process) {
+                try {
+                    process.wait();
+                } catch (Exception e) {
+                    LOG.warn("failed to wait driver pid: ", e);
+                }
+            }
+            InputStream inputStream = process.getInputStream();
+            BufferedReader bufferedReader = new BufferedReader(new InputStreamReader(inputStream));
+            String pid;
+            while ((pid = bufferedReader.readLine()) != null) {
+                result.add(pid);
+            }
+            bufferedReader.close();
+
+            for (String item : result) {
+                System.out.println(item);
+            }
         } catch (Exception e) {
             LOG.error("failed to start as a spark application, ", e);
         }
