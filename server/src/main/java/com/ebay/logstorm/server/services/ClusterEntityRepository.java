@@ -27,7 +27,7 @@ public interface ClusterEntityRepository extends Repository<ClusterEntity, Strin
     Optional<ClusterEntity> findOneByUuid(String uuid);
     ClusterEntity save(ClusterEntity entity);
     Integer delete(ClusterEntity entity);
-    Integer deleteByUuid(String uuid);
+    Integer delete(String uuid);
     Integer deleteByName(String name);
     Optional<ClusterEntity> findOneByUuidOrName(String uuid, String name);
     List<ClusterEntity> findAll();

@@ -49,6 +49,13 @@ public class ClusterController extends BaseController {
         return RestResponse.async(() -> entityService.updateCluster(clusterEntity)).get();
     }
 
+    @RequestMapping(path="/{uuid}", method= RequestMethod.DELETE)
+    @Transactional
+    public @ResponseBody
+    ResponseEntity<RestResponse<Integer>> deleteClusterByUuid(@PathVariable String uuid) {
+        return RestResponse.async(() -> entityService.deleteClusterByUuid(uuid)).get();
+    }
+
     @RequestMapping(method= RequestMethod.DELETE)
     @Transactional
     public @ResponseBody

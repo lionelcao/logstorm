@@ -31,6 +31,8 @@ public interface ClusterEntityService {
 
     Integer deleteClusterByName(String name);
 
+    Integer deleteClusterByUuid(String uuid);
+
     ClusterEntity getClusterByUuidOrName(String uuid, String name) throws Exception;
 
     List<ClusterEntity> getAllClusters();
