@@ -40,8 +40,8 @@ import java.util.Properties;
 public class SparkExecutionPlatform implements ExecutionPlatform {
     private final static Logger LOG = LoggerFactory.getLogger(SparkExecutionPlatform.class);
     private SparkPipelineRunner runner;
-    private static int MIN_REST_PORT = 4040;
-    private static int MAX_REST_PORT = 4100;
+    private static int MIN_REST_PORT = 4000;
+    private static int MAX_REST_PORT = 5000;
     private String sparkRestUrl;
     private Properties properties;
     private static final String SPARK_REST_API_PATH = "/api/v1/applications/";
