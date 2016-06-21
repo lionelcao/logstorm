@@ -49,17 +49,17 @@ public class StatusSyncServiceImpl implements PipelineStatusSyncService {
         LOG.info("Checking status of {} pipelines",allPipelineEntities.size());
         for (PipelineEntity pipelineEntity : allPipelineEntities) {
             if (pipelineEntity.getInstances() != null) {
-                pipelineEntity.getInstances().forEach((executor) ->{
+                pipelineEntity.getInstances().forEach((instance) ->{
                     try {
-                        LOG.info("Checking status of '{}'", pipelineEntity.getName());
-                        pipelineEntity.getCluster().getPlatformInstance().status(executor);
+                        LOG.info("Checking status of instance '{}'", instance.getName());
+                        pipelineEntity.getCluster().getPlatformInstance().status(instance);
                     } catch (Exception e) {
                         LOG.error(e.getMessage(), e);
-                        executor.setStatus(PipelineExecutionStatus.UNKNOWN);
-                        executor.setDescription(ExceptionUtils.getStackTrace(e));
+                        instance.setStatus(PipelineExecutionStatus.UNKNOWN);
+                        instance.setDescription(ExceptionUtils.getStackTrace(e));
                     } finally {
-                        executionService.updateExecutionEntity(executor);
-                        LOG.info("Updated status of '{}'",pipelineEntity.getName());
+                        executionService.updateExecutionEntity(instance);
+                        LOG.info("Updated status of instance '{}'",instance.getName());
                     }
                 });
             } else {

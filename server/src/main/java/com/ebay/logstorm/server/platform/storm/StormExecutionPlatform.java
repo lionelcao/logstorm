@@ -59,7 +59,7 @@ public class StormExecutionPlatform implements ExecutionPlatform {
     }
 
     @Override
-    public void start(final PipelineExecutionEntity entity) throws Exception {
+    public synchronized void start(final PipelineExecutionEntity entity) throws Exception {
         PipelineContext context = new PipelineContext(entity.getPipeline().getPipeline());
         context.setConfig(entity.getPipeline().getCluster().getProperties());
         context.setDeployMode(entity.getPipeline().getMode());
@@ -78,10 +78,8 @@ public class StormExecutionPlatform implements ExecutionPlatform {
             case CLUSTER:
                 startInRemoteMode(pipeline);
                 break;
-            default:
-                status(entity);
-         //   throw new IllegalStateException("State of "+entity.getPipeline().getName()+" is illegal: "+ entity.getPipeline().getMode());
         }
+        status(entity);
     }
 
     private void startInRemoteMode(Pipeline pipeline) {
@@ -95,7 +93,7 @@ public class StormExecutionPlatform implements ExecutionPlatform {
     }
 
     @Override
-    public void stop(final PipelineExecutionEntity entity) throws Exception {
+    public synchronized void stop(final PipelineExecutionEntity entity) throws Exception {
         if(entity.getPipeline().getMode().equals(LogStormConstants.DeployMode.LOCAL)) {
             ExecutionManager.getInstance().stop(entity.getName());
             entity.setDescription("Stopped");
@@ -114,8 +112,11 @@ public class StormExecutionPlatform implements ExecutionPlatform {
     private final static String topology_id_key = "topology.id";
 
     @Override
-    public void status(final PipelineExecutionEntity entity) throws Exception {
+    public synchronized void status(final PipelineExecutionEntity entity) throws Exception {
         if (LogStormConstants.DeployMode.LOCAL.equals(entity.getPipeline().getMode())) {
+            if(!ExecutionManager.getInstance().contains(entity.getName())){
+                LOG.info("Pipeline instance '{}' is not ready yet",entity.getName());
+            }
             PipelineExecutionStatus currentStatus = entity.getStatus();
             PipelineExecutionStatus newStatus = ExecutionManager.getWorkerStatus(ExecutionManager.getInstance().get(entity.getName()).getState());
             if (!currentStatus.equals(newStatus)) {

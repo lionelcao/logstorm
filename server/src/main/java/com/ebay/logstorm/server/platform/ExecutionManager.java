@@ -125,4 +125,8 @@ public class ExecutionManager {
             this.executorMap.remove(id);
         }
     }
+
+    public boolean contains(Object id) {
+        return executorMap.containsKey(id);
+    }
 }

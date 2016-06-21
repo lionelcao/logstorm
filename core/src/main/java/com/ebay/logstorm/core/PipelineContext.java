@@ -127,6 +127,7 @@ public class PipelineContext implements Serializable{
     }
 
     public void setConfig(Properties properties) {
+        if(properties == null) return;
         if(this.config == null) {
             this.config = ConfigFactory.parseProperties(properties);
         } else {
