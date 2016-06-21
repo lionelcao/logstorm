@@ -127,6 +127,14 @@ public class PipelineContext implements Serializable{
     }
 
     public void setConfig(Properties properties) {
-        this.config = ConfigFactory.parseProperties(properties);
+        if(this.config == null) {
+            this.config = ConfigFactory.parseProperties(properties);
+        } else {
+            this.config = ConfigFactory.parseProperties(properties).withFallback(this.config);
+        }
+    }
+
+    public String getPipelineJarPath(){
+        return this.config.getString("pipeline.jar");
     }
 }

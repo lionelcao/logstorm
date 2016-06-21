@@ -7,9 +7,14 @@ echo "[STEP 1] Create cluster by POST http://localhost:8080/api/cluster"
 sleep 1
 curl --silent -H 'Content-Type:application/json' -XPOST http://localhost:8080/api/cluster -d '
 	{
-	  "uuid": "47bda9f1-f0c0-458d-be1b-3d54b6bec25b",
-	  "name":"sample_spark_cluster",
-	  "adapterClass":"com.ebay.logstorm.server.platform.spark.SparkExecutionPlatform"
+	  "uuid": "7ef7d151-fe79-4b7c-847e-5d1e682ddfb4",
+	  "name": "sample_spark_cluster",
+	  "adapterClass": "com.ebay.logstorm.server.platform.spark.SparkExecutionPlatform",
+	  "properties": {
+	    "spark.master": "spark://127.0.0.1:7077",
+	    "spark.rest": "http://127.0.0.1:?/api/v1/applications/"
+	  },
+	  "type": "spark"
 	}
 '
 
@@ -23,14 +28,14 @@ echo "[STEP 3] Create pipeline by POST http://localhost:8080/api/pipeline"
 sleep 1
 curl --silent -H 'Content-Type:application/json' -XPOST http://localhost:8080/api/pipeline -d '
 	{
-	  "uuid": "fc6ffb53-2905-4665-b0ae-ed5f32565fef",
+	  "uuid": "d8f6837b-331d-475d-b202-5c1466e254d8",
 	  "name": "test_pipeline_spark_local",
 	  "pipeline": "input { generator { type => \"one_stream\" lines => [ \"GET /user 0.98\", \"GET /user 1.98\", \"GET /user 2.98\" ] count => 3 } } output { stdout { codec => rubydebug } }",
 	  "properties": {"a":"b"},
 	  "execution": null,
 	  "cluster":{
-	        "uuid": "47bda9f1-f0c0-458d-be1b-3d54b6bec25b"
-	    },
+	        "uuid": "7ef7d151-fe79-4b7c-847e-5d1e682ddfb4"
+	   },
 	  "mode": "LOCAL"
 	}
 '

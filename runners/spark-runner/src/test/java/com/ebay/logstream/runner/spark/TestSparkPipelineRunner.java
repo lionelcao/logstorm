@@ -3,6 +3,7 @@ package com.ebay.logstream.runner.spark;
 import com.ebay.logstorm.core.LogStormConstants;
 import com.ebay.logstorm.core.PipelineContext;
 import com.ebay.logstorm.core.exception.PipelineException;
+import com.ebay.logstorm.core.utils.PipelineEnvironmentLoaderForTest;
 import org.junit.Test;
 
 import java.io.IOException;
@@ -23,13 +24,18 @@ import java.io.IOException;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-public class TestSparkPipelineRunner {
+public class TestSparkPipelineRunner extends PipelineEnvironmentLoaderForTest {
+
+    public TestSparkPipelineRunner() {
+        super("/../../");
+    }
+
     @Test
     public void testSparkResourcePipelineTopologyBuilder() throws IOException, PipelineException {
         PipelineContext.pipelineResource("/simple-generator-stdout.txt")
-                .name("simple-generator-stdout-pipeline")
-                .runner(SparkPipelineRunner.class)
-                .deploy(LogStormConstants.DeployMode.CLUSTER)
-                .submit();
+            .name("simple-generator-stdout-pipeline")
+            .runner(SparkPipelineRunner.class)
+            .deploy(LogStormConstants.DeployMode.LOCAL)
+            .submit();
     }
 }

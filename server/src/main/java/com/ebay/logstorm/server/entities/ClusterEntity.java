@@ -36,7 +36,7 @@ public class ClusterEntity extends BaseEntity{
     @Column(nullable = false)
     private String adapterClass;
 
-    @Column(nullable = true)
+    @Column(nullable = true,length = 8192)
     private Properties properties;
 
     public Properties getProperties() {
@@ -50,7 +50,7 @@ public class ClusterEntity extends BaseEntity{
     public String getType() {
         if(getPlatformInstance()!=null){
             return getPlatformInstance().getType();
-        }else {
+        } else {
             return null;
         }
     }

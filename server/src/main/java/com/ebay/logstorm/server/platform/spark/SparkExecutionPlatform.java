@@ -8,6 +8,7 @@ import com.ebay.logstorm.server.entities.PipelineExecutionEntity;
 import com.ebay.logstorm.server.entities.PipelineExecutionStatus;
 import com.ebay.logstorm.server.platform.ExecutionPlatform;
 import com.ebay.logstream.runner.spark.SparkPipelineRunner;
+import com.google.common.base.Preconditions;
 import com.typesafe.config.Config;
 import com.typesafe.config.ConfigFactory;
 import org.json.simple.JSONArray;
@@ -43,30 +44,36 @@ import java.util.Properties;
 public class SparkExecutionPlatform implements ExecutionPlatform {
     private final static Logger LOG = LoggerFactory.getLogger(SparkExecutionPlatform.class);
     private SparkPipelineRunner runner;
-    private Config config;
     private int minRestPort = 4040;
     private int maxRestPort = 4100;
+    private String sparkRestUrl;
+    private Properties properties;
+
     @Override
     public void prepare(Properties properties) {
-        runner = new SparkPipelineRunner();
-        config = ConfigFactory.load();
+        this.runner = new SparkPipelineRunner();
+        this.sparkRestUrl = (String) properties.get(SparkPipelineRunner.SPARK_REST_KEY);
+        this.properties = properties;
     }
 
     private void startPipeLine(final PipelineExecutionEntity entity) throws Exception {
         PipelineContext context = new PipelineContext(entity.getPipeline().getPipeline());
-
-        context.setConfig(entity.getPipeline().getProperties());
+        context.setConfig(properties);
         context.setDeployMode(entity.getPipeline().getMode());
         context.setPipelineName(entity.getPipeline().getName());
         Pipeline pipeline = PipelineCompiler.compile(context);
-        pipeline.getContext().setConfig(config);
         Map<String, Object> result = runner.run(pipeline);
         String applicationId = (String)result.get("applicationId");
         String driverPid = (String)result.get("driverPid");
+
+        Preconditions.checkNotNull(applicationId,"applicationId is null");
+        Preconditions.checkNotNull(driverPid,"driverPid is null");
+
         entity.setProperty("applicationId", applicationId);
         entity.setProperty("driverPid", driverPid);
         entity.setStatus(PipelineExecutionStatus.STARTING);
     }
+
     @Override
     public void start(final PipelineExecutionEntity entity) throws Exception {
         startPipeLine(entity);
@@ -76,7 +83,6 @@ public class SparkExecutionPlatform implements ExecutionPlatform {
     public void stop(final PipelineExecutionEntity entity) throws Exception {
         String applicationId = entity.getProperties().getProperty("applicationId");
         String driverPid = entity.getProperties().getProperty("driverPid");
-
         String cmd = "kill -9 " + driverPid;
         Process process = Runtime.getRuntime().exec(new String[] { "/bin/sh", "-c", cmd});
         synchronized (process) {
@@ -96,7 +102,7 @@ public class SparkExecutionPlatform implements ExecutionPlatform {
         String applicationId = entity.getProperties().getProperty("applicationId");
         int beginPort = minRestPort;
         while (beginPort++ < maxRestPort) {
-            String restURL = config.getString("sparkRest").replace(new String("?"), beginPort + "") + applicationId;
+            String restURL = sparkRestUrl.replace(new String("?"), beginPort + "") + applicationId;
             try {
                 URL url = new URL(restURL);
                 BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));

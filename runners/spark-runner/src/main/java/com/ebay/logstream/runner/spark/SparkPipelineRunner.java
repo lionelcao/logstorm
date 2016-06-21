@@ -16,7 +16,6 @@ package com.ebay.logstream.runner.spark;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-import com.ebay.logstorm.core.LogStormConstants;
 import com.ebay.logstorm.core.PipelineContext;
 import com.ebay.logstorm.core.compiler.*;
 import com.ebay.logstorm.core.runner.PipelineRunner;
@@ -37,6 +36,10 @@ import java.util.*;
 
 public class SparkPipelineRunner implements PipelineRunner {
     private final static Logger LOG = LoggerFactory.getLogger(SparkPipelineRunner.class);
+    public static final String SPARK_HOME_KEY="spark.home";
+    public static final String SPARK_MASTER_KEY="spark.master";
+    public static final String SPARK_REST_KEY="spark.rest";
+    public static final String JAVA_HOME="java.home";
 
     @Override
     public Map<String, Object> run(Pipeline pipeline) {
@@ -44,11 +47,11 @@ public class SparkPipelineRunner implements PipelineRunner {
         Map<String, String> env = Maps.newHashMap();
         env.put("SPARK_PRINT_LAUNCH_COMMAND", "1");
         SparkLauncher launcher = new SparkLauncher(env);
-        launcher.setAppResource(pipeline.getContext().getConfig().getString("JarPath"));
+        launcher.setAppResource(pipeline.getContext().getPipelineJarPath());
         launcher.setAppName(pipeline.getContext().getPipelineName());
-        launcher.setMainClass("com.ebay.logstream.runner.spark.SparkPipelineRunner");
-        launcher.setSparkHome(pipeline.getContext().getConfig().getString("SparkHome"));
-        launcher.setJavaHome(pipeline.getContext().getConfig().getString("JavaHome"));
+        launcher.setMainClass(SparkPipelineRunner.class.getCanonicalName());
+        launcher.setSparkHome(pipeline.getContext().getConfig().getString(SPARK_HOME_KEY));
+        launcher.setJavaHome(pipeline.getContext().getConfig().getString(JAVA_HOME));
         //set app args
         launcher.addAppArgs(pipeline.getContext().getPipeline());
         launcher.addAppArgs(pipeline.getContext().getPipelineName());
@@ -59,8 +62,7 @@ public class SparkPipelineRunner implements PipelineRunner {
         launcher.addAppArgs();
         launcher.setVerbose(true);
         launcher.addSparkArg("--verbose");
-
-        launcher.setMaster(pipeline.getContext().getConfig().getString("SparkMaster"));
+        launcher.setMaster(pipeline.getContext().getConfig().getString(SPARK_MASTER_KEY));
 
         try {
             SparkAppHandle handle = launcher.startApplication();
@@ -109,7 +111,6 @@ public class SparkPipelineRunner implements PipelineRunner {
             List<InputPlugin> inputs = pipeline.getInputs();
             List<FilterPlugin> filters = pipeline.getFilters();
             List<OutputPlugin> outputs = pipeline.getOutputs();
-
 
             SparkConf conf = new SparkConf();
             JavaStreamingContext jsc = new JavaStreamingContext(conf, new Duration(5000));
