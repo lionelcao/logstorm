@@ -61,8 +61,7 @@ public class StormExecutionPlatform implements ExecutionPlatform {
     @Override
     public void start(final PipelineExecutionEntity entity) throws Exception {
         PipelineContext context = new PipelineContext(entity.getPipeline().getPipeline());
-
-        context.setConfig(entity.getPipeline().getProperties());
+        context.setConfig(entity.getPipeline().getCluster().getProperties());
         context.setDeployMode(entity.getPipeline().getMode());
         context.setPipelineName(entity.getPipeline().getName());
         Pipeline pipeline = PipelineCompiler.compile(context);

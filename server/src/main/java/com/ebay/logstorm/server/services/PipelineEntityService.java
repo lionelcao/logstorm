@@ -32,6 +32,7 @@ public interface PipelineEntityService {
     PipelineEntity createPipeline(PipelineEntity pipelineEntity);
     PipelineEntity updatePipeline(PipelineEntity pipelineEntity);
     Integer deletePipeline(PipelineEntity pipelineEntity);
+    Integer deletePipelineByUuid(String uuid);
 
     Optional<PipelineEntity> getPipelineByUuid(String uuid);
     PipelineEntity getPipelineByIdOrThrow(String uuid) throws Exception;

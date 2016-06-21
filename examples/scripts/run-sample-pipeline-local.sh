@@ -27,7 +27,7 @@ curl --silent -H 'Content-Type:application/json' -XPOST http://localhost:8080/ap
 	  "name": "test_pipeline_local",
 	  "pipeline": "input { generator { type => \"one_stream\" lines => [ \"GET /user 0.98\", \"GET /user 1.98\", \"GET /user 2.98\" ] count => 3 } } output { stdout { codec => rubydebug } }",
 	  "properties": {"a":"b"},
-	  "execution": null,
+	  "instances": null,
 	  "cluster":{
 	        "uuid": "47bda9f1-f0c0-458d-be1b-3d54b6bec25b"
 	    },

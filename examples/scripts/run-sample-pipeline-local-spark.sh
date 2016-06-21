@@ -32,7 +32,7 @@ curl --silent -H 'Content-Type:application/json' -XPOST http://localhost:8080/ap
 	  "name": "test_pipeline_spark_local",
 	  "pipeline": "input { generator { type => \"one_stream\" lines => [ \"GET /user 0.98\", \"GET /user 1.98\", \"GET /user 2.98\" ] count => 3 } } output { stdout { codec => rubydebug } }",
 	  "properties": {"a":"b"},
-	  "execution": null,
+	  "instances": null,
 	  "cluster":{
 	        "uuid": "7ef7d151-fe79-4b7c-847e-5d1e682ddfb4"
 	   },
