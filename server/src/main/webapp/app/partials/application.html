@@ -31,7 +31,6 @@
 										<th>Mode</th>
 										<th>Instance</th>
 										<th>Cluster</th>
-										<!--<th>Pipeline</th>-->
 										<th>Actions</th>
 									</tr>
 									</thead>
@@ -42,17 +41,16 @@
 										<td><span class="label label-default">{{application.mode}}</span></td>
 										<td>{{application.instances.length}}/{{application.parallelism}}</td>
 										<td><a href="#/cluster/{{application.cluster.uuid}}">{{application.cluster.name}}</a> (type: <span>{{application.cluster.type}} version: {{application.cluster.version}}</span>)</td>
-										<!--<td><pre>{{application.pipeline}}</pre></td>-->
 										<td>
 											<div class="btn-group btn-group-xs">
 												<a class="btn btn-default" ng-click="startApplication(application)">
-													<i class="fa fa-play"></i>
+													<i class="fa fa-play"></i> start
 												</a>
 												<a class="btn btn-default" ng-click="stopApplication(application)">
-													<i class="fa fa-stop"></i>
+													<i class="fa fa-stop"></i> stop
 												</a>
 												<a class="btn btn-default" ng-click="deleteApplication(application)">
-													<i class="fa fa-trash"></i>
+													<i class="fa fa-trash"></i> delete
 												</a>
 											</div>
 										</td>

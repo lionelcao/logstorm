@@ -113,4 +113,13 @@
 			});
 		};
 	});
+
+	logStormControllers.controller('applicationViewCtrl', function($scope,$stateParams, API) {
+		API.get("api/pipeline/"+$stateParams.id,function(data){
+			$scope.application = data;
+		})
+		API.get("api/pipeline/"+$stateParams.id+"/compiled",function(data){
+			$scope.compiled_pipeline=data;
+		})
+	});
 })();

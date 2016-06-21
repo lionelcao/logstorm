@@ -7,12 +7,14 @@
 
 	logStormApp.service('API', function($http) {
 		return {
-			get: function (url) {
+			//  return list type by default
+			get: function (url,callback) {
 				var list = [];
 				list._promise = $http.get(host + url).then(function (res) {
 					var result = res.data;
 					list.splice(0);
 					Array.prototype.push.apply(list, result.data);
+					if(typeof callback == "function") callback(result.data);
 				});
 				return list;
 			},
