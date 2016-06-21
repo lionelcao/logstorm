@@ -12,29 +12,34 @@
 			.state('home', {
 				url: "/",
 				templateUrl: "partials/home.html?_=" + _TRS,
-				controller: "homeCtrl",
+				controller: "homeCtrl"
 				//resolve: _resolve({featureCheck: true})
 			})
 			.state('application', {
 				url: "/application",
 				templateUrl: "partials/application.html?_=" + _TRS,
-				controller: "applicationCtrl",
+				controller: "applicationCtrl"
 				//resolve: _resolve({featureCheck: true})
+			})
+			.state('application_new', {
+				url: "/application/new",
+				templateUrl: "partials/application_new.html?_=" + _TRS,
+				controller: "applicationNewCtrl"
 			})
 			.state('cluster', {
 				url: "/cluster",
 				templateUrl: "partials/cluster.html?_=" + _TRS,
-				controller: "clusterCtrl",
+				controller: "clusterCtrl"
 			})
 			.state('cluster_new', {
 				url: "/cluster/new",
 				templateUrl: "partials/cluster_new.html?_=" + _TRS,
-				controller: "clusterNewCtrl",
+				controller: "clusterNewCtrl"
 			})
 			.state('configuration', {
 				url: "/configuration",
 				templateUrl: "partials/configuration.html?_=" + _TRS,
-				controller: "configurationCtrl",
+				controller: "configurationCtrl"
 				//resolve: _resolve({featureCheck: true})
 			})
 	});

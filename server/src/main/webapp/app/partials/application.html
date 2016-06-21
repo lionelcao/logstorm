@@ -18,7 +18,6 @@
 			<code>
 				<b>TODO:</b> <br/>
 
-				1. List current applications <br/>
 				2. Start/Stop/Rescale application <br/>
 				3. New application (!most important page, step by step declaration, instead of popup dialog) <br/>
 				4. View application (definition detail & execution status)
@@ -40,7 +39,7 @@
 					<td>{{application.name}}</td>
 					<td>{{application.status}}</td>
 					<td>{{application.mode}}</td>
-					<td>{{clusters[application.cluster.uuid]}}</td>
+					<td>{{clusters[application.cluster.uuid].name}}</td>
 					<td><pre>{{application.pipeline}}</pre></td>
 					<td><a class="fa fa-trash" ng-click="deleteApplication(application)"></a></td>
 				</tr>
@@ -49,6 +48,9 @@
 				</tr>
 				</tbody>
 			</table>
+		</div>
+		<div class="box-footer text-right">
+			<a class="btn btn-primary" href="#/application/new">+ New Application</a>
 		</div>
 	</div>
 </section>

@@ -4,6 +4,17 @@
 	var logStormControllers = angular.module('logStormControllers', ['ui.bootstrap']);
 
 	// ===========================================================
+	// =                        Functions                        =
+	// ===========================================================
+	function clusterMapWrapper(clusterMap, clusterList, mappingKey) {
+		clusterList._promise.then(function () {
+			$.each(clusterList, function (i, cluster) {
+				clusterMap[cluster[mappingKey || "uuid"]] = cluster;
+			});
+		});
+	}
+
+	// ===========================================================
 	// ===========================================================
 	// ==                       Controller                      ==
 	// ===========================================================
@@ -61,12 +72,7 @@
 		$scope.applicationList = API.get("api/pipeline");
 		$scope.clusterList = API.get("api/cluster");
 		$scope.clusters = {};
-
-		$scope.clusterList._promise.then(function () {
-			$.each($scope.clusterList, function (i, cluster) {
-				$scope.clusters[cluster.uuid] = cluster.name;
-			});
-		});
+		clusterMapWrapper($scope.clusters, $scope.clusterList);
 
 		$scope.deleteApplication = function (application) {
 			UI.deleteConfirm(application.name).then(null, null, function(holder) {
@@ -74,6 +80,35 @@
 					holder.closeFunc();
 					location.reload();
 				});
+			});
+		};
+	});
+
+	logStormControllers.controller('applicationNewCtrl', function($scope, API) {
+		$scope.clusterList = API.get("api/cluster");
+		$scope.clusters = {};
+		clusterMapWrapper($scope.clusters, $scope.clusterList, "name");
+
+		$scope._name = "";
+		$scope._mode = "LOCAL";
+		$scope._cluster = "";
+		$scope._pipeline = "";
+
+		$scope.clusterList._promise.then(function () {
+			$scope._cluster = ($scope.clusterList[0] || {}).name;
+		});
+
+
+		$scope.create = function () {
+			API.post("api/pipeline", {
+				name: $scope._name,
+				mode: $scope._mode,
+				cluster: {
+					uuid: $scope.clusters[$scope._cluster].uuid
+				},
+				pipeline: $scope._pipeline
+			}).then(function () {
+				location.href = "#/application";
 			});
 		};
 	});
