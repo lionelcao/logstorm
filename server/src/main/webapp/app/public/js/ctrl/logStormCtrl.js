@@ -90,14 +90,15 @@
 		clusterMapWrapper($scope.clusters, $scope.clusterList, "name");
 
 		$scope._name = "";
-		$scope._mode = "LOCAL";
+		$scope._mode = "CLUSTER";
 		$scope._cluster = "";
 		$scope._pipeline = "";
+		$scope._parallelism = 1;
+		$scope._properties = '{}';
 
 		$scope.clusterList._promise.then(function () {
 			$scope._cluster = ($scope.clusterList[0] || {}).name;
 		});
-
 
 		$scope.create = function () {
 			API.post("api/pipeline", {
