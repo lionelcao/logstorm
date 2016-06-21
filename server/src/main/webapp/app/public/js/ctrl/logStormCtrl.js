@@ -109,7 +109,7 @@
 				},
 				pipeline: $scope._pipeline
 			}).then(function () {
-				location.href = "#/application";
+				location.href = "#/application/"+ $scope._name;
 			});
 		};
 	});

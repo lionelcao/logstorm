@@ -1,6 +1,6 @@
 <section class="content-header">
 	<h1>
-		Application: {{application.name}}
+		Application Detail
 		<small>{{application.uuid}}</small>
 	</h1>
 	<ol class="breadcrumb">
@@ -20,7 +20,7 @@
 				<div class="row">
 					<div class="col-xs-12">
 						<div class="box-header">
-							Basic Information
+							Application: <strong>{{application.name}}</strong>
 							<div class="pull-right btn-group btn-group-xs">
 								<a class="btn btn-default" href="#">Start</a>
 								<a class="btn btn-default" href="#">Stop</a>
@@ -66,6 +66,9 @@
 														<hr/>
 														<strong>Execution Plan</strong><br/><br/>
 														<i>Inputs:</i>
+														<span ng-if="compiled_pipeline.inputs.length === 0">
+															[]
+														</span>
 														<ul>
 															<li ng-repeat="plugin in compiled_pipeline.inputs">{{plugin.debugInfo}}</li>
 														</ul>
@@ -77,6 +80,9 @@
 															<li ng-repeat="plugin in compiled_pipeline.filters">{{plugin.debugInfo}}</li>
 														</ul>
 														<i>Outputs:</i>
+														<span ng-if="compiled_pipeline.outputs.length === 0">
+															[]
+														</span>
 														<ul>
 															<li ng-repeat="plugin in compiled_pipeline.outputs">{{plugin.debugInfo}}</li>
 														</ul>
