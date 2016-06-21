@@ -1,7 +1,7 @@
 <section class="content-header">
 	<h1>
 		Cluster
-		<small></small>
+		<small>New Streaming Processing Environments</small>
 	</h1>
 	<ol class="breadcrumb">
 		<li><a href="#/"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -11,29 +11,64 @@
 </section>
 
 <section class="content">
-	<div class="box box-success">
-		<div class="box-header with-border">
-			<h3 class="box-title">New</h3>
-		</div>
-		<div class="box-body">
-			<div class="form-group">
-				<label>Name</label>
-				<input type="text" class="form-control" ng-model="_name" />
+	<div class="nav-tabs-custom">
+		<ul class="nav nav-tabs">
+			<li><a href="#/cluster" data-toggle="tab">Clusters</a></li>
+			<li class="active"><a href="#/cluster/new" data-toggle="tab">New Cluster</a></li>
+		</ul>
+		<div class="tab-content">
+			<div class="tab-pane" id="cluster_tab">
 			</div>
-			<div class="form-group">
-				<label>Type</label>
-				<select class="form-control" ng-model="_type">
-					<option>storm</option>
-					<option>spark</option>
-				</select>
+			<div class="tab-pane active" id="cluster_new_tab">
+				<div class="box-body">
+					<div class="form-group">
+						<label>Cluster Name</label>
+						<input type="text" class="form-control" ng-model="_name" placeholder="Input an unique cluster name"/>
+					</div>
+					<div class="form-group">
+						<label>Environment Type</label>
+						<select class="form-control" ng-model="_type">
+							<option>storm</option>
+							<option>spark</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label>Environment Properties</label>
+						<textarea class="form-control" rows="6" ng-model="_properties" placeholder="{'key':'value'}"></textarea>
+					</div>
+				</div>
+				<div class="box-footer text-right">
+					<button class="btn btn-primary" ng-click="create()" ng-disabled="!_name">Create</button>
+				</div>
 			</div>
-			<div class="form-group">
-				<label>Properties</label>
-				<textarea class="form-control" rows="6" ng-model="_properties" placeholder="Json format..."></textarea>
-			</div>
-		</div>
-		<div class="box-footer text-right">
-			<button class="btn btn-primary" ng-click="create()" ng-disabled="!_name">Create</button>
 		</div>
 	</div>
 </section>
+
+<!--<section class="content">-->
+	<!--<div class="box box-success">-->
+		<!--<div class="box-header with-border">-->
+			<!--<h3 class="box-title">New</h3>-->
+		<!--</div>-->
+		<!--<div class="box-body">-->
+			<!--<div class="form-group">-->
+				<!--<label>Name</label>-->
+				<!--<input type="text" class="form-control" ng-model="_name" />-->
+			<!--</div>-->
+			<!--<div class="form-group">-->
+				<!--<label>Type</label>-->
+				<!--<select class="form-control" ng-model="_type">-->
+					<!--<option>storm</option>-->
+					<!--<option>spark</option>-->
+				<!--</select>-->
+			<!--</div>-->
+			<!--<div class="form-group">-->
+				<!--<label>Properties</label>-->
+				<!--<textarea class="form-control" rows="6" ng-model="_properties" placeholder="Json format..."></textarea>-->
+			<!--</div>-->
+		<!--</div>-->
+		<!--<div class="box-footer text-right">-->
+			<!--<button class="btn btn-primary" ng-click="create()" ng-disabled="!_name">Create</button>-->
+		<!--</div>-->
+	<!--</div>-->
+<!--</section>-->

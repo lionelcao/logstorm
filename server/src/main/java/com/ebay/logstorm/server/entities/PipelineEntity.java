@@ -50,15 +50,20 @@ public class PipelineEntity extends BaseEntity {
     @Column
     private int parallelism = 1;
 
-    @Transient
-    private PipelineExecutionStatus pipelineStatus;
-
-    public PipelineExecutionStatus getPipelineStatus() {
-        return pipelineStatus;
-    }
-
-    public void setPipelineStatus(PipelineExecutionStatus pipelineStatus) {
-        this.pipelineStatus = pipelineStatus;
+    public PipelineExecutionStatus getStatus() {
+        if(this.getInstances() == null || this.getInstances().size() == 0){
+            return PipelineExecutionStatus.UNDEPLOYED;
+        }else{
+            boolean stopped = false;
+            for(PipelineExecutionEntity instance: this.getInstances()){
+                if(instance.getStatus() != PipelineExecutionStatus.STOPPED) {
+                    return instance.getStatus();
+                }else{
+                    stopped = true;
+                }
+            }
+            return stopped?PipelineExecutionStatus.STOPPED:PipelineExecutionStatus.UNKNOWN;
+        }
     }
 
     public String getName() {
