@@ -40,15 +40,17 @@ import java.util.Properties;
 public class SparkExecutionPlatform implements ExecutionPlatform {
     private final static Logger LOG = LoggerFactory.getLogger(SparkExecutionPlatform.class);
     private SparkPipelineRunner runner;
-    private int minRestPort = 4040;
-    private int maxRestPort = 4100;
+    private static int MIN_REST_PORT = 4040;
+    private static int MAX_REST_PORT = 4100;
     private String sparkRestUrl;
     private Properties properties;
+    private static final String SPARK_REST_API_PATH = "/api/v1/applications/";
+    private static final String SPARK_JOB_PATH = "/jobs/";
 
     @Override
     public void prepare(Properties properties) {
         this.runner = new SparkPipelineRunner();
-        this.sparkRestUrl = (String) properties.get(SparkPipelineRunner.SPARK_REST_KEY);
+        this.sparkRestUrl = (String) properties.get(SparkPipelineRunner.SPARK_DRIVER_KEY);
         this.properties = properties;
     }
 
@@ -73,6 +75,7 @@ public class SparkExecutionPlatform implements ExecutionPlatform {
     @Override
     public void start(final PipelineExecutionEntity entity) throws Exception {
         startPipeLine(entity);
+        status(entity);
     }
 
     @Override
@@ -96,9 +99,9 @@ public class SparkExecutionPlatform implements ExecutionPlatform {
     @Override
     public void status(final PipelineExecutionEntity entity) throws Exception {
         String applicationId = entity.getProperties().getProperty("applicationId");
-        int beginPort = minRestPort;
-        while (beginPort++ < maxRestPort) {
-            String restURL = sparkRestUrl.replace(new String("?"), beginPort + "") + applicationId;
+        int beginPort = MIN_REST_PORT;
+        while (beginPort++ < MAX_REST_PORT) {
+            String restURL = sparkRestUrl + ":" + beginPort + SPARK_REST_API_PATH + applicationId;
             try {
                 URL url = new URL(restURL);
                 BufferedReader br = new BufferedReader(new InputStreamReader(url.openStream()));
@@ -110,6 +113,7 @@ public class SparkExecutionPlatform implements ExecutionPlatform {
                 br.close();
 
                 entity.setDescription(statusStr);
+                entity.setUrl(sparkRestUrl + ":" + beginPort + SPARK_JOB_PATH);
                 LOG.info(statusStr);
                 //parse more json fields later, just work now
                 JSONParser parser = new JSONParser();

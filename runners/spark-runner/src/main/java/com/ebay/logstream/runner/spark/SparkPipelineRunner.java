@@ -38,7 +38,7 @@ public class SparkPipelineRunner implements PipelineRunner {
     private final static Logger LOG = LoggerFactory.getLogger(SparkPipelineRunner.class);
     public static final String SPARK_HOME_KEY="spark.home";
     public static final String SPARK_MASTER_KEY="spark.master";
-    public static final String SPARK_REST_KEY="spark.rest";
+    public static final String SPARK_DRIVER_KEY="spark.driver";
     public static final String JAVA_HOME="java.home";
 
     @Override

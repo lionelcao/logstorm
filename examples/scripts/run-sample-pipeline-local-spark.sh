@@ -11,8 +11,8 @@ curl --silent -H 'Content-Type:application/json' -XPOST http://localhost:8080/ap
 	  "name": "sample_spark_cluster",
 	  "adapterClass": "com.ebay.logstorm.server.platform.spark.SparkExecutionPlatform",
 	  "properties": {
-	    "spark.master": "spark://127.0.0.1:7077",
-	    "spark.rest": "http://127.0.0.1:?/api/v1/applications/"
+	    "spark.master": "local[*]",
+	    "spark.driver": "http://127.0.0.1"
 	  },
 	  "type": "spark"
 	}
