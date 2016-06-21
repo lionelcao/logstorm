@@ -23,6 +23,32 @@
 				3. New application (!most important page, step by step declaration, instead of popup dialog) <br/>
 				4. View application (definition detail & execution status)
 			</code>
+
+			<table class="table table-bordered">
+				<thead>
+				<tr>
+					<th>Name</th>
+					<th>Status</th>
+					<th>Mode</th>
+					<th>Cluster</th>
+					<th>Pipeline</th>
+					<th width="5"></th>
+				</tr>
+				</thead>
+				<tbody>
+				<tr ng-repeat="application in applicationList track by $index">
+					<td>{{application.name}}</td>
+					<td>{{application.status}}</td>
+					<td>{{application.mode}}</td>
+					<td>{{clusters[application.cluster.uuid]}}</td>
+					<td><pre>{{application.pipeline}}</pre></td>
+					<td><a class="fa fa-trash" ng-click="deleteApplication(application)"></a></td>
+				</tr>
+				<tr ng-if="applicationList.length === 0">
+					<td colspan="6" class="text-muted">[Empty list]</td>
+				</tr>
+				</tbody>
+			</table>
 		</div>
 	</div>
 </section>

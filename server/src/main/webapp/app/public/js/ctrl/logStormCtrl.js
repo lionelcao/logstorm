@@ -4,27 +4,18 @@
 	var logStormControllers = angular.module('logStormControllers', ['ui.bootstrap']);
 
 	// ===========================================================
-	// =                        Controller                       =
+	// ===========================================================
+	// ==                       Controller                      ==
+	// ===========================================================
 	// ===========================================================
 	logStormControllers.controller('homeCtrl', function($scope, API, UI){});
-	logStormControllers.controller('applicationCtrl', function($scope, API, UI){});
 	logStormControllers.controller('configurationCtrl', function($scope, API, UI){});
 
+	// ===========================================================
+	// =                         Cluster                         =
+	// ===========================================================
 	logStormControllers.controller('clusterCtrl', function($scope, API, UI) {
 		$scope.clusterList = API.get("api/cluster");
-
-		/*$scope.createCluster = function () {
-			UI.createConfirm("Cluster", {}, [
-				{field: "name"},
-				{field: "adapterClass", type: "select", valueList: ["com.ebay.logstorm.server.platform.storm.StormExecutionPlatform", "com.ebay.logstorm.server.platform.spark.SparkExecutionPlatform"]}
-			], function () {
-			}).then(null, null, function(holder) {
-				API.post("api/cluster", holder.entity).then(function () {
-					holder.closeFunc();
-					location.reload();
-				});
-			});
-		};*/
 
 		$scope.deleteCluster = function (cluster) {
 			UI.deleteConfirm(cluster.name).then(null, null, function(holder) {
@@ -59,6 +50,30 @@
 				adapterClass: typeMapping[$scope._type]
 			}).then(function () {
 				location.href = "#/cluster";
+			});
+		};
+	});
+
+	// ===========================================================
+	// =                       Application                       =
+	// ===========================================================
+	logStormControllers.controller('applicationCtrl', function($scope, API, UI){
+		$scope.applicationList = API.get("api/pipeline");
+		$scope.clusterList = API.get("api/cluster");
+		$scope.clusters = {};
+
+		$scope.clusterList._promise.then(function () {
+			$.each($scope.clusterList, function (i, cluster) {
+				$scope.clusters[cluster.uuid] = cluster.name;
+			});
+		});
+
+		$scope.deleteApplication = function (application) {
+			UI.deleteConfirm(application.name).then(null, null, function(holder) {
+				API.delete("api/pipeline", application.uuid).then(function () {
+					holder.closeFunc();
+					location.reload();
+				});
 			});
 		};
 	});
