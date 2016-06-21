@@ -1,0 +1,39 @@
+<section class="content-header">
+	<h1>
+		Cluster
+		<small></small>
+	</h1>
+	<ol class="breadcrumb">
+		<li><a href="#/"><i class="fa fa-dashboard"></i> Home</a></li>
+		<li><a href="#/cluster">Cluster</a></li>
+		<li><a>New</a></li>
+	</ol>
+</section>
+
+<section class="content">
+	<div class="box box-success">
+		<div class="box-header with-border">
+			<h3 class="box-title">New</h3>
+		</div>
+		<div class="box-body">
+			<div class="form-group">
+				<label>Name</label>
+				<input type="text" class="form-control" ng-model="_name" />
+			</div>
+			<div class="form-group">
+				<label>Type</label>
+				<select class="form-control" ng-model="_type">
+					<option>storm</option>
+					<option>spark</option>
+				</select>
+			</div>
+			<div class="form-group">
+				<label>Properties</label>
+				<textarea class="form-control" rows="6" ng-model="_properties" placeholder="Json format..."></textarea>
+			</div>
+		</div>
+		<div class="box-footer text-right">
+			<button class="btn btn-primary" ng-click="create()" ng-disabled="!_name">Create</button>
+		</div>
+	</div>
+</section>
