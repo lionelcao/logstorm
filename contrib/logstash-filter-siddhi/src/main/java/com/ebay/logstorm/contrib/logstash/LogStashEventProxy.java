@@ -1,8 +1,3 @@
-package com.ebay.logstorm.contrib.logstash;
-
-import org.jruby.runtime.builtin.IRubyObject;
-import org.wso2.siddhi.query.api.definition.AbstractDefinition;
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -19,33 +14,60 @@ import org.wso2.siddhi.query.api.definition.AbstractDefinition;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.ebay.logstorm.contrib.logstash;
+
+import org.jruby.Ruby;
+import org.jruby.javasupport.JavaUtil;
+import org.jruby.runtime.Helpers;
+import org.jruby.runtime.builtin.IRubyObject;
+import org.wso2.siddhi.query.api.definition.AbstractDefinition;
+
 public class LogStashEventProxy {
+    private final IRubyObject rubyObject;
 
-    public LogStashEventProxy(IRubyObject eventRubyObject){
-
+    public LogStashEventProxy(IRubyObject rubyObject){
+        this.rubyObject = rubyObject;
     }
 
     public <T> T getValue(String fieldName){
-        throw new RuntimeException("Not implemented yet");
+        return (T) invokeRubyMethod("[]",fieldName);
+    }
+
+    private Object invokeRubyMethod(String rubyMethodName,Object param){
+        return JavaUtil.convertRubyToJava(Helpers.invoke(Ruby.getGlobalRuntime().getCurrentContext(),rubyObject,rubyMethodName, JavaUtil.convertJavaToRuby(Ruby.getGlobalRuntime(),param)));
+    }
+
+    private Object invokeRubyMethod(String rubyMethodName){
+        return JavaUtil.convertRubyToJava(Helpers.invoke(Ruby.getGlobalRuntime().getCurrentContext(),rubyObject,rubyMethodName));
     }
 
     public boolean isCanceled(){
-        throw new RuntimeException("Not implemented yet");
+        return (boolean) invokeRubyMethod("cancelled?");
     }
 
     public void setCancel(boolean cancel){
-        throw new RuntimeException("Not implemented yet");
-    }
-
-    public void verifyDefinition(AbstractDefinition streamDefinition){
-        // do nothing;
+        if(cancel){
+            invokeRubyMethod("cancel");
+        } else {
+            invokeRubyMethod("uncancel");
+        }
     }
 
     public long getTimestamp() {
-        throw new RuntimeException("Not implemented yet");
+        return (long) invokeRubyMethod("timestamp");
     }
 
     public Object[] getDatas(AbstractDefinition definition) {
-        throw new RuntimeException("Not implemented yet");
+        String[] attributeNames = definition.getAttributeNameArray();
+        Object[] values = new Object[attributeNames.length];
+        for(int i=0;i<attributeNames.length;i++){
+            values[i] = getValue(attributeNames[i]);
+        }
+        return values;
+    }
+
+    @Override
+    public String toString() {
+        return (String) invokeRubyMethod("to_s");
     }
 }

@@ -23,13 +23,14 @@ class LogStash::Filters::Siddhi < LogStash::Filters::Base
   config_name "siddhi"
 
   # Replace the message with this value.
-  config :plan, :validate => :string, :default => nil
-  config :expect, :validate => :array, :default => nil
+  config :query, :validate => :string, :default => nil
+  config :export, :validate => :array, :default => nil
 
   public
   def register
     # Add instance variables
-    @java_siddhi_filter = LogStashSiddhiFilterImpl.new(@plan,@expect)
+    @java_siddhi_filter = LogStashSiddhiFilterImpl.new(@query,@export)
+    @java_siddhi_filter.register()
   end # def register
 
   public
