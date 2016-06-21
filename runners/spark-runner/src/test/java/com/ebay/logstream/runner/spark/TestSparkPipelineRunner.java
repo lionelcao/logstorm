@@ -1,13 +1,3 @@
-package com.ebay.logstream.runner.spark;
-
-import com.ebay.logstorm.core.LogStormConstants;
-import com.ebay.logstorm.core.PipelineContext;
-import com.ebay.logstorm.core.exception.PipelineException;
-import com.ebay.logstorm.core.utils.PipelineEnvironmentLoaderForTest;
-import org.junit.Test;
-
-import java.io.IOException;
-
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
  * contributor license agreements.  See the NOTICE file distributed with
@@ -24,6 +14,16 @@ import java.io.IOException;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+package com.ebay.logstream.runner.spark;
+
+import com.ebay.logstorm.core.LogStormConstants;
+import com.ebay.logstorm.core.PipelineContext;
+import com.ebay.logstorm.core.exception.PipelineException;
+import com.ebay.logstorm.core.utils.PipelineEnvironmentLoaderForTest;
+import org.junit.Test;
+
+import java.io.IOException;
+
 public class TestSparkPipelineRunner extends PipelineEnvironmentLoaderForTest {
 
     public TestSparkPipelineRunner() {

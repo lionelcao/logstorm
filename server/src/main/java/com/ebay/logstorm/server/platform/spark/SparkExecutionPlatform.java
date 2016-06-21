@@ -1,6 +1,5 @@
 package com.ebay.logstorm.server.platform.spark;
 
-import com.ebay.logstorm.core.LogStormConstants;
 import com.ebay.logstorm.core.PipelineContext;
 import com.ebay.logstorm.core.compiler.Pipeline;
 import com.ebay.logstorm.core.compiler.PipelineCompiler;
@@ -9,8 +8,6 @@ import com.ebay.logstorm.server.entities.PipelineExecutionStatus;
 import com.ebay.logstorm.server.platform.ExecutionPlatform;
 import com.ebay.logstream.runner.spark.SparkPipelineRunner;
 import com.google.common.base.Preconditions;
-import com.typesafe.config.Config;
-import com.typesafe.config.ConfigFactory;
 import org.json.simple.JSONArray;
 import org.json.simple.JSONObject;
 import org.json.simple.parser.JSONParser;
@@ -20,7 +17,6 @@ import org.slf4j.LoggerFactory;
 import java.io.BufferedReader;
 import java.io.InputStreamReader;
 import java.net.URL;
-import java.util.List;
 import java.util.Map;
 import java.util.Properties;
 
