@@ -82,6 +82,11 @@ public class PipelineEntityServiceImpl implements PipelineEntityService {
     }
 
     @Override
+    public Integer deletePipelineByUuid(String uuid) {
+        return this.pipelineEntityRepository.removeByUuid(uuid);
+    }
+
+    @Override
     public Optional<PipelineEntity> getPipelineByUuid(String uuid) {
         return this.pipelineEntityRepository.findOneByUuid(uuid);
     }

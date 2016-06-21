@@ -88,13 +88,23 @@ public class PipelineController extends BaseController{
     ResponseEntity<RestResponse<Integer>> deletePipeline(@RequestBody PipelineEntity pipelineEntity) {
         return RestResponse
                 .async(() -> entityService.deletePipeline(pipelineEntity))
-                .then((response)-> {
-                    if(response.current.getData() == 0){
-                        response.status(false,HttpStatus.NOT_FOUND).message("No pipeline deleted");
+                .then((response) -> {
+                    if (response.current.getData() == 0) {
+                        response.status(false, HttpStatus.NOT_FOUND).message("No pipeline deleted");
                     }
                 })
                 .get();
     }
+
+    @RequestMapping(path="/{uuid}", method= RequestMethod.DELETE)
+    @Transactional
+    public @ResponseBody
+    ResponseEntity<RestResponse<Integer>> deletePipelineByUuid(@PathVariable String uuid) {
+        return RestResponse
+                .async(() -> entityService.deletePipelineByUuid(uuid)).get();
+    }
+
+
 
     @RequestMapping(path = "/compile",method = RequestMethod.POST)
     public @ResponseBody
