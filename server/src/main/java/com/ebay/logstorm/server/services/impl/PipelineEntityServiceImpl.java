@@ -2,10 +2,11 @@ package com.ebay.logstorm.server.services.impl;
 
 import com.ebay.logstorm.core.exception.PipelineException;
 import com.ebay.logstorm.server.entities.PipelineEntity;
+import com.ebay.logstorm.server.entities.PipelineExecutionEntity;
+import com.ebay.logstorm.server.entities.PipelineExecutionStatus;
 import com.ebay.logstorm.server.services.PipelineEntityRepository;
 import com.ebay.logstorm.server.services.PipelineEntityService;
 import com.ebay.logstorm.server.services.PipelineSearchCriteria;
-import org.hibernate.Hibernate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -86,6 +87,17 @@ public class PipelineEntityServiceImpl implements PipelineEntityService {
         return this.pipelineEntityRepository.removeByUuid(uuid);
     }
 
+    private PipelineExecutionStatus statusPipeline(PipelineEntity pipelineEntity) throws Exception {
+        if (pipelineEntity.getInstances() != null) {
+            for (PipelineExecutionEntity instance : pipelineEntity.getInstances()) {
+                if (instance.getStatus().equals(PipelineExecutionStatus.RUNNING)) {
+                    return PipelineExecutionStatus.RUNNING;
+                }
+            }
+        }
+        return PipelineExecutionStatus.UNDEPLOYED;
+    }
+
     @Override
     public Optional<PipelineEntity> getPipelineByUuid(String uuid) {
         return this.pipelineEntityRepository.findOneByUuid(uuid);
@@ -108,6 +120,8 @@ public class PipelineEntityServiceImpl implements PipelineEntityService {
 
     @Override
     public PipelineEntity getPipelineByUuidOrNameOrThrow(String uuid,String name) throws Exception {
-        return pipelineEntityRepository.findOneByUuidOrName(uuid,name).orElseThrow(()-> new PipelineException("Pipeline [uuid='"+uuid+"' or name='"+name+"'] not found"));
+        PipelineEntity pipelineEntity = pipelineEntityRepository.findOneByUuidOrName(uuid, name).orElseThrow(()-> new PipelineException("Pipeline [uuid='"+uuid+"' or name='"+name+"'] not found"));
+        pipelineEntity.setPipelineStatus(statusPipeline(pipelineEntity));
+        return pipelineEntity;
     }
 }

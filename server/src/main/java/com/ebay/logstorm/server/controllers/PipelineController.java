@@ -104,8 +104,6 @@ public class PipelineController extends BaseController{
                 .async(() -> entityService.deletePipelineByUuid(uuid)).get();
     }
 
-
-
     @RequestMapping(path = "/compile",method = RequestMethod.POST)
     public @ResponseBody
     ResponseEntity<RestResponse<Pipeline>> compilePipeline(@RequestBody PipelineEntity pipelineEntity){
@@ -117,17 +115,17 @@ public class PipelineController extends BaseController{
     @Transactional(readOnly = true)
     public @ResponseBody
     ResponseEntity<RestResponse<PipelineEntity>> getPipeline(@PathVariable String uuidOrName) {
-        return RestResponse.async(()-> entityService.getPipelineByUuidOrNameOrThrow(uuidOrName,uuidOrName)).get();
+        return RestResponse.async(()-> entityService.getPipelineByUuidOrNameOrThrow(uuidOrName, uuidOrName)).get();
     }
 
     @RequestMapping(path = "/{uuidOrName}/compiled",method= RequestMethod.GET)
     @Transactional(readOnly = true)
     public @ResponseBody
     ResponseEntity<RestResponse<Pipeline>> getCompiledPipeline(@PathVariable String uuidOrName) {
-        return RestResponse.async(()-> PipelineCompiler.compileConfigString(entityService.getPipelineByUuidOrNameOrThrow(uuidOrName,uuidOrName).getPipeline())).get();
+        return RestResponse.async(()-> PipelineCompiler.compileConfigString(entityService.getPipelineByUuidOrNameOrThrow(uuidOrName, uuidOrName).getPipeline())).get();
     }
 
-    @RequestMapping(path = "/{uuidOrName}/executor",method= RequestMethod.GET)
+    @RequestMapping(path = "/{uuidOrName}/instance",method= RequestMethod.GET)
     @Transactional(readOnly = true)
     public @ResponseBody
     ResponseEntity<RestResponse<Collection<PipelineExecutionEntity>>> getPipelineExecution(@PathVariable String uuidOrName) {

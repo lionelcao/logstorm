@@ -50,6 +50,17 @@ public class PipelineEntity extends BaseEntity {
     @Column
     private int parallelism = 1;
 
+    @Transient
+    private PipelineExecutionStatus pipelineStatus;
+
+    public PipelineExecutionStatus getPipelineStatus() {
+        return pipelineStatus;
+    }
+
+    public void setPipelineStatus(PipelineExecutionStatus pipelineStatus) {
+        this.pipelineStatus = pipelineStatus;
+    }
+
     public String getName() {
         return name;
     }
