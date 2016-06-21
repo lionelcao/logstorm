@@ -25,7 +25,11 @@
 				url: "/cluster",
 				templateUrl: "partials/cluster.html?_=" + _TRS,
 				controller: "clusterCtrl",
-				//resolve: _resolve({featureCheck: true})
+			})
+			.state('cluster_new', {
+				url: "/cluster/new",
+				templateUrl: "partials/cluster_new.html?_=" + _TRS,
+				controller: "clusterNewCtrl",
 			})
 			.state('configuration', {
 				url: "/configuration",
