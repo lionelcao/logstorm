@@ -54,9 +54,9 @@ public class StatusSyncServiceImpl implements PipelineStatusSyncService {
                         LOG.info("Checking status of instance '{}'", instance.getName());
                         pipelineEntity.getCluster().getPlatformInstance().status(instance);
                     } catch (Exception e) {
-                        LOG.error(e.getMessage(), e);
+                        LOG.error(ExceptionUtils.getStackTrace(e));
                         instance.setStatus(PipelineExecutionStatus.UNKNOWN);
-                        instance.setDescription(ExceptionUtils.getStackTrace(e));
+                        instance.setDescription(ExceptionUtils.getMessage(e));
                     } finally {
                         executionService.updateExecutionEntity(instance);
                         LOG.info("Updated status of instance '{}'",instance.getName());

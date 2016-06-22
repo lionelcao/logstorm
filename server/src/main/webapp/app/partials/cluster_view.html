@@ -1,0 +1,47 @@
+<section class="content-header">
+	<h1>
+		Cluster Detail
+		<small>{{application.uuid}}</small>
+	</h1>
+	<ol class="breadcrumb">
+		<li><a href="#/"><i class="fa fa-dashboard"></i> Home</a></li>
+		<li><a href="#/cluster">Cluster</a></li>
+		<li><a>{{cluster.name}}</a></li>
+	</ol>
+</section>
+
+<section class="content">
+	<div class="nav-tabs-custom">
+		<div class="tab-content">
+			<div class="tab-pane active" id="application_tab">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="box-header">
+							Cluster: <strong>{{cluster.name}}</strong>
+						</div>
+						<div class="box-body table-responsive no-padding">
+							<table class="table table-hover">
+								<tbody>
+									<tr>
+										<td>Name</td><td>{{cluster.name}}</td>
+										<td>ID</td><td>{{cluster.uuid}}</td>
+									</tr>
+									<tr>
+										<td>Type</td><td><span class="label label-default">{{cluster.type}}</span></td>
+										<td>Version</td><td><span class="label label-default">{{cluster.version}}</span></td>
+									</tr>
+									<tr>
+										<td>Properties</td>
+										<td colspan="3">
+											<pre>{{cluster.properties}}</pre>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+</section>
