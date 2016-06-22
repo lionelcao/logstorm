@@ -115,11 +115,18 @@
 	});
 
 	logStormControllers.controller('applicationViewCtrl', function($scope,$stateParams, API) {
-		API.get("api/pipeline/"+$stateParams.id,function(data){
+		API.get("api/pipeline/"+$stateParams.id)._promise.then(function (res) {
+			$scope.application = res.data;
+		});
+		API.get("api/pipeline/" + $stateParams.id + "/compiled")._promise.then(function(res){
+			$scope.compiled_pipeline = res.data;
+		});
+
+		/*API.get("api/pipeline/"+$stateParams.id,function(data){
 			$scope.application = data;
 		})
 		API.get("api/pipeline/"+$stateParams.id+"/compiled",function(data){
 			$scope.compiled_pipeline=data;
-		})
+		})*/
 	});
 })();
