@@ -73,13 +73,13 @@ public class SparkExecutionPlatform implements ExecutionPlatform {
     }
 
     @Override
-    public void start(final PipelineExecutionEntity entity) throws Exception {
+    public synchronized void start(final PipelineExecutionEntity entity) throws Exception {
         startPipeLine(entity);
         status(entity);
     }
 
     @Override
-    public void stop(final PipelineExecutionEntity entity) throws Exception {
+    public synchronized void stop(final PipelineExecutionEntity entity) throws Exception {
         String applicationId = entity.getProperties().getProperty("applicationId");
         String driverPid = entity.getProperties().getProperty("driverPid");
         String cmd = "kill -9 " + driverPid;
@@ -97,8 +97,15 @@ public class SparkExecutionPlatform implements ExecutionPlatform {
     }
 
     @Override
-    public void status(final PipelineExecutionEntity entity) throws Exception {
+    public synchronized void status(final PipelineExecutionEntity entity) throws Exception {
         String applicationId = entity.getProperties().getProperty("applicationId");
+        if (applicationId == null) {
+            LOG.warn("get null applicationId, may be starting");
+            return;
+        }
+
+        entity.setNeedUpdate(true);
+
         int beginPort = MIN_REST_PORT;
         while (beginPort++ < MAX_REST_PORT) {
             String restURL = sparkRestUrl + ":" + beginPort + SPARK_REST_API_PATH + applicationId;

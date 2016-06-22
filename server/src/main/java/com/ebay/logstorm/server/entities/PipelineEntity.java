@@ -44,7 +44,7 @@ public class PipelineEntity extends BaseEntity {
     @Enumerated(EnumType.ORDINAL)
     private LogStormConstants.DeployMode mode = LogStormConstants.DEFAULT_DEPLOY_MODE;
 
-    @OneToOne(cascade = CascadeType.REMOVE)
+    @ManyToOne
     private ClusterEntity cluster;
 
     @Column

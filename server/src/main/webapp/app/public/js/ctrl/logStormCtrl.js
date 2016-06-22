@@ -65,14 +65,30 @@
 		};
 	});
 
+	logStormControllers.controller('clusterViewCtrl', function($scope, $stateParams, API, UI) {
+		API.get("api/cluster/"+$stateParams.id)._promise.then(function (res) {
+			$scope.cluster = res.data;
+			console.log(res.data);
+		});
+	});
+
 	// ===========================================================
 	// =                       Application                       =
 	// ===========================================================
 	logStormControllers.controller('applicationCtrl', function($scope, API, UI){
 		$scope.applicationList = API.get("api/pipeline");
-		$scope.clusterList = API.get("api/cluster");
-		$scope.clusters = {};
-		clusterMapWrapper($scope.clusters, $scope.clusterList);
+
+		$scope.startApplication = function (application) {
+			API.post("api/pipeline/start", {name: application.name}).then(function () {
+				location.reload();
+			});
+		};
+
+		$scope.stopApplication = function (application) {
+			API.post("api/pipeline/stop", {name: application.name}).then(function () {
+				location.reload();
+			});
+		};
 
 		$scope.deleteApplication = function (application) {
 			UI.deleteConfirm(application.name).then(null, null, function(holder) {
@@ -115,11 +131,11 @@
 	});
 
 	logStormControllers.controller('applicationViewCtrl', function($scope,$stateParams, API) {
-		API.get("api/pipeline/"+$stateParams.id,function(data){
-			$scope.application = data;
-		})
-		API.get("api/pipeline/"+$stateParams.id+"/compiled",function(data){
-			$scope.compiled_pipeline=data;
-		})
+		API.get("api/pipeline/"+$stateParams.id)._promise.then(function (res) {
+			$scope.application = res.data;
+		});
+		API.get("api/pipeline/" + $stateParams.id + "/compiled")._promise.then(function(res){
+			$scope.compiled_pipeline = res.data;
+		});
 	});
 })();

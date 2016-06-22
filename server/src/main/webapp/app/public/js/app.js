@@ -2,7 +2,7 @@
 	'use strict';
 
 	/* App Module */
-	var logStormApp = angular.module('logStormApp', ['ngRoute', 'ngAnimate', 'ui.router', 'logStormControllers']);//, 'eagleControllers', 'featureControllers', 'eagle.service']);
+	var logStormApp = angular.module('logStormApp', ['ngRoute', 'ngAnimate', 'ui.router', 'logStormControllers']);
 	var _TRS = Math.random();
 
 	logStormApp.config(function ($stateProvider, $urlRouterProvider, $animateProvider) {
@@ -19,7 +19,6 @@
 				url: "/application",
 				templateUrl: "partials/application.html?_=" + _TRS,
 				controller: "applicationCtrl"
-				//resolve: _resolve({featureCheck: true})
 			})
 			.state('application_new', {
 				url: "/application/new",
@@ -40,6 +39,11 @@
 				url: "/cluster/new",
 				templateUrl: "partials/cluster_new.html?_=" + _TRS,
 				controller: "clusterNewCtrl"
+			})
+			.state('cluster_view', {
+				url: "/cluster/:id",
+				templateUrl: "partials/cluster_view.html?_=" + _TRS,
+				controller: "clusterViewCtrl"
 			})
 			.state('configuration', {
 				url: "/configuration",

@@ -12,8 +12,8 @@
 <section class="content">
 	<div class="nav-tabs-custom">
 		<ul class="nav nav-tabs">
-			<li class="active"><a href="#/application" data-toggle="tab">Applications</a></li>
-			<li><a href="#/application/new" data-toggle="tab">New Application</a></li>
+			<li class="active"><a href="#/application">Applications</a></li>
+			<li><a href="#/application/new">New Application</a></li>
 		</ul>
 		<div class="tab-content">
 			<div class="tab-pane active" id="application_tab">
@@ -55,9 +55,6 @@
 											</div>
 										</td>
 									</tr>
-									<!--<tr ng-if="applicationList.length === 0">-->
-										<!--<td colspan="6" class="text-muted">[Empty list]</td>-->
-									<!--</tr>-->
 									</tbody>
 								</table>
 							<blockquote ng-if="applicationList.length === 0">
@@ -79,50 +76,3 @@
 		<!-- /.tab-content -->
 	</div>
 </section>
-
-
-<!--<section class="content">-->
-	<!--<div class="box box-success">-->
-		<!--<div class="box-header with-border">-->
-			<!--<h3 class="box-title">Applications</h3>-->
-		<!--</div>-->
-		<!--<div class="box-body">-->
-			<!--<code>-->
-				<!--<b>TODO:</b> <br/>-->
-
-				<!--2. Start/Stop/Rescale application <br/>-->
-				<!--3. New application (!most important page, step by step declaration, instead of popup dialog) <br/>-->
-				<!--4. View application (definition detail & execution status)-->
-			<!--</code>-->
-
-			<!--<table class="table table-bordered">-->
-				<!--<thead>-->
-				<!--<tr>-->
-					<!--<th>Name</th>-->
-					<!--<th>Status</th>-->
-					<!--<th>Mode</th>-->
-					<!--<th>Cluster</th>-->
-					<!--<th>Pipeline</th>-->
-					<!--<th width="5"></th>-->
-				<!--</tr>-->
-				<!--</thead>-->
-				<!--<tbody>-->
-				<!--<tr ng-repeat="application in applicationList track by $index">-->
-					<!--<td>{{application.name}}</td>-->
-					<!--<td>{{application.status}}</td>-->
-					<!--<td>{{application.mode}}</td>-->
-					<!--<td>{{clusters[application.cluster.uuid].name}}</td>-->
-					<!--<td><pre>{{application.pipeline}}</pre></td>-->
-					<!--<td><a class="fa fa-trash" ng-click="deleteApplication(application)"></a></td>-->
-				<!--</tr>-->
-				<!--<tr ng-if="applicationList.length === 0">-->
-					<!--<td colspan="6" class="text-muted">[Empty list]</td>-->
-				<!--</tr>-->
-				<!--</tbody>-->
-			<!--</table>-->
-		<!--</div>-->
-		<!--<div class="box-footer text-right">-->
-			<!--<a class="btn btn-primary" href="#/application/new">+ New Application</a>-->
-		<!--</div>-->
-	<!--</div>-->
-<!--</section>-->

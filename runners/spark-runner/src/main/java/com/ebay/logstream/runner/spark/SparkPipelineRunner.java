@@ -16,6 +16,7 @@ package com.ebay.logstream.runner.spark;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+import com.ebay.logstorm.core.LogStormConstants;
 import com.ebay.logstorm.core.PipelineContext;
 import com.ebay.logstorm.core.compiler.*;
 import com.ebay.logstorm.core.runner.PipelineRunner;
@@ -62,7 +63,11 @@ public class SparkPipelineRunner implements PipelineRunner {
         launcher.addAppArgs();
         launcher.setVerbose(true);
         launcher.addSparkArg("--verbose");
-        launcher.setMaster(pipeline.getContext().getConfig().getString(SPARK_MASTER_KEY));
+        if (pipeline.getContext().getDeployMode() == LogStormConstants.DeployMode.LOCAL) {
+            launcher.setMaster("local[*]");
+        } else {
+            launcher.setMaster(pipeline.getContext().getConfig().getString(SPARK_MASTER_KEY));
+        }
 
         try {
             SparkAppHandle handle = launcher.startApplication();
