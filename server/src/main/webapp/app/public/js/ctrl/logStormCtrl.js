@@ -46,7 +46,7 @@
 
 		$scope._name = "";
 		$scope._type = "";
-		$scope._properties = "";
+		$scope._properties = {};
 
 		$scope.currentCluster = function () {
 			return $scope.clusterMetaList.find(function (cluster) {
@@ -60,15 +60,10 @@
 		};
 
 		$scope.create = function () {
-			var _properties = {};
-			try {
-				_properties = JSON.parse($scope._properties);
-			} catch(err) {}
-
 			API.post("api/cluster", {
 				name: $scope._name,
 				type: $scope._type,
-				properties: _properties,
+				properties: $scope._properties,
 				adapterClass: typeMapping[$scope._type]
 			}).then(function () {
 				location.href = "#/cluster";

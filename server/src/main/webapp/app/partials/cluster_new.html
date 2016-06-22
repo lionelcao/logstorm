@@ -37,11 +37,12 @@
 					</div-->
 					<div class="form-group">
 						<label>Environment Properties</label>
-						{{currentCluster().fieldsTemplate}}
+						{{currentCluster().fields}}
 						<table class="table table-striped table-bordered">
 							<tbody>
-								<tr ng-repeat="field in currentCluster().fieldsTemplate track by $index">
-									<th>{{field}}</th>
+								<tr ng-repeat="field in currentCluster().fields track by $index">
+									<th width="30%">{{field.name}}</th>
+									<td><input type="text" class="form-control" placeholder="{{field.value}}" ng-model="_properties[field.name]" /></td>
 								</tr>
 							</tbody>
 						</table>
