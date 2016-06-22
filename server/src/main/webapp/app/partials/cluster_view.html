@@ -33,7 +33,12 @@
 									<tr>
 										<td>Properties</td>
 										<td colspan="3">
-											<pre>{{cluster.properties}}</pre>
+											<ul>
+												<li ng-repeat="(key, value) in cluster.properties track by $index">
+													<strong>{{key}}:</strong>
+													{{value}}
+												</li>
+											</ul>
 										</td>
 									</tr>
 								</tbody>
