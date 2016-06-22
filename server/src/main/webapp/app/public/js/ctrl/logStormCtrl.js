@@ -145,5 +145,17 @@
 		API.get("api/pipeline/" + $stateParams.id + "/compiled")._promise.then(function(res){
 			$scope.compiled_pipeline = res.data;
 		});
+
+		$scope.startApplication = function () {
+			API.post("api/pipeline/start", {name: $scope.application.name}).then(function () {
+				location.reload();
+			});
+		};
+
+		$scope.stopApplication = function () {
+			API.post("api/pipeline/stop", {name: $scope.application.name}).then(function () {
+				location.reload();
+			});
+		};
 	});
 })();
