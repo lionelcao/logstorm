@@ -8,7 +8,6 @@ import backtype.storm.generated.InvalidTopologyException;
 import backtype.storm.topology.BoltDeclarer;
 import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.tuple.Fields;
-import backtype.storm.utils.Utils;
 import com.ebay.logstorm.core.LogStormConstants;
 import com.ebay.logstorm.core.PipelineContext;
 import com.ebay.logstorm.core.compiler.FilterPlugin;
@@ -61,13 +60,13 @@ public class StormPipelineRunner implements PipelineRunner {
 
         for(InputPlugin input:inputs){
             LogStashInputSpout  inputSpout = new LogStashInputSpout(input,context);
-            builder.setSpout(input.getUniqueName(),inputSpout,input.getParallelism());
+            builder.setSpout(input.getUniqueName(),inputSpout,pipeline.getContext().getInputParallelism());
             inputSpouts.add(inputSpout);
         }
 
         // TODO: Avoid create filter bolt if having no filters, even created, it will do nothing but just pass through the events
         filtersBolt = new LogStashFiltersBolt(filters,context);
-        BoltDeclarer declarer = builder.setBolt(Constants.STORM_FILTER_BOLT_NAME,filtersBolt, context.getFilterParallesm());
+        BoltDeclarer declarer = builder.setBolt(Constants.STORM_FILTER_BOLT_NAME,filtersBolt, context.getFilterParallelism());
         for(InputPlugin input:inputs) {
             declarer.fieldsGrouping(input.getUniqueName(),new Fields(Constants.EVENT_KEY_FIELD));
         }
@@ -75,7 +74,7 @@ public class StormPipelineRunner implements PipelineRunner {
         for(OutputPlugin output: outputs){
             LogStashOutputBolt outputBolt = new LogStashOutputBolt(output,context);
             outputBolts.add(outputBolt);
-            builder.setBolt(output.getUniqueName(),outputBolt,output.getParallelism() ).fieldsGrouping(Constants.STORM_FILTER_BOLT_NAME, new Fields(Constants.EVENT_KEY_FIELD));
+            builder.setBolt(output.getUniqueName(),outputBolt,pipeline.getContext().getOutputParallelism()).fieldsGrouping(Constants.STORM_FILTER_BOLT_NAME, new Fields(Constants.EVENT_KEY_FIELD));
         }
 
         LOG.info("Submitting topology '{}': {}",context.getPipelineName(),pipeline);

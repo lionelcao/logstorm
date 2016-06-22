@@ -65,8 +65,16 @@ public class PipelineContext implements Serializable{
         return 50;
     }
 
-    public int getFilterParallesm(){
-        return 1;
+    public int getFilterParallelism(){
+        return this.getConfig().getInt("filter.parallelism");
+    }
+
+    public int getInputParallelism(){
+        return this.getConfig().getInt("input.parallelism");
+    }
+
+    public int getOutputParallelism(){
+        return this.getConfig().getInt("output.parallelism");
     }
 
     public Config getConfig() {

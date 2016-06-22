@@ -121,6 +121,9 @@
 		$scope._cluster = "";
 		$scope._pipeline = "";
 		$scope._parallelism = 1;
+		$scope._input_parallelism = 3;
+		$scope._filter_parallelism = 3;
+		$scope._output_parallelism = 3;
 		$scope._properties = '{}';
 
 		$scope.clusterList._promise.then(function () {
@@ -136,7 +139,13 @@
 				cluster: {
 					uuid: $scope.clusters[$scope._cluster].uuid
 				},
-				pipeline: $scope._pipeline
+				pipeline: $scope._pipeline,
+				parallelism: $scope._parallelism,
+				properties: {
+					"input.parallelism": $scope._input_parallelism,
+					"filter.parallelism": $scope._filter_parallelism,
+					"output.parallelism": $scope._output_parallelism
+				}
 			}).then(function () {
 				location.href = "#/application/"+ $scope._name;
 			});

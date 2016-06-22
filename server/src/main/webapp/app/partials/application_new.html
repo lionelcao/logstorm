@@ -46,8 +46,22 @@
 						<a class="form-control btn btn-danger" href="#/cluster/new" ng-if="clusterList.length ===0">No existing clusters, create one firstly!</a>
 					</div>
 					<div class="form-group">
-						<label>Scale Parallelism</label> <small>Execution parallelism including instance number, input/filter/output parallelism</small>
-						<input class="form-control" type="number" ng-model="_parallelism" placeholder="instance: 1, input: 1, filter: 1, output: 1"/>
+						<label>Scale Parallelism</label> <small>Scale by different parallelism level: instance sharding number, input task number, filter task number, output  task number</small>
+						<div class="row">
+								<div class="col-xs-3">
+								<span>Sharding</span> <input class="form-control" type="number" ng-model="_parallelism"/>
+								</div>
+								<div class="col-xs-3">
+								<span>Input</span> <input class="form-control" type="number" ng-model="_input_parallelism"/>
+								</div>
+								<div class="col-xs-3">
+								<span>Filter</span> <input class="form-control" type="number" ng-model="_filter_parallelism"/>
+								</div>
+								<div class="col-xs-3">
+								<span>Output</span> <input class="form-control" type="number" ng-model="_output_parallelism"/>
+								</div>
+							</div>
+						</div>
 					</div>
 					<div class="form-group">
 						<label>Advanced Settings</label>

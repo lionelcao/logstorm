@@ -53,7 +53,6 @@ public class StormExecutionPlatform implements ExecutionPlatform {
             LOG.info("Setting storm.jar as {}", pipelineJar);
             System.setProperty("storm.jar", pipelineJar);
         }
-
     }
 
     @Override
@@ -64,7 +63,7 @@ public class StormExecutionPlatform implements ExecutionPlatform {
     @Override
     public synchronized void start(final PipelineExecutionEntity entity) throws Exception {
         PipelineContext context = new PipelineContext(entity.getPipeline().getPipeline());
-        context.setConfig(entity.getPipeline().getCluster().getProperties());
+        context.setConfig(ConfigFactory.parseProperties(entity.getPipeline().getCluster().getProperties()).withFallback(ConfigFactory.parseProperties(entity.getPipeline().getProperties())));
         context.setDeployMode(entity.getPipeline().getMode());
         context.setPipelineName(entity.getName());
         Pipeline pipeline = PipelineCompiler.compile(context);

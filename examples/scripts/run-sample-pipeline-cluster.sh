@@ -30,11 +30,16 @@ curl --silent -H 'Content-Type:application/json' -XPOST http://localhost:8080/ap
 	  "uuid": "fc6ffb53-2905-4665-b0ae-ed5f32565fee",
 	  "name": "test_pipeline_cluster",
 	  "pipeline": "input { generator { type => \"one_stream\" lines => [ \"GET /user 0.98\", \"GET /user 1.98\", \"GET /user 2.98\" ] count => 3 } } output { stdout { codec => rubydebug } }",
-	  "properties": {"a":"b"},
+	  "properties": {
+	    "input.parallelism":3,
+	    "output.parallelism":3,
+	    "filter.parallelism":3
+	  },
+	  "parallelism":2,
 	  "execution": null,
 	  "cluster":{
-	        "uuid": "47bda9f1-f0c0-458d-be1b-3d54b6bec25b"
-	    },
+	    "uuid": "47bda9f1-f0c0-458d-be1b-3d54b6bec25b"
+	  },
 	  "mode": "CLUSTER"
 	}
 '
