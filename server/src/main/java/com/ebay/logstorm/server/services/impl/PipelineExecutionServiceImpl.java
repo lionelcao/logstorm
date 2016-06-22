@@ -92,7 +92,7 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
                 executor.setDescription(ExceptionUtils.getMessage(ex));
                 updateExecutionEntity(executor);
                 LOG.error(ex.getMessage(), ex);
-                throw new RuntimeException(ex);
+                //throw new RuntimeException(ex);
             }
         })).forEach((future -> {
             try {
@@ -125,7 +125,7 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
                     instance.setDescription(ExceptionUtils.getMessage(e));
                     updateExecutionEntity(instance);
                     LOG.error(e.getMessage(), e);
-                    throw new RuntimeException(e);
+                    //throw new RuntimeException(e);
                 }
             }
         })).forEach(future -> {
@@ -133,7 +133,7 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
                 future.get();
             } catch (InterruptedException | ExecutionException e) {
                 LOG.error(e.getMessage(),e);
-                throw new RuntimeException(e);
+                //throw new RuntimeException(e);
             }
         });
         return pipeline;

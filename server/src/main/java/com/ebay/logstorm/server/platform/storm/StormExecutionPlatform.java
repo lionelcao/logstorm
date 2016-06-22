@@ -104,9 +104,10 @@ public class StormExecutionPlatform implements ExecutionPlatform {
             ExecutionManager.getInstance().remove(entity.getName());
         } else {
             Nimbus.Client client = getStormClient(entity);
-            client.killTopology(entity.getName());
+            client.killTopology(entity.getPipeline().getName());
             entity.setDescription("Stopped");
-            entity.setStatus(PipelineExecutionStatus.STOPPED);
+            entity.setStatus(PipelineExecutionStatus.STOPPING);
+            entity.setProperty("topology.status", "");
         }
     }
 
@@ -131,14 +132,14 @@ public class StormExecutionPlatform implements ExecutionPlatform {
                 Nimbus.Client client = getStormClient(entity);
                 String id = entity.getProperties() == null? null:entity.getProperties().getProperty(topology_id_key);
 
-                if(id == null) {
+                if(id == null || id.isEmpty()) {
                     for (TopologySummary topologySummary : client.getClusterInfo().get_topologies()) {
                         if (topologySummary.get_name().equals(entity.getPipeline().getName())) {
                             id = topologySummary.get_id();
                         }
                     }
                 }
-                if(id == null){
+                if(id == null || id.isEmpty()){
                     throw new NotAliveException("Topology named "+entity.getPipeline().getName()+" is not found");
                 } else {
                     TopologyInfo topologyInfo = client.getTopologyInfo(id);
@@ -168,7 +169,7 @@ public class StormExecutionPlatform implements ExecutionPlatform {
                             entity.setDescription(sb.toString());
                         }
                     }
-                    //entity.setName(topologyInfo.get_id());
+                    entity.setName(topologyInfo.get_id());
                     entity.setStatus(ExecutionManager.getTopologyStatus(topologyInfo.get_status()));
                 }
             }catch (NotAliveException ex){

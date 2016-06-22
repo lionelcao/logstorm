@@ -28,7 +28,6 @@ public enum PipelineExecutionStatus {
     public static boolean isReadyToStart(PipelineExecutionStatus status){
         return status.equals(UNDEPLOYED) ||
                 status.equals(STOPPED) ||
-                status.equals(KILLED) ||
                 status.equals(FAILED);
     }
 
