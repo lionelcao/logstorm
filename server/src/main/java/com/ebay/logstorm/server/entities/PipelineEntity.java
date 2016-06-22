@@ -52,7 +52,7 @@ public class PipelineEntity extends BaseEntity {
 
     public PipelineExecutionStatus getStatus() {
         if(this.getInstances() == null || this.getInstances().size() == 0){
-            return PipelineExecutionStatus.UNDEPLOYED;
+            return PipelineExecutionStatus.STOPPED;
         }else{
             boolean stopped = false;
             for(PipelineExecutionEntity instance: this.getInstances()){
