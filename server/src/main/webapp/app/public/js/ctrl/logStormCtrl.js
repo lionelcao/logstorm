@@ -65,14 +65,18 @@
 		};
 	});
 
+	logStormControllers.controller('clusterViewCtrl', function($scope, $stateParams, API, UI) {
+		API.get("api/cluster/"+$stateParams.id)._promise.then(function (res) {
+			$scope.cluster = res.data;
+			console.log(res.data);
+		});
+	});
+
 	// ===========================================================
 	// =                       Application                       =
 	// ===========================================================
 	logStormControllers.controller('applicationCtrl', function($scope, API, UI){
 		$scope.applicationList = API.get("api/pipeline");
-		$scope.clusterList = API.get("api/cluster");
-		$scope.clusters = {};
-		clusterMapWrapper($scope.clusters, $scope.clusterList);
 
 		$scope.startApplication = function (application) {
 			API.post("api/pipeline/start", {name: application.name}).then(function () {
