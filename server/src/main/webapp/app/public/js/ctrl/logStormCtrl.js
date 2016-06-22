@@ -117,6 +117,8 @@
 		});
 
 		$scope.create = function () {
+			console.log($scope.clusters, $scope._cluster, $scope.clusters[$scope._cluster]);
+
 			API.post("api/pipeline", {
 				name: $scope._name,
 				mode: $scope._mode,
