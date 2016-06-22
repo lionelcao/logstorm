@@ -153,4 +153,9 @@ public class SparkExecutionPlatform implements ExecutionPlatform {
     public String getVersion() {
         return "v1.6.1";
     }
+
+    @Override
+    public String getConfigTemplate() {
+        return "[{\"name\":\"spark.master\",\"value\":\"local[*]\"},{\"name\":\"spark.driver\",\"value\":\"http://127.0.0.1\"}]";
+    }
 }

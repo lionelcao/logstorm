@@ -28,4 +28,5 @@ public interface ExecutionPlatform {
     void status(final PipelineExecutionEntity entity) throws Exception;
     String getType();
     String getVersion();
+    String getConfigTemplate();
 }

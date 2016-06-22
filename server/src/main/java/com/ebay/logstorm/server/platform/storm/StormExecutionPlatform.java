@@ -51,6 +51,7 @@ public class StormExecutionPlatform implements ExecutionPlatform {
             LOG.info("Setting storm.jar as {}", pipelineJar);
             System.setProperty("storm.jar", pipelineJar);
         }
+
     }
 
     @Override
@@ -184,7 +185,6 @@ public class StormExecutionPlatform implements ExecutionPlatform {
         }
     }
 
-    @Override
     public String getType() {
         return "storm";
     }
@@ -192,5 +192,10 @@ public class StormExecutionPlatform implements ExecutionPlatform {
     @Override
     public String getVersion() {
         return "v0.8";
+    }
+
+    @Override
+    public String getConfigTemplate() {
+        return "[{\"name\":\"storm.url\",\"value\":\"sandbox.hortonworks.com:8744\"},{\"name\":\"storm.nimbus\",\"value\":\"sandbox.hortonworks.com\"}]";
     }
 }
