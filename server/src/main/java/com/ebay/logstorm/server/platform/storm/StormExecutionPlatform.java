@@ -113,6 +113,7 @@ public class StormExecutionPlatform implements ExecutionPlatform {
 
     @Override
     public synchronized void status(final PipelineExecutionEntity entity) throws Exception {
+        entity.setNeedUpdate(true);
         if (LogStormConstants.DeployMode.LOCAL.equals(entity.getPipeline().getMode())) {
             if(!ExecutionManager.getInstance().contains(entity.getName())){
                 LOG.info("Pipeline instance '{}' is not ready yet",entity.getName());
