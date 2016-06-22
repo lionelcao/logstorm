@@ -89,7 +89,7 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
                 updateExecutionEntity(executor);
             } catch (Exception ex) {
                 executor.setStatus(PipelineExecutionStatus.FAILED);
-                executor.setDescription(ExceptionUtils.getStackTrace(ex));
+                executor.setDescription(ExceptionUtils.getMessage(ex));
                 updateExecutionEntity(executor);
                 LOG.error(ex.getMessage(), ex);
                 throw new RuntimeException(ex);
@@ -122,7 +122,7 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
                     updateExecutionEntity(instance);
                 } catch (Exception e) {
                     instance.setStatus(PipelineExecutionStatus.FAILED);
-                    instance.setDescription(ExceptionUtils.getStackTrace(e));
+                    instance.setDescription(ExceptionUtils.getMessage(e));
                     updateExecutionEntity(instance);
                     LOG.error(e.getMessage(), e);
                     throw new RuntimeException(e);

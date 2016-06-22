@@ -32,7 +32,7 @@ public class PipelineExecutionEntity extends BaseEntity {
     @Column(unique = false)
     private int number;
 
-    @Column(nullable = true)
+    @Column(nullable = true, length = 10000)
     private Properties properties;
 
     @JsonIgnore
