@@ -207,7 +207,7 @@ public class StormExecutionPlatform implements ExecutionPlatform {
 
     @Override
     public String getVersion() {
-        return "v0.8";
+        return "0.9.3";
     }
 
     @Override

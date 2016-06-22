@@ -158,7 +158,7 @@ public class SparkExecutionPlatform implements ExecutionPlatform {
 
     @Override
     public String getVersion() {
-        return "v1.6.1";
+        return "1.6.1";
     }
 
     @Override
