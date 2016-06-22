@@ -74,6 +74,18 @@
 		$scope.clusters = {};
 		clusterMapWrapper($scope.clusters, $scope.clusterList);
 
+		$scope.startApplication = function (application) {
+			API.post("api/pipeline/start", {name: application.name}).then(function () {
+				location.reload();
+			});
+		};
+
+		$scope.stopApplication = function (application) {
+			API.post("api/pipeline/stop", {name: application.name}).then(function () {
+				location.reload();
+			});
+		};
+
 		$scope.deleteApplication = function (application) {
 			UI.deleteConfirm(application.name).then(null, null, function(holder) {
 				API.delete("api/pipeline", application.uuid).then(function () {
@@ -121,12 +133,5 @@
 		API.get("api/pipeline/" + $stateParams.id + "/compiled")._promise.then(function(res){
 			$scope.compiled_pipeline = res.data;
 		});
-
-		/*API.get("api/pipeline/"+$stateParams.id,function(data){
-			$scope.application = data;
-		})
-		API.get("api/pipeline/"+$stateParams.id+"/compiled",function(data){
-			$scope.compiled_pipeline=data;
-		})*/
 	});
 })();

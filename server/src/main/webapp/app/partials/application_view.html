@@ -87,14 +87,18 @@
 															<li ng-repeat="plugin in compiled_pipeline.outputs">{{plugin.debugInfo}}</li>
 														</ul>
 													</div>
+
 													<div class="tab-pane" data-id="pipeline_viz">
 														<code>TODO: Visualize as dataflow</code>
 														<textarea class="form-control" data-editable="false" rows="8">
 														{{compiled_pipeline}}
 														</textarea>
 													</div>
+
 													<div class="tab-pane" data-id="pipeline_instance">
-														<code>TODO: Table list of instances</code>
+														<ul>
+															<li></li>
+														</ul>
 													</div>
 												</div>
 												<!-- /.tab-content -->
@@ -110,60 +114,3 @@
 		</div>
 		</div>
 </section>
-<!--<section class="content">-->
-	<!--<div class="box">-->
-		<!--<div class="box-header with-border">-->
-			<!--<h3 class="box-title">Application: <b>{{application.name}}</b> </h3>-->
-			<!--<div class="box-tools pull-right">-->
-				<!--<div class="btn-group btn-group-xs">-->
-					<!--<a class="btn btn-default btn-box-tool">Start</a>-->
-					<!--<a class="btn btn-default btn-box-tool">Stop</a>-->
-					<!--<a class="btn btn-default btn-box-tool">Delete</a>-->
-					<!--<a class="btn btn-default btn-box-tool">All</a>-->
-				<!--</div>-->
-				<!--&lt;!&ndash;<a href="#/application" type="button" class="btn btn-box-tool" data-widget="remove" data-toggle="tooltip" title="Remove">&ndash;&gt;-->
-					<!--&lt;!&ndash;<i class="fa fa-times"></i></a>&ndash;&gt;-->
-			<!--</div>-->
-		<!--</div>-->
-		<!--<div class="box-body">-->
-			<!--<div class="tab-pane active">-->
-				<!--<div class="row">-->
-					<!--<br/>-->
-					<!--<div class="col-sm-4">-->
-						<!--<strong>Name: </strong> {{application.name}}<br/>-->
-					<!--</div>-->
-					<!--<div class="col-sm-4">-->
-						<!--<strong>Status: </strong> <span class="label label-default">{{application.status}}</span><br/>-->
-					<!--</div>-->
-					<!--<div class="col-sm-4">-->
-						<!--<strong>ID: </strong> {{application.uuid}}<br/>-->
-					<!--</div>-->
-				<!--</div>-->
-			<!--</div>-->
-		<!--</div>-->
-		<!--&lt;!&ndash;&lt;!&ndash; /.box-body &ndash;&gt;&ndash;&gt;-->
-		<!--&lt;!&ndash;<div class="box-footer">&ndash;&gt;-->
-			<!--&lt;!&ndash;Footer&ndash;&gt;-->
-		<!--&lt;!&ndash;</div>&ndash;&gt;-->
-		<!--&lt;!&ndash; /.box-footer&ndash;&gt;-->
-	<!--</div>-->
-
-	<!--<div class="nav-tabs-custom">-->
-		<!--<ul class="nav nav-tabs">-->
-			<!--<li class="active"><a href="#/application" data-toggle="tab">Pipeline</a></li>-->
-			<!--<li><a href="{id:instance_tab}" data-toggle="tab">Instances</a></li>-->
-			<!--<li><a href="" data-toggle="tab">Cluster</a></li>-->
-		<!--</ul>-->
-		<!--<div class="tab-content">-->
-			<!--<div class="tab-pane active" id="pipeline_tab">-->
-				<!--<textarea rows="6" class="form-control" data-editable="false">{{application.pipeline}}</textarea>-->
-			<!--</div>-->
-			<!--<div class="tab-pane" id="cluster_tab">-->
-				<!--{{application.cluster}}-->
-			<!--</div>-->
-			<!--<div class="tab-pane" id="instance_tab">-->
-				<!--{{application.instances}}-->
-			<!--</div>-->
-		<!--</div>-->
-	<!--</div>-->
-<!--</section>-->
