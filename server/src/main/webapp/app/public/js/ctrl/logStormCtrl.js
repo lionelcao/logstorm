@@ -60,6 +60,11 @@
 		};
 
 		$scope.create = function () {
+			$.each($scope.currentCluster().fields, function (i, field) {
+				var name = field.name;
+				$scope._properties[name] = $scope._properties[name] || field.value;
+			});
+
 			API.post("api/cluster", {
 				name: $scope._name,
 				type: $scope._type,
