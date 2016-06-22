@@ -16,6 +16,7 @@
  */
 package com.ebay.logstorm.server.platform.storm;
 
+import backtype.storm.Config;
 import backtype.storm.generated.*;
 import backtype.storm.utils.NimbusClient;
 import backtype.storm.utils.Utils;
@@ -36,6 +37,7 @@ import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
+import java.util.Optional;
 import java.util.Properties;
 
 /**
@@ -101,9 +103,7 @@ public class StormExecutionPlatform implements ExecutionPlatform {
             entity.setStatus(PipelineExecutionStatus.STOPPED);
             ExecutionManager.getInstance().remove(entity.getName());
         } else {
-            Map clusterConf = Utils.readStormConfig();
-            clusterConf.putAll(Utils.readCommandLineOpts());
-            Nimbus.Client client = NimbusClient.getConfiguredClient(clusterConf).getClient();
+            Nimbus.Client client = getStormClient(entity);
             client.killTopology(entity.getName());
             entity.setDescription("Stopped");
             entity.setStatus(PipelineExecutionStatus.STOPPED);
@@ -128,10 +128,7 @@ public class StormExecutionPlatform implements ExecutionPlatform {
             }
         } else {
             try {
-                Map clusterConf = Utils.readStormConfig();
-                clusterConf.putAll(Utils.readCommandLineOpts());
-                Nimbus.Client client = NimbusClient.getConfiguredClient(clusterConf).getClient();
-
+                Nimbus.Client client = getStormClient(entity);
                 String id = entity.getProperties() == null? null:entity.getProperties().getProperty(topology_id_key);
 
                 if(id == null) {
@@ -179,11 +176,24 @@ public class StormExecutionPlatform implements ExecutionPlatform {
                 entity.setStatus(PipelineExecutionStatus.STOPPED);
                 entity.setProperty("topology.status","NOT_ALIVE");
                 entity.setDescription(ex.getMessage());
-            } catch (TException ex ){
-                LOG.error("Failed to connect to nimbus through thrift",ex);
+            } catch (Exception ex ){
+                LOG.error(ex.getMessage(), ex);
                 throw ex;
             }
         }
+    }
+
+    private Map getStormConf(final PipelineExecutionEntity entity) {
+        Map<String, Object> storm_conf = Utils.readStormConfig();
+        Properties properties = entity.getPipeline().getCluster().getProperties();
+        if (properties != null) {
+            storm_conf.put(Config.NIMBUS_HOST, properties.getProperty(STORM_NIMBUS));
+        }
+        return storm_conf;
+    }
+
+    private Nimbus.Client getStormClient(final PipelineExecutionEntity entity) {
+        return NimbusClient.getConfiguredClient(getStormConf(entity)).getClient();
     }
 
     @Override
@@ -200,4 +210,7 @@ public class StormExecutionPlatform implements ExecutionPlatform {
     public String getConfigTemplate() {
         return "[{\"name\":\"storm.url\",\"value\":\"sandbox.hortonworks.com:8744\"},{\"name\":\"storm.nimbus\",\"value\":\"sandbox.hortonworks.com\"}]";
     }
+
+    private final static String STORM_URL = "storm.url";
+    private final static String STORM_NIMBUS = "storm.nimbus";
 }
