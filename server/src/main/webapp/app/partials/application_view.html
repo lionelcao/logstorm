@@ -96,29 +96,23 @@
 													</div>
 
 													<div class="tab-pane" data-id="pipeline_instance">
-														<table class="table table-striped table-bordered">
+														<table class="table table-bordered">
+															<thead>
+															<tr>
+																<th>No.</th>
+																<th>Name</th>
+																<th>Status</th>
+																<th>Context</th>
+																<th>Description</th>
+															</tr>
+															</thead>
 															<tbody ng-repeat="instance in application.instances track by $index">
 																<tr>
-																	<th>Name</th>
-																	<td>{{instance.name}}</td>
-																	<th>UUID</th>
-																	<td>{{instance.uuid}}</td>
-																</tr>
-																<tr>
-																	<th>Status</th>
-																	<td>{{instance.status}}</td>
-																	<th>Number</th>
-																	<td>{{instance.number}}</td>
-																</tr>
-																<tr>
-																	<th>Created Time</th>
-																	<td>{{instance.createdTimestamp}}</td>
-																	<th>Modified Time</th>
-																	<td>{{instance.modifiedTimestamp}}</td>
-																</tr>
-																<tr>
-																	<th>Description</th>
-																	<td colspan="3">{{instance.description}}</td>
+																	<td>#{{instance.number}}</td>
+																	<th><a href="{{instance.url}}">{{instance.name}}</a></th>
+																	<th><span class="label label-default">{{instance.status}}</span></th>
+																	<td>{{instance.properties}}</td>
+																	<th><span class="label label-default">{{instance.description}}</span></th>
 																</tr>
 															</tbody>
 														</table>

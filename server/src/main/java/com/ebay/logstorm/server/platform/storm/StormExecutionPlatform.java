@@ -115,6 +115,7 @@ public class StormExecutionPlatform implements ExecutionPlatform {
 
     @Override
     public synchronized void status(final PipelineExecutionEntity entity) throws Exception {
+        String stormUIUrl= (String) entity.getPipeline().getCluster().getProperties().get(STORM_URL);
         entity.setNeedUpdate(true);
         if (LogStormConstants.DeployMode.LOCAL.equals(entity.getPipeline().getMode())) {
             if(!ExecutionManager.getInstance().contains(entity.getName())){
@@ -139,6 +140,7 @@ public class StormExecutionPlatform implements ExecutionPlatform {
                         }
                     }
                 }
+
                 if(id == null || id.isEmpty()){
                     throw new NotAliveException("Topology named "+entity.getPipeline().getName()+" is not found");
                 } else {
@@ -149,6 +151,7 @@ public class StormExecutionPlatform implements ExecutionPlatform {
                     entity.setProperty("topology.uptime_secs", String.valueOf(topologyInfo.get_uptime_secs()));
                     entity.setProperty("topology.executors_size", String.valueOf(topologyInfo.get_executors_size()));
                     entity.setProperty("topology.errors_size", String.valueOf(topologyInfo.get_errors_size()));
+                    entity.setUrl(String.format("%s/topology.html?id=%s",stormUIUrl,topologyInfo.get_id()));
                     Map<String,List<ErrorInfo>> errors = topologyInfo.get_errors();
                     StringBuilder sb = new StringBuilder();
 
@@ -173,13 +176,12 @@ public class StormExecutionPlatform implements ExecutionPlatform {
                     entity.setStatus(ExecutionManager.getTopologyStatus(topologyInfo.get_status()));
                 }
             }catch (NotAliveException ex){
-                //LOG.error("{} not alive",entity.getPipeline().getName(),ex);
+                LOG.error("{} not alive",entity.getPipeline().getName(),ex);
                 entity.setStatus(PipelineExecutionStatus.STOPPED);
                 entity.setProperty("topology.status","NOT_ALIVE");
                 entity.setDescription(ex.getMessage());
             } catch (Exception ex ){
                 LOG.error(ex.getMessage(), ex);
-                //throw ex;
             }
         }
     }
@@ -209,9 +211,9 @@ public class StormExecutionPlatform implements ExecutionPlatform {
 
     @Override
     public String getConfigTemplate() {
-        return "[{\"name\":\"storm.url\",\"value\":\"sandbox.hortonworks.com:8744\"},{\"name\":\"storm.nimbus\",\"value\":\"sandbox.hortonworks.com\"}]";
+        return "[{\"name\":\"storm.ui\",\"value\":\"http://sandbox.hortonworks.com:8744\"},{\"name\":\"storm.nimbus\",\"value\":\"sandbox.hortonworks.com\"}]";
     }
 
-    private final static String STORM_URL = "storm.url";
+    private final static String STORM_URL = "storm.ui";
     private final static String STORM_NIMBUS = "storm.nimbus";
 }

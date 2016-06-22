@@ -62,6 +62,7 @@ public class PipelineEntity extends BaseEntity {
                     stopped = true;
                 }
             }
+
             return stopped?PipelineExecutionStatus.STOPPED:PipelineExecutionStatus.UNKNOWN;
         }
     }
