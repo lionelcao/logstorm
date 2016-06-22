@@ -92,6 +92,10 @@ public class ClusterEntity extends BaseEntity{
         this.adapterClass = adapterClass;
     }
 
+    public String getVersion(){
+        return getPlatformInstance().getVersion();
+    }
+
     @JsonIgnoreProperties @Transient
     private ExecutionPlatform perInstanceCache;
 }

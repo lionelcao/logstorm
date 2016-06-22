@@ -121,7 +121,6 @@ public class PipelineEntityServiceImpl implements PipelineEntityService {
     @Override
     public PipelineEntity getPipelineByUuidOrNameOrThrow(String uuid,String name) throws Exception {
         PipelineEntity pipelineEntity = pipelineEntityRepository.findOneByUuidOrName(uuid, name).orElseThrow(()-> new PipelineException("Pipeline [uuid='"+uuid+"' or name='"+name+"'] not found"));
-        pipelineEntity.setPipelineStatus(statusPipeline(pipelineEntity));
         return pipelineEntity;
     }
 }

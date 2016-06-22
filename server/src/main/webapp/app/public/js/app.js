@@ -26,6 +26,11 @@
 				templateUrl: "partials/application_new.html?_=" + _TRS,
 				controller: "applicationNewCtrl"
 			})
+			.state('application_view', {
+				url: "/application/:id",
+				templateUrl: "partials/application_view.html?_=" + _TRS,
+				controller: "applicationViewCtrl"
+			})
 			.state('cluster', {
 				url: "/cluster",
 				templateUrl: "partials/cluster.html?_=" + _TRS,
@@ -40,7 +45,6 @@
 				url: "/configuration",
 				templateUrl: "partials/configuration.html?_=" + _TRS,
 				controller: "configurationCtrl"
-				//resolve: _resolve({featureCheck: true})
 			})
 	});
 

@@ -1,0 +1,116 @@
+<section class="content-header">
+	<h1>
+		Application Detail
+		<small>{{application.uuid}}</small>
+	</h1>
+	<ol class="breadcrumb">
+		<li><a href="#/"><i class="fa fa-dashboard"></i> Home</a></li>
+		<li><a href="#/application">Application</a></li>
+		<li><a>{{application.name}}</a></li>
+	</ol>
+</section>
+
+<section class="content">
+	<div class="nav-tabs-custom">
+		<!--<ul class="nav nav-tabs">-->
+			<!--<li class="active"><a href="#/application" data-toggle="tab">Application: {{application.name}}</a></li>-->
+		<!--</ul>-->
+		<div class="tab-content">
+			<div class="tab-pane active" id="application_tab">
+				<div class="row">
+					<div class="col-xs-12">
+						<div class="box-header">
+							Application: <strong>{{application.name}}</strong>
+							<div class="pull-right btn-group btn-group-xs">
+								<a class="btn btn-default" href="#">Start</a>
+								<a class="btn btn-default" href="#">Stop</a>
+								<a class="btn btn-default" href="#">Modify</a>
+								<a class="btn btn-default" href="#/application">All</a>
+							</div>
+						</div>
+						<div class="box-body table-responsive no-padding">
+							<table class="table table-hover">
+								<tbody>
+									<tr>
+										<td>Name</td><td>{{application.name}}</td>
+										<td>ID</td><td>{{application.uuid}}</td>
+									</tr>
+									<tr>
+										<td>Status</td><td><span class="label label-default">{{application.status}}</span></td>
+										<td>Mode</td><td><span class="label label-default">{{application.mode}}</span></td>
+									</tr>
+									<tr>
+										<td>Cluster</td>
+										<td colspan="3">
+											<a href="#/cluster/{{application.cluster.uuid}}">{{application.cluster}}</a>
+										</td>
+									</tr>
+									<tr>
+										<td>Parallelism</td>
+										<td colspan="3">
+											{{application.parallelism}}
+										</td>
+									</tr>
+									<tr>
+										<td colspan="4">
+											<div class="nav-tabs-custom">
+												<ul class="nav nav-tabs nav-tab-default">
+													<li class="active"><a href="[data-id='pipeline_detail']" data-toggle="tab">Pipeline</a></li>
+													<li><a href="[data-id='pipeline_viz']" data-toggle="tab">Visualization</a></li>
+													<li><a href="[data-id='pipeline_instance']" data-toggle="tab">Instances</a></li>
+													<!--li><a href="[data-id='panels']" data-toggle="tab">Portals</a></li-->
+												</ul>
+												<div class="tab-content">
+													<div class="tab-pane active" data-id="pipeline_detail">
+														<textarea class="form-control" disabled="true" rows="10">{{application.pipeline}}</textarea>
+														<hr/>
+														<strong>Execution Plan</strong><br/><br/>
+														<i>Inputs:</i>
+														<span ng-if="compiled_pipeline.inputs.length === 0">
+															[]
+														</span>
+														<ul>
+															<li ng-repeat="plugin in compiled_pipeline.inputs">{{plugin.debugInfo}}</li>
+														</ul>
+														<i>Filters:</i>
+														<span ng-if="compiled_pipeline.filters.length === 0">
+															[]
+														</span>
+														<ul>
+															<li ng-repeat="plugin in compiled_pipeline.filters">{{plugin.debugInfo}}</li>
+														</ul>
+														<i>Outputs:</i>
+														<span ng-if="compiled_pipeline.outputs.length === 0">
+															[]
+														</span>
+														<ul>
+															<li ng-repeat="plugin in compiled_pipeline.outputs">{{plugin.debugInfo}}</li>
+														</ul>
+													</div>
+
+													<div class="tab-pane" data-id="pipeline_viz">
+														<code>TODO: Visualize as dataflow</code>
+														<textarea class="form-control" data-editable="false" rows="8">
+														{{compiled_pipeline}}
+														</textarea>
+													</div>
+
+													<div class="tab-pane" data-id="pipeline_instance">
+														<ul>
+															<li></li>
+														</ul>
+													</div>
+												</div>
+												<!-- /.tab-content -->
+											</div>
+										</td>
+									</tr>
+								</tbody>
+							</table>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		</div>
+</section>

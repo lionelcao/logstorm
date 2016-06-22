@@ -13,6 +13,7 @@
 					var result = res.data;
 					list.splice(0);
 					Array.prototype.push.apply(list, result.data);
+					return result;
 				});
 				return list;
 			},

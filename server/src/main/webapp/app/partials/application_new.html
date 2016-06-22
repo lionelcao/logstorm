@@ -1,7 +1,7 @@
 <section class="content-header">
 	<h1>
 		Application
-		<small></small>
+		<small>New Streaming Application</small>
 	</h1>
 	<ol class="breadcrumb">
 		<li><a href="#/"><i class="fa fa-dashboard"></i> Home</a></li>
@@ -11,35 +11,87 @@
 </section>
 
 <section class="content">
-	<div class="box box-success">
-		<div class="box-header with-border">
-			<h3 class="box-title">New</h3>
-		</div>
-		<div class="box-body">
-			<div class="form-group">
-				<label>Name</label>
-				<input type="text" class="form-control" ng-model="_name" />
+	<div class="nav-tabs-custom">
+		<ul class="nav nav-tabs">
+			<li><a href="#/application">Applications</a></li>
+			<li class="active"><a href="#/application/new">New Application</a></li>
+		</ul>
+		<div class="tab-content">
+			<div class="tab-pane active" id="application_tab">
 			</div>
-			<div class="form-group">
-				<label>Mode</label>
-				<select class="form-control" ng-model="_mode">
-					<option>LOCAL</option>
-					<option>CLUSTER</option>
-				</select>
+			<div class="tab-pane active" id="application_new_tab">
+				<div class="box-body">
+					<div class="form-group">
+						<label>Streaming Pipeline</label> <small>Define streaming pipeline with native <a target="_blank" href="https://www.elastic.co/guide/en/logstash/current/config-examples.html">logstash syntax</a>
+						and <a href="https://github.com/logstash-plugins">thousands of existing logstash plugins</a></small>
+						<textarea class="form-control" rows="8" ng-model="_pipeline" placeholder="input{} filter{} output{}">input{} filter{} output{}</textarea>
+					</div>
+					<hr/>
+					<div class="form-group">
+						<label>Application Name</label>
+						<input type="text" class="form-control" ng-model="_name" placeholder="Input an unique application name"/>
+					</div>
+					<div class="form-group">
+						<label>Running Mode</label> <small>Run as local or cluster mode</small>
+						<select class="form-control" ng-model="_mode">
+							<option>CLUSTER</option>
+							<option>LOCAL</option>
+						</select>
+					</div>
+					<div class="form-group">
+						<label>Deployment Cluster</label> <small>Deploy to an existing physical execution cluster, or <a href="#/cluster/new">create a new one</a></small>
+						<select class="form-control" ng-model="_cluster" ng-if="clusterList.length > 0">
+							<option ng-repeat="cluster in clusterList track by $index" value="{{cluster.name}}">{{cluster.name}} (type: {{cluster.type}}, version: {{cluster.version}})</option>
+						</select>
+						<a class="form-control btn btn-danger" href="#/cluster/new" ng-if="clusterList.length ===0">No existing clusters, create one firstly!</a>
+					</div>
+					<div class="form-group">
+						<label>Scale Parallelism</label> <small>Execution parallelism including instance number, input/filter/output parallelism</small>
+						<input class="form-control" type="number" ng-model="_parallelism" placeholder="instance: 1, input: 1, filter: 1, output: 1"/>
+					</div>
+					<div class="form-group">
+						<label>Advanced Settings</label>
+						<textarea class="form-control" rows="2" ng-model="_properties" placeholder="{'key':'value'}"></textarea>
+					</div>
+				</div>
+				<div class="box-footer text-right">
+					<button class="btn btn-primary" ng-click="create()" ng-disabled="!_name || !_pipeline">Create</button>
+				</div>
 			</div>
-			<div class="form-group">
-				<label>Cluster</label>
-				<select class="form-control" ng-model="_cluster">
-					<option ng-repeat="cluster in clusterList track by $index">{{cluster.name}}</option>
-				</select>
-			</div>
-			<div class="form-group">
-				<label>Pipeline</label>
-				<textarea class="form-control" rows="6" ng-model="_pipeline"></textarea>
-			</div>
-		</div>
-		<div class="box-footer text-right">
-			<button class="btn btn-primary" ng-click="create()" ng-disabled="!_name || !_pipeline">Create</button>
 		</div>
 	</div>
 </section>
+
+<!--<section class="content">-->
+	<!--<div class="box box-success">-->
+		<!--<div class="box-header with-border">-->
+			<!--<h3 class="box-title">New</h3>-->
+		<!--</div>-->
+		<!--<div class="box-body">-->
+			<!--<div class="form-group">-->
+				<!--<label>Name</label>-->
+				<!--<input type="text" class="form-control" ng-model="_name" />-->
+			<!--</div>-->
+			<!--<div class="form-group">-->
+				<!--<label>Mode</label>-->
+				<!--<select class="form-control" ng-model="_mode">-->
+					<!--<option>LOCAL</option>-->
+					<!--<option>CLUSTER</option>-->
+				<!--</select>-->
+			<!--</div>-->
+			<!--<div class="form-group">-->
+				<!--<label>Cluster</label>-->
+				<!--<select class="form-control" ng-model="_cluster">-->
+					<!--<option ng-repeat="cluster in clusterList track by $index">{{cluster.name}}</option>-->
+				<!--</select>-->
+			<!--</div>-->
+			<!--<div class="form-group">-->
+				<!--<label>Pipeline</label>-->
+				<!--<textarea class="form-control" rows="6" ng-model="_pipeline"></textarea>-->
+			<!--</div>-->
+		<!--</div>-->
+		<!--<div class="box-footer text-right">-->
+			<!--<button class="btn btn-primary" ng-click="create()" ng-disabled="!_name || !_pipeline">Create</button>-->
+		<!--</div>-->
+	<!--</div>-->
+<!--</section>-->

@@ -74,6 +74,18 @@
 		$scope.clusters = {};
 		clusterMapWrapper($scope.clusters, $scope.clusterList);
 
+		$scope.startApplication = function (application) {
+			API.post("api/pipeline/start", {name: application.name}).then(function () {
+				location.reload();
+			});
+		};
+
+		$scope.stopApplication = function (application) {
+			API.post("api/pipeline/stop", {name: application.name}).then(function () {
+				location.reload();
+			});
+		};
+
 		$scope.deleteApplication = function (application) {
 			UI.deleteConfirm(application.name).then(null, null, function(holder) {
 				API.delete("api/pipeline", application.uuid).then(function () {
@@ -90,14 +102,15 @@
 		clusterMapWrapper($scope.clusters, $scope.clusterList, "name");
 
 		$scope._name = "";
-		$scope._mode = "LOCAL";
+		$scope._mode = "CLUSTER";
 		$scope._cluster = "";
 		$scope._pipeline = "";
+		$scope._parallelism = 1;
+		$scope._properties = '{}';
 
 		$scope.clusterList._promise.then(function () {
 			$scope._cluster = ($scope.clusterList[0] || {}).name;
 		});
-
 
 		$scope.create = function () {
 			API.post("api/pipeline", {
@@ -108,8 +121,17 @@
 				},
 				pipeline: $scope._pipeline
 			}).then(function () {
-				location.href = "#/application";
+				location.href = "#/application/"+ $scope._name;
 			});
 		};
+	});
+
+	logStormControllers.controller('applicationViewCtrl', function($scope,$stateParams, API) {
+		API.get("api/pipeline/"+$stateParams.id)._promise.then(function (res) {
+			$scope.application = res.data;
+		});
+		API.get("api/pipeline/" + $stateParams.id + "/compiled")._promise.then(function(res){
+			$scope.compiled_pipeline = res.data;
+		});
 	});
 })();
