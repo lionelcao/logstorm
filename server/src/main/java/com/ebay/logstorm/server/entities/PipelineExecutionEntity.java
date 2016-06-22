@@ -55,6 +55,16 @@ public class PipelineExecutionEntity extends BaseEntity {
     @Column(length = 10000)
     private String description;
 
+    public boolean isNeedUpdate() {
+        return needUpdate;
+    }
+
+    public void setNeedUpdate(boolean needUpdate) {
+        this.needUpdate = needUpdate;
+    }
+
+    private boolean needUpdate;
+
     public PipelineExecutionStatus getStatus() {
         return status;
     }

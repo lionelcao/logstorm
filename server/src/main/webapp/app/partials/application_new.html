@@ -40,7 +40,7 @@
 					</div>
 					<div class="form-group">
 						<label>Deployment Cluster</label> <small>Deploy to an existing physical execution cluster, or <a href="#/cluster/new">create a new one</a></small>
-						<select class="form-control" ng-model="_cluster" ng-if="clusterList.length > 0">
+						<select class="form-control" ng-model="_cluster" ng-show="clusterList.length > 0">
 							<option ng-repeat="cluster in clusterList track by $index" value="{{cluster.name}}">{{cluster.name}} (type: {{cluster.type}}, version: {{cluster.version}})</option>
 						</select>
 						<a class="form-control btn btn-danger" href="#/cluster/new" ng-if="clusterList.length ===0">No existing clusters, create one firstly!</a>
@@ -61,37 +61,3 @@
 		</div>
 	</div>
 </section>
-
-<!--<section class="content">-->
-	<!--<div class="box box-success">-->
-		<!--<div class="box-header with-border">-->
-			<!--<h3 class="box-title">New</h3>-->
-		<!--</div>-->
-		<!--<div class="box-body">-->
-			<!--<div class="form-group">-->
-				<!--<label>Name</label>-->
-				<!--<input type="text" class="form-control" ng-model="_name" />-->
-			<!--</div>-->
-			<!--<div class="form-group">-->
-				<!--<label>Mode</label>-->
-				<!--<select class="form-control" ng-model="_mode">-->
-					<!--<option>LOCAL</option>-->
-					<!--<option>CLUSTER</option>-->
-				<!--</select>-->
-			<!--</div>-->
-			<!--<div class="form-group">-->
-				<!--<label>Cluster</label>-->
-				<!--<select class="form-control" ng-model="_cluster">-->
-					<!--<option ng-repeat="cluster in clusterList track by $index">{{cluster.name}}</option>-->
-				<!--</select>-->
-			<!--</div>-->
-			<!--<div class="form-group">-->
-				<!--<label>Pipeline</label>-->
-				<!--<textarea class="form-control" rows="6" ng-model="_pipeline"></textarea>-->
-			<!--</div>-->
-		<!--</div>-->
-		<!--<div class="box-footer text-right">-->
-			<!--<button class="btn btn-primary" ng-click="create()" ng-disabled="!_name || !_pipeline">Create</button>-->
-		<!--</div>-->
-	<!--</div>-->
-<!--</section>-->
