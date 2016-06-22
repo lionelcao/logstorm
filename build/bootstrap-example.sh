@@ -25,7 +25,12 @@ curl --silent -H 'Content-Type:application/json' -XPOST http://localhost:8080/ap
 	  "adapterClass":"com.ebay.logstorm.server.platform.storm.StormExecutionPlatform"
 	}
 '
-
+curl --silent -H 'Content-Type:application/json' -XPOST http://localhost:8080/api/cluster -d '
+	{
+	  "name":"sample_spark_cluster",
+	  "adapterClass":"com.ebay.logstorm.server.platform.spark.SparkExecutionPlatform"
+	}
+'
 echo '\n'
 echo "[STEP 2] View created cluster by GET http://localhost:8080/api/cluster/sample_storm_cluster"
 sleep 1

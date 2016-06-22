@@ -22,6 +22,7 @@ public enum PipelineExecutionStatus {
     STARTING, RUNNING,
     STOPPING, STOPPED,
     RESCALING,
+    KILLED,
     FAILED;
 
     public static boolean isReadyToStart(PipelineExecutionStatus status){

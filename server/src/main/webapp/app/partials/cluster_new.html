@@ -28,13 +28,19 @@
 					<div class="form-group">
 						<label>Environment Type</label>
 						<select class="form-control" ng-model="_type">
-							<option>storm</option>
-							<option>spark</option>
+							<option ng-repeat="cluster in clusterMetaList track by $index">{{cluster.type}}</option>
 						</select>
 					</div>
 					<div class="form-group">
 						<label>Environment Properties</label>
-						<textarea class="form-control" rows="6" ng-model="_properties" placeholder="{'key':'value'}"></textarea>
+						<table class="table table-striped table-bordered">
+							<tbody>
+								<tr ng-repeat="field in currentCluster().fields track by $index">
+									<th width="30%">{{field.name}}</th>
+									<td><input type="text" class="form-control" placeholder="{{field.value}}" ng-model="_properties[field.name]" /></td>
+								</tr>
+							</tbody>
+						</table>
 					</div>
 				</div>
 				<div class="box-footer text-right">

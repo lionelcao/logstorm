@@ -1,12 +1,13 @@
 (function() {
 	'use strict';
 
-	var host  = "http://localhost:8080/";
+	//var host  = "http://localhost:8080/";
+	var host = "/";
 	/* App Module */
 	var logStormApp = angular.module('logStormApp');
 
 	logStormApp.service('API', function($http) {
-		return {
+		var API = {
 			get: function (url) {
 				var list = [];
 				list._promise = $http.get(host + url).then(function (res) {
@@ -28,5 +29,11 @@
 				}
 			}
 		};
+
+		API.get("api/cluster")._promise.then(null, function () {
+			host = "http://localhost:8080/";
+		});
+
+		return API;
 	});
 }());

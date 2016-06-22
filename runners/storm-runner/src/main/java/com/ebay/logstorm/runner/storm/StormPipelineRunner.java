@@ -8,6 +8,7 @@ import backtype.storm.generated.InvalidTopologyException;
 import backtype.storm.topology.BoltDeclarer;
 import backtype.storm.topology.TopologyBuilder;
 import backtype.storm.tuple.Fields;
+import backtype.storm.utils.Utils;
 import com.ebay.logstorm.core.LogStormConstants;
 import com.ebay.logstorm.core.PipelineContext;
 import com.ebay.logstorm.core.compiler.FilterPlugin;
@@ -19,10 +20,7 @@ import com.google.common.base.Preconditions;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -42,6 +40,7 @@ import java.util.Map;
  */
 public class StormPipelineRunner implements PipelineRunner {
     private final static Logger LOG = LoggerFactory.getLogger(StormPipelineRunner.class);
+
     public Map<String, Object> run(Pipeline pipeline) {
         PipelineContext context = pipeline.getContext();
         List<InputPlugin> inputs = pipeline.getInputs();
@@ -49,6 +48,9 @@ public class StormPipelineRunner implements PipelineRunner {
         List<OutputPlugin> outputs = pipeline.getOutputs();
 
         Config stormConfig = new Config();
+        if (pipeline.getContext().getConfig().hasPath("storm.nimbus")) {
+            stormConfig.put(Config.NIMBUS_HOST, pipeline.getContext().getConfig().getString("storm.nimbus"));
+        }
         TopologyBuilder builder = new TopologyBuilder();
 
         List<LogStashInputSpout> inputSpouts = new ArrayList<LogStashInputSpout>(inputs.size());

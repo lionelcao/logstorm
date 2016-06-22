@@ -39,9 +39,20 @@
 	});
 
 	logStormControllers.controller('clusterNewCtrl', function($scope, API) {
+		$scope.clusterMetaList = API.get("api/platform");
+		$scope.clusterMetaList._promise.then(function () {
+			$scope._type = ($scope.clusterMetaList[0] || {}).type;
+		});
+
 		$scope._name = "";
-		$scope._type = "storm";
-		$scope._properties = "";
+		$scope._type = "";
+		$scope._properties = {};
+
+		$scope.currentCluster = function () {
+			return $scope.clusterMetaList.find(function (cluster) {
+				return cluster.type === $scope._type;
+			}) || {};
+		};
 
 		var typeMapping = {
 			storm: "com.ebay.logstorm.server.platform.storm.StormExecutionPlatform",
@@ -49,15 +60,15 @@
 		};
 
 		$scope.create = function () {
-			var _properties = {};
-			try {
-				_properties = JSON.parse($scope._properties);
-			} catch(err) {}
+			$.each($scope.currentCluster().fields, function (i, field) {
+				var name = field.name;
+				$scope._properties[name] = $scope._properties[name] || field.value;
+			});
 
 			API.post("api/cluster", {
 				name: $scope._name,
 				type: $scope._type,
-				properties: _properties,
+				properties: $scope._properties,
 				adapterClass: typeMapping[$scope._type]
 			}).then(function () {
 				location.href = "#/cluster";
@@ -117,6 +128,8 @@
 		});
 
 		$scope.create = function () {
+			console.log($scope.clusters, $scope._cluster, $scope.clusters[$scope._cluster]);
+
 			API.post("api/pipeline", {
 				name: $scope._name,
 				mode: $scope._mode,
@@ -137,5 +150,17 @@
 		API.get("api/pipeline/" + $stateParams.id + "/compiled")._promise.then(function(res){
 			$scope.compiled_pipeline = res.data;
 		});
+
+		$scope.startApplication = function () {
+			API.post("api/pipeline/start", {name: $scope.application.name}).then(function () {
+				location.reload();
+			});
+		};
+
+		$scope.stopApplication = function () {
+			API.post("api/pipeline/stop", {name: $scope.application.name}).then(function () {
+				location.reload();
+			});
+		};
 	});
 })();

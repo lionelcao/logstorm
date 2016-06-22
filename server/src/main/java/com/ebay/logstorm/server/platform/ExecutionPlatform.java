@@ -1,6 +1,5 @@
 package com.ebay.logstorm.server.platform;
 
-import com.ebay.logstorm.server.entities.PipelineEntity;
 import com.ebay.logstorm.server.entities.PipelineExecutionEntity;
 
 import java.util.Properties;
@@ -28,4 +27,5 @@ public interface ExecutionPlatform {
     void status(final PipelineExecutionEntity entity) throws Exception;
     String getType();
     String getVersion();
+    String getConfigTemplate();
 }
