@@ -1,6 +1,5 @@
 package com.ebay.logstorm.server.platform;
 
-import com.ebay.logstorm.server.entities.PipelineEntity;
 import com.ebay.logstorm.server.entities.PipelineExecutionEntity;
 
 import java.util.Properties;

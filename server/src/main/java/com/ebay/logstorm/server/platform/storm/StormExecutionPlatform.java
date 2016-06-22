@@ -186,6 +186,7 @@ public class StormExecutionPlatform implements ExecutionPlatform {
         }
     }
 
+    @Override
     public String getType() {
         return "storm";
     }

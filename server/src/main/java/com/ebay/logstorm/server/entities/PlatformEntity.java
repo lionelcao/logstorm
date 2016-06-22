@@ -18,10 +18,13 @@
 
 package com.ebay.logstorm.server.entities;
 
+import java.util.List;
+import java.util.Map;
+
 public class PlatformEntity {
     private String type;
     private String className;
-    private String fieldsTemplate;
+    protected List<Map<String, String>> fields;
     private String description;
 
     public String getType() {
@@ -35,16 +38,17 @@ public class PlatformEntity {
     public String getClassName(){
         return className;
     }
+
     public void setClassName(String className){
         this.className = className;
     }
 
-    public String getFieldsTemplate() {
-        return fieldsTemplate;
+    public List<Map<String, String>> getFields() {
+        return fields;
     }
 
-    public void setFieldsTemplate(String fieldsTemplate) {
-        this.fieldsTemplate = fieldsTemplate;
+    public void setFields(List<Map<String, String>> fields) {
+        this.fields = fields;
     }
 
     public String getDescription(){

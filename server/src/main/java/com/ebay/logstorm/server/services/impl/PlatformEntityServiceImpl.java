@@ -22,10 +22,14 @@ import com.ebay.logstorm.server.entities.PlatformEntity;
 import com.ebay.logstorm.server.platform.ExecutionPlatform;
 import com.ebay.logstorm.server.services.PlatformEntityRepository;
 import com.ebay.logstorm.server.services.PlatformEntityService;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.type.CollectionType;
 import org.springframework.stereotype.Component;
 
+import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 
 @Component("PlatformEntityService")
 public class PlatformEntityServiceImpl implements PlatformEntityService {
@@ -37,9 +41,23 @@ public class PlatformEntityServiceImpl implements PlatformEntityService {
         if (platform != null) {
             entity.setType(platform.getType());
             entity.setClassName(className);
-            entity.setFieldsTemplate(platform.getConfigTemplate());
+            entity.setFields(parseTemplateString(platform.getConfigTemplate()));
             return entity;
         } else {
+            return null;
+        }
+    }
+
+    private List<Map<String, String>> parseTemplateString(String template) {
+        if (template == null || template.isEmpty()) {
+            return null;
+        }
+        ObjectMapper om = new ObjectMapper();
+        CollectionType collectionType = om.getTypeFactory().constructCollectionType(List.class, Map.class);
+        try {
+            return om.readValue(template, collectionType);
+        } catch (IOException e) {
+            e.printStackTrace();
             return null;
         }
     }
