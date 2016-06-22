@@ -1,6 +1,5 @@
 package com.ebay.logstorm.server.services;
 
-import com.ebay.logstorm.server.entities.PipelineEntity;
 import com.ebay.logstorm.server.entities.PipelineExecutionEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -25,4 +24,6 @@ import org.springframework.data.repository.Repository;
 public interface PipelineExecutionRepository extends Repository<PipelineExecutionEntity, String> {
     Page<PipelineExecutionEntity> findAll(Pageable pageable);
     PipelineExecutionEntity save(PipelineExecutionEntity pipelineExecutionEntity);
+    Integer removeByUuid(String uuid);
+    Integer removeByName(String name);
 }

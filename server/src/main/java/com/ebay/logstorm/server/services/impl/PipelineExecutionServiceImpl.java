@@ -14,7 +14,6 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -41,6 +40,7 @@ import java.util.concurrent.ExecutionException;
  */
 @Component("pipelineExecutionService")
 public class PipelineExecutionServiceImpl implements PipelineExecutionService {
+
     private final PipelineExecutionRepository executionRespository;
     private final static Logger LOG = LoggerFactory.getLogger(PipelineExecutionServiceImpl.class);
     private final PipelineEntityService entityService;
@@ -51,7 +51,6 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
         this.executionRespository = executionRespository;
     }
 
-    @Transactional
     private void checkInitExecutionContext(PipelineEntity pipeline){
         Preconditions.checkNotNull(pipeline,"pipeline is null: "+pipeline);
         Preconditions.checkNotNull(pipeline.getCluster(),"cluster is null: "+ pipeline);
@@ -88,7 +87,7 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
                 pipeline.getCluster().getPlatformInstance().start(executor);
                 executor.setStatus(PipelineExecutionStatus.RUNNING);
                 updateExecutionEntity(executor);
-            } catch (Exception ex) {
+            } catch (Throwable ex) {
                 executor.setStatus(PipelineExecutionStatus.FAILED);
                 executor.setDescription(ExceptionUtils.getMessage(ex));
                 updateExecutionEntity(executor);
@@ -121,8 +120,9 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
                     updateExecutionEntity(instance);
                     pipeline.getCluster().getPlatformInstance().stop(instance);
                     instance.setStatus(PipelineExecutionStatus.STOPPED);
-                    updateExecutionEntity(instance);
-                } catch (Exception e) {
+//                    updateExecutionEntity(instance);
+                    removeExecutionEntity(instance);
+                } catch (Throwable e) {
                     instance.setStatus(PipelineExecutionStatus.FAILED);
                     instance.setDescription(ExceptionUtils.getMessage(e));
                     updateExecutionEntity(instance);
@@ -138,8 +138,6 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
                 throw new RuntimeException(e);
             }
         });
-        pipeline.getInstances().clear();
-        entityService.updatePipeline(pipeline);
         return pipeline;
     }
 
@@ -163,6 +161,12 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
     public PipelineExecutionEntity updateExecutionEntity(PipelineExecutionEntity executionEntity) {
         executionEntity.updateModifiedTimestamp();
         return executionRespository.save(executionEntity);
+    }
+
+
+    @Override
+    public Integer removeExecutionEntity(PipelineExecutionEntity executionEntity) {
+        return executionRespository.removeByUuid(executionEntity.getUuid());
     }
 
     @Override

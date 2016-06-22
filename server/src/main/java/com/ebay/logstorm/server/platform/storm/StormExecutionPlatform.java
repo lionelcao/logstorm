@@ -66,7 +66,7 @@ public class StormExecutionPlatform implements ExecutionPlatform {
         PipelineContext context = new PipelineContext(entity.getPipeline().getPipeline());
         context.setConfig(entity.getPipeline().getCluster().getProperties());
         context.setDeployMode(entity.getPipeline().getMode());
-        context.setPipelineName(entity.getPipeline().getName());
+        context.setPipelineName(entity.getName());
         Pipeline pipeline = PipelineCompiler.compile(context);
 
         switch (entity.getPipeline().getMode()){
@@ -104,10 +104,10 @@ public class StormExecutionPlatform implements ExecutionPlatform {
             ExecutionManager.getInstance().remove(entity.getName());
         } else {
             Nimbus.Client client = getStormClient(entity);
-            client.killTopology(entity.getPipeline().getName());
+            client.killTopology(entity.getName());
             entity.setDescription("Stopped");
             entity.setStatus(PipelineExecutionStatus.STOPPING);
-            entity.setProperty("topology.status", "");
+            entity.setProperty("topology.status", "KILLING");
         }
     }
 
@@ -132,17 +132,16 @@ public class StormExecutionPlatform implements ExecutionPlatform {
             try {
                 Nimbus.Client client = getStormClient(entity);
                 String id = entity.getProperties() == null? null:entity.getProperties().getProperty(topology_id_key);
-
                 if(id == null || id.isEmpty()) {
                     for (TopologySummary topologySummary : client.getClusterInfo().get_topologies()) {
-                        if (topologySummary.get_name().equals(entity.getPipeline().getName())) {
+                        if (topologySummary.get_name().equals(entity.getName())) {
                             id = topologySummary.get_id();
                         }
                     }
                 }
 
                 if(id == null || id.isEmpty()){
-                    throw new NotAliveException("Topology named "+entity.getPipeline().getName()+" is not found");
+                    throw new NotAliveException("Topology named "+entity.getName()+" is not found");
                 } else {
                     TopologyInfo topologyInfo = client.getTopologyInfo(id);
                     entity.setProperty(topology_id_key, topologyInfo.get_id());
@@ -172,15 +171,17 @@ public class StormExecutionPlatform implements ExecutionPlatform {
                             entity.setDescription(sb.toString());
                         }
                     }
-                    entity.setName(topologyInfo.get_id());
                     entity.setStatus(ExecutionManager.getTopologyStatus(topologyInfo.get_status()));
                 }
             }catch (NotAliveException ex){
-                LOG.error("{} not alive",entity.getPipeline().getName(),ex);
+                LOG.error("{} not alive",entity.getName(),ex);
                 entity.setStatus(PipelineExecutionStatus.STOPPED);
                 entity.setProperty("topology.status","NOT_ALIVE");
                 entity.setDescription(ex.getMessage());
             } catch (Exception ex ){
+                entity.setStatus(PipelineExecutionStatus.STOPPED);
+                entity.setProperty("topology.status","UNKNOWN");
+                entity.setDescription(ex.getMessage());
                 LOG.error(ex.getMessage(), ex);
             }
         }

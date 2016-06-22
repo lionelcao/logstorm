@@ -9,7 +9,11 @@ curl --silent -H 'Content-Type:application/json' -XPOST http://localhost:8080/ap
 	{
 	  "uuid": "47bda9f1-f0c0-458d-be1b-3d54b6bec25b",
 	  "name":"sample_storm_cluster",
-	  "adapterClass":"com.ebay.logstorm.server.platform.storm.StormExecutionPlatform"
+	  "adapterClass":"com.ebay.logstorm.server.platform.storm.StormExecutionPlatform",
+	  "properties":{
+	    "storm.ui":"http://logstorm-3162.lvs01.dev.ebayc3.com:8744",
+	    "storm.nimbus":"logstorm-3162.lvs01.dev.ebayc3.com"
+	  }
 	}
 '
 

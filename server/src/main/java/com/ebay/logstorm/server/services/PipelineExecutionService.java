@@ -22,10 +22,11 @@ import org.springframework.data.domain.Pageable;
  * limitations under the License.
  */
 public interface PipelineExecutionService {
-    /**
-     * @param pipelineEntity
-     * @return
-     */
+
+        /**
+         * @param pipelineEntity
+         * @return
+         */
     PipelineEntity start(PipelineEntity pipelineEntity) throws Exception;
 
     /**
@@ -55,4 +56,5 @@ public interface PipelineExecutionService {
     PipelineExecutionEntity createExecutionEntity(PipelineExecutionEntity executionEntity);
 
     Page<PipelineExecutionEntity> searchExecutionEntities(Pageable pageable);
+    Integer removeExecutionEntity(PipelineExecutionEntity executionEntity);
 }
