@@ -22,11 +22,13 @@ public enum PipelineExecutionStatus {
     STARTING, RUNNING,
     STOPPING, STOPPED,
     RESCALING,
+    KILLED,
     FAILED;
 
     public static boolean isReadyToStart(PipelineExecutionStatus status){
         return status.equals(UNDEPLOYED) ||
                 status.equals(STOPPED) ||
+                status.equals(KILLED) ||
                 status.equals(FAILED);
     }
 

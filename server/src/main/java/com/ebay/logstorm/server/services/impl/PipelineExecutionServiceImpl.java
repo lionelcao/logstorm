@@ -85,7 +85,7 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
                 executor.setStatus(PipelineExecutionStatus.STARTING);
                 updateExecutionEntity(executor);
                 pipeline.getCluster().getPlatformInstance().start(executor);
-                executor.setStatus(PipelineExecutionStatus.RUNNING);
+                //executor.setStatus(PipelineExecutionStatus.RUNNING);
                 updateExecutionEntity(executor);
             } catch (Exception ex) {
                 executor.setStatus(PipelineExecutionStatus.FAILED);
@@ -118,7 +118,7 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
                     instance.setStatus(PipelineExecutionStatus.STOPPING);
                     updateExecutionEntity(instance);
                     pipeline.getCluster().getPlatformInstance().stop(instance);
-                    instance.setStatus(PipelineExecutionStatus.STOPPED);
+                    //instance.setStatus(PipelineExecutionStatus.STOPPED);
                     updateExecutionEntity(instance);
                 } catch (Exception e) {
                     instance.setStatus(PipelineExecutionStatus.FAILED);

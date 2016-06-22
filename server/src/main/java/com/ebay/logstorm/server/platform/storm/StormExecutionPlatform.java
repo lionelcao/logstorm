@@ -138,9 +138,8 @@ public class StormExecutionPlatform implements ExecutionPlatform {
                         }
                     }
                 }
-
                 if(id == null){
-                    throw new IllegalStateException("Topology named "+entity.getPipeline().getName()+" is not found");
+                    throw new NotAliveException("Topology named "+entity.getPipeline().getName()+" is not found");
                 } else {
                     TopologyInfo topologyInfo = client.getTopologyInfo(id);
                     entity.setProperty(topology_id_key, topologyInfo.get_id());
@@ -169,16 +168,17 @@ public class StormExecutionPlatform implements ExecutionPlatform {
                             entity.setDescription(sb.toString());
                         }
                     }
-                    entity.setName(topologyInfo.get_id());
+                    //entity.setName(topologyInfo.get_id());
+                    entity.setStatus(ExecutionManager.getTopologyStatus(topologyInfo.get_status()));
                 }
             }catch (NotAliveException ex){
-                LOG.error("{} not alive",entity.getPipeline().getName(),ex);
+                //LOG.error("{} not alive",entity.getPipeline().getName(),ex);
                 entity.setStatus(PipelineExecutionStatus.STOPPED);
                 entity.setProperty("topology.status","NOT_ALIVE");
                 entity.setDescription(ex.getMessage());
             } catch (Exception ex ){
                 LOG.error(ex.getMessage(), ex);
-                throw ex;
+                //throw ex;
             }
         }
     }

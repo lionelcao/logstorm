@@ -82,7 +82,7 @@ public class ExecutionManager {
     }
 
     public TaskExecutor get(Object id){
-        Preconditions.checkArgument(executorMap.containsKey(id),"Executor '"+id+"' not found");
+        Preconditions.checkArgument(executorMap.containsKey(id), "Executor '" + id + "' not found");
         return executorMap.get(id);
     }
 
@@ -108,9 +108,26 @@ public class ExecutionManager {
         throw new IllegalStateException("Unknown state: "+state);
     }
 
+    public static PipelineExecutionStatus getTopologyStatus(String status) {
+        if (whereIn(status, PipelineExecutionStatus.KILLED.toString())) {
+            return PipelineExecutionStatus.STOPPING;
+        } else {
+            return PipelineExecutionStatus.RUNNING;
+        }
+    }
+
     private static boolean whereIn(java.lang.Thread.State state, java.lang.Thread.State... inStates){
         for(java.lang.Thread.State _state : inStates){
             if(_state == state){
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private static boolean whereIn(String state, String... inStates){
+        for(String _state : inStates){
+            if(_state.equalsIgnoreCase(state)){
                 return true;
             }
         }
