@@ -39,9 +39,20 @@
 	});
 
 	logStormControllers.controller('clusterNewCtrl', function($scope, API) {
+		$scope.clusterMetaList = API.get("api/platform");
+		$scope.clusterMetaList._promise.then(function () {
+			$scope._type = ($scope.clusterMetaList[0] || {}).type;
+		});
+
 		$scope._name = "";
-		$scope._type = "storm";
+		$scope._type = "";
 		$scope._properties = "";
+
+		$scope.currentCluster = function () {
+			return $scope.clusterMetaList.find(function (cluster) {
+				return cluster.type === $scope._type;
+			}) || {};
+		};
 
 		var typeMapping = {
 			storm: "com.ebay.logstorm.server.platform.storm.StormExecutionPlatform",
