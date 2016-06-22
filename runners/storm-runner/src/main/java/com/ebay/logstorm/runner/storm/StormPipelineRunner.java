@@ -42,6 +42,9 @@ import java.util.Map;
  */
 public class StormPipelineRunner implements PipelineRunner {
     private final static Logger LOG = LoggerFactory.getLogger(StormPipelineRunner.class);
+    public static final String STORM_NIMBUS_HOST_KEY="storm.nimbus.host";
+    public static final String STORM_NIMBUS_PORT_KEY="storm.nimbus.port";
+
     public Map<String, Object> run(Pipeline pipeline) {
         PipelineContext context = pipeline.getContext();
         List<InputPlugin> inputs = pipeline.getInputs();
@@ -84,6 +87,10 @@ public class StormPipelineRunner implements PipelineRunner {
         } else {
             LOG.info("Submitting topology '{}': {} in remote mode",context.getPipelineName(),pipeline);
             try {
+                LOG.info(pipeline.getContext().getConfig().getString(STORM_NIMBUS_HOST_KEY));
+                LOG.info(pipeline.getContext().getConfig().getInt(STORM_NIMBUS_PORT_KEY) + "");
+                stormConfig.put(Config.NIMBUS_HOST, pipeline.getContext().getConfig().getString(STORM_NIMBUS_HOST_KEY));
+                stormConfig.put(Config.NIMBUS_THRIFT_PORT, pipeline.getContext().getConfig().getInt(STORM_NIMBUS_PORT_KEY));
                 StormSubmitter.submitTopologyWithProgressBar(context.getPipelineName(),stormConfig,builder.createTopology());
             } catch (AlreadyAliveException | InvalidTopologyException e) {
                 LOG.error(e.getMessage(),e);
