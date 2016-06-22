@@ -51,24 +51,31 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
         this.executionRespository = executionRespository;
     }
 
+    @Transactional
     private void checkInitExecutionContext(PipelineEntity pipeline){
         Preconditions.checkNotNull(pipeline,"pipeline is null: "+pipeline);
         Preconditions.checkNotNull(pipeline.getCluster(),"cluster is null: "+ pipeline);
         Preconditions.checkNotNull(pipeline.getCluster().getPlatformInstance(),"platform instance is null: "+pipeline);
-        if(pipeline.getInstances() == null || pipeline.getInstances().size() == 0) {
-            LOG.info("{} has not been deployed yet, deploying now", pipeline);
-            List<PipelineExecutionEntity> executors = new ArrayList<>(pipeline.getParallelism());
-            for(int i =0;i<pipeline.getParallelism();i++) {
-                PipelineExecutionEntity instance = new PipelineExecutionEntity();
-                instance.setNumber(i);
-                instance.setName(String.format("%s_%s",pipeline.getName(),instance.getNumber()));
-                instance.setPipeline(pipeline);
-                executors.add(this.createExecutionEntity(instance));
-            }
-            pipeline.setInstances(executors);
-            entityService.updatePipeline(pipeline);
-            LOG.info("Initialized [] executors for pipeline {}", executors.size(),pipeline);
+
+        if(pipeline.getInstances()!=null){
+            pipeline.getInstances().forEach(this::removeExecutionEntity);
+            pipeline.getInstances().clear();
         }
+
+//        if(pipeline.getInstances() == null || pipeline.getInstances().size() == 0) {
+        LOG.info("{} has not been deployed yet, deploying now", pipeline);
+        List<PipelineExecutionEntity> executors = new ArrayList<>(pipeline.getParallelism());
+        for(int i =0;i<pipeline.getParallelism();i++) {
+            PipelineExecutionEntity instance = new PipelineExecutionEntity();
+            instance.setNumber(i);
+            instance.setName(String.format("%s_%s",pipeline.getName(),instance.getNumber()));
+            instance.setPipeline(pipeline);
+            executors.add(this.createExecutionEntity(instance));
+        }
+        pipeline.setInstances(executors);
+        entityService.updatePipeline(pipeline);
+        LOG.info("Initialized [] executors for pipeline {}", executors.size(),pipeline);
+//        }
     }
 
     @Override
@@ -112,6 +119,7 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
     }
 
     @Override
+    @Transactional
     public PipelineEntity stop(PipelineEntity pipeline) {
         pipeline.getInstances().stream().map((instance)-> ExecutionManager.getInstance().submit(()->{
             if(PipelineExecutionStatus.isReadyToStop(instance.getStatus())) {
@@ -120,16 +128,16 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
                     updateExecutionEntity(instance);
                     pipeline.getCluster().getPlatformInstance().stop(instance);
                     instance.setStatus(PipelineExecutionStatus.STOPPED);
-//                    updateExecutionEntity(instance);
-                    removeExecutionEntity(instance);
+                    updateExecutionEntity(instance);
                 } catch (Throwable e) {
+                    LOG.error(e.getMessage(), e);
                     instance.setStatus(PipelineExecutionStatus.FAILED);
                     instance.setDescription(ExceptionUtils.getMessage(e));
                     updateExecutionEntity(instance);
-                    LOG.error(e.getMessage(), e);
                     throw new RuntimeException(e);
                 }
             }
+            removeExecutionEntity(instance);
         })).forEach(future -> {
             try {
                 future.get();
@@ -138,6 +146,7 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
                 throw new RuntimeException(e);
             }
         });
+        pipeline.getInstances().clear();
         return pipeline;
     }
 
@@ -165,8 +174,10 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
 
 
     @Override
+    @Transactional
     public Integer removeExecutionEntity(PipelineExecutionEntity executionEntity) {
-        return executionRespository.removeByUuid(executionEntity.getUuid());
+        LOG.info("Removing {}",executionEntity.getName());
+        return executionRespository.deleteByUuid(executionEntity.getUuid());
     }
 
     @Override

@@ -2,6 +2,7 @@ package com.ebay.logstorm.server.services;
 
 import com.ebay.logstorm.server.entities.ClusterEntity;
 import org.springframework.data.repository.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 import java.util.Optional;
@@ -25,10 +26,19 @@ import java.util.Optional;
 public interface ClusterEntityRepository extends Repository<ClusterEntity, String> {
     Optional<ClusterEntity> findOneByName(String name);
     Optional<ClusterEntity> findOneByUuid(String uuid);
+
+    @Transactional
     ClusterEntity save(ClusterEntity entity);
+
+    @Transactional
     Integer delete(ClusterEntity entity);
+
+    @Transactional
     Integer delete(String uuid);
+
+    @Transactional
     Integer deleteByName(String name);
+
     Optional<ClusterEntity> findOneByUuidOrName(String uuid, String name);
     List<ClusterEntity> findAll();
 }

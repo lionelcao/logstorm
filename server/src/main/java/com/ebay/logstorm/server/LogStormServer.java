@@ -16,6 +16,7 @@ import org.springframework.boot.context.web.SpringBootServletInitializer;
 import org.springframework.context.ApplicationContext;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.ComponentScan;
+import org.springframework.transaction.annotation.EnableTransactionManagement;
 
 import javax.servlet.ServletContext;
 
@@ -36,6 +37,7 @@ import javax.servlet.ServletContext;
  * limitations under the License.
  */
 @ComponentScan({"com.ebay.logstorm"})
+@EnableTransactionManagement
 @SpringBootApplication
 public class LogStormServer  extends SpringBootServletInitializer {
     private final static Logger LOG = LoggerFactory.getLogger(LogStormServer.class);

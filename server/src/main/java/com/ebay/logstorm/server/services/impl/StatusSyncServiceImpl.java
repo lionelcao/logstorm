@@ -50,7 +50,7 @@ public class StatusSyncServiceImpl implements PipelineStatusSyncService {
         for (PipelineEntity pipelineEntity : allPipelineEntities) {
             if (pipelineEntity.getInstances() != null) {
                 pipelineEntity.getInstances().forEach((instance) ->{
-                    if(instance.getStatus() == PipelineExecutionStatus.STARTING || instance.getStatus() == PipelineExecutionStatus.STOPPING ) {
+                    if(instance.getStatus() == PipelineExecutionStatus.STARTING) {
                         LOG.info("Status of {} is {}, skip check status",instance.getName(),instance.getStatus());
                         return;
                     }

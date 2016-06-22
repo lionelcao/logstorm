@@ -3,7 +3,9 @@ package com.ebay.logstorm.server.services;
 import com.ebay.logstorm.server.entities.PipelineExecutionEntity;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.repository.Repository;
+import org.springframework.transaction.annotation.Transactional;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -21,9 +23,19 @@ import org.springframework.data.repository.Repository;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
+@Transactional(readOnly = true)
 public interface PipelineExecutionRepository extends Repository<PipelineExecutionEntity, String> {
     Page<PipelineExecutionEntity> findAll(Pageable pageable);
+
+    @Modifying
+    @Transactional
     PipelineExecutionEntity save(PipelineExecutionEntity pipelineExecutionEntity);
-    Integer removeByUuid(String uuid);
-    Integer removeByName(String name);
+
+    @Modifying
+    @Transactional
+    Integer deleteByUuid(String uuid);
+
+    @Modifying
+    @Transactional
+    Integer deleteByName(String name);
 }
