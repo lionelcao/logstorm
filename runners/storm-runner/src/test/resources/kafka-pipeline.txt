@@ -7,7 +7,7 @@ input {
             "Dec 23 14:30:01 louis CRON[619]: (www-data) CMD (php /usr/share/cacti/site/poller.php >/dev/null 2>/var/log/cacti/poller-error.log)",
             "Dec 22 18:28:06 louis rsyslogd: [origin software=\"rsyslogd\" swVersion=\"4.2.0\" x-pid=\"2253\" x-info=\"http://www.rsyslog.com\"] rsyslogd was HUPed, type 'lightweight'."
         ]
-        count => 1000000
+        count => 100000
     }
 }
 
@@ -17,21 +17,19 @@ filter{
       add_field => [ "received_at", "%{@timestamp}" ]
       add_field => [ "received_from", "%{host}" ]
     }
+
     date {
       match => [ "syslog_timestamp", "MMM  d HH:mm:ss", "MMM dd HH:mm:ss" ]
     }
 }
 
 output {
- kafka {
-	bootstrap_servers => "logstorm-3162.lvs01.dev.ebayc3.com:9092"
-	topic_id => "storm_output"
-	batch_size => 1
- }
- stdout {
-     codec => rubydebug
- }
- elasticsearch {
-    hosts => ["logstorm-3162.lvs01.dev.ebayc3.com"]
- }
+	 kafka {
+		bootstrap_servers => "logstorm-3162.lvs01.dev.ebayc3.com:9092"
+		topic_id => "storm_output"
+		batch_size => 1
+	 }
+	 stdout {
+	     codec => rubydebug
+	 }
 }

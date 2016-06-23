@@ -74,7 +74,7 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
         }
         pipeline.setInstances(executors);
         entityService.updatePipeline(pipeline);
-        LOG.info("Initialized [] executors for pipeline {}", executors.size(),pipeline);
+        LOG.info("Initialized {} executors for pipeline {}", executors.size(),pipeline);
 //        }
     }
 
@@ -121,16 +121,20 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
     @Override
     @Transactional
     public PipelineEntity stop(PipelineEntity pipeline) {
+        LOG.info("Stopping {} instances of {}",pipeline.getInstances().size(),pipeline.getName());
         pipeline.getInstances().stream().map((instance)-> ExecutionManager.getInstance().submit(()->{
             if(PipelineExecutionStatus.isReadyToStop(instance.getStatus())) {
                 try {
                     instance.setStatus(PipelineExecutionStatus.STOPPING);
                     updateExecutionEntity(instance);
+                    LOG.info("{} changed status from {} to {}",instance.getName(),instance.getStatus(),PipelineExecutionStatus.STOPPING);
                     pipeline.getCluster().getPlatformInstance().stop(instance);
                     instance.setStatus(PipelineExecutionStatus.STOPPED);
                     updateExecutionEntity(instance);
+                    LOG.info("{} changed status from {} to {}",instance.getName(),instance.getStatus(),PipelineExecutionStatus.STOPPED);
                 } catch (Throwable e) {
                     LOG.error(e.getMessage(), e);
+                    LOG.info("{} changed status from {} to {}",instance.getName(),instance.getStatus(),PipelineExecutionStatus.FAILED);
                     instance.setStatus(PipelineExecutionStatus.FAILED);
                     instance.setDescription(ExceptionUtils.getMessage(e));
                     updateExecutionEntity(instance);

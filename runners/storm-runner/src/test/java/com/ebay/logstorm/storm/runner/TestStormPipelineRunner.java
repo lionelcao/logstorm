@@ -34,6 +34,7 @@ public class TestStormPipelineRunner {
             "filter{ grok { add_field => { \"new_field\" => \"new_value\"}}}"+
             "output { stdout { codec => rubydebug }}"
         ).submit();
+        Utils.sleep(Long.MAX_VALUE);
     }
 
     @Test
@@ -43,6 +44,7 @@ public class TestStormPipelineRunner {
             .filter("grok { add_field => { \"new_field\" => \"new_value\"}}")
             .output("stdout { codec => rubydebug }")
         .submit();
+        Utils.sleep(Long.MAX_VALUE);
     }
 
     @Test
@@ -52,6 +54,8 @@ public class TestStormPipelineRunner {
             .runner(StormPipelineRunner.class)
             .deploy(LogStormConstants.DeployMode.LOCAL)
             .submit();
+
+        Utils.sleep(Long.MAX_VALUE);
     }
 
 

@@ -32,7 +32,7 @@ public class PipelineExecutionEntity extends BaseEntity {
     @Column(unique = false)
     private int number;
 
-    @Column(nullable = true, length = 10000)
+    @Column(nullable = true, length = 100000)
     private Properties properties;
 
     @JsonIgnore
@@ -52,7 +52,7 @@ public class PipelineExecutionEntity extends BaseEntity {
     @Column
     private String url;
 
-    @Column(length = 10000)
+    @Column(length = 100000)
     private String description;
 
     public boolean isNeedUpdate() {

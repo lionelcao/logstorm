@@ -78,7 +78,7 @@ public class LogStashPipelineProxy implements Pipeline {
             evaluate();
         } catch (Exception ex){
             LOG.error("Failed to evaluate logstash configuration: "+this.logStashConfigStr,ex);
-            if(rubyRuntime !=null)  rubyRuntime.shutdownTruffleContextIfRunning();
+//            if(rubyRuntime !=null)  rubyRuntime.shutdownTruffleContextIfRunning();
             throw new PipelineException("Failed to evaluate logstash configuration: "+this.logStashConfigStr,ex);
         } finally {
             stopWatch.stop();

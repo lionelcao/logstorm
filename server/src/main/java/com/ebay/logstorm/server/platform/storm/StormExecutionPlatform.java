@@ -31,13 +31,11 @@ import com.ebay.logstorm.server.platform.ExecutionManager;
 import com.ebay.logstorm.server.platform.ExecutionPlatform;
 import com.ebay.logstorm.server.platform.TaskExecutor;
 import com.typesafe.config.ConfigFactory;
-import org.apache.thrift7.TException;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 import java.util.Properties;
 
 /**
@@ -61,7 +59,7 @@ public class StormExecutionPlatform implements ExecutionPlatform {
     }
 
     @Override
-    public synchronized void start(final PipelineExecutionEntity entity) throws Exception {
+    public void start(final PipelineExecutionEntity entity) throws Exception {
         PipelineContext context = new PipelineContext(entity.getPipeline().getPipeline());
         context.setConfig(ConfigFactory.parseProperties(entity.getPipeline().getCluster().getProperties()).withFallback(ConfigFactory.parseProperties(entity.getPipeline().getProperties())));
         context.setDeployMode(entity.getPipeline().getMode());
@@ -78,7 +76,15 @@ public class StormExecutionPlatform implements ExecutionPlatform {
                 entity.setUrl("/api/executor/" + entity.getName());
                 break;
             case CLUSTER:
-                startInRemoteMode(pipeline);
+                try {
+                    LOG.info("Submitting pipeline {}",pipeline);
+                    startInRemoteMode(pipeline);
+                }catch (Throwable ex){
+                    LOG.error("Failed to submit {}",entity.getName(),ex);
+                    entity.setStatus(PipelineExecutionStatus.FAILED);
+                    entity.setDescription(ex.getMessage());
+                    throw ex;
+                }
                 break;
         }
         status(entity);
@@ -95,7 +101,7 @@ public class StormExecutionPlatform implements ExecutionPlatform {
     }
 
     @Override
-    public synchronized void stop(final PipelineExecutionEntity entity) throws Exception {
+    public void stop(final PipelineExecutionEntity entity) throws Exception {
         if(entity.getPipeline().getMode().equals(LogStormConstants.DeployMode.LOCAL)) {
             ExecutionManager.getInstance().stop(entity.getName());
             entity.setDescription("Stopped");
@@ -113,7 +119,7 @@ public class StormExecutionPlatform implements ExecutionPlatform {
     private final static String topology_id_key = "topology.id";
 
     @Override
-    public synchronized void status(final PipelineExecutionEntity entity) throws Exception {
+    public void status(final PipelineExecutionEntity entity) throws Exception {
         String stormUIUrl= (String) entity.getPipeline().getCluster().getProperties().get(STORM_URL);
         entity.setNeedUpdate(true);
         if (LogStormConstants.DeployMode.LOCAL.equals(entity.getPipeline().getMode())) {
