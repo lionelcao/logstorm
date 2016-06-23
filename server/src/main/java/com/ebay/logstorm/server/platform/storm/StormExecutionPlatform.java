@@ -161,7 +161,7 @@ public class StormExecutionPlatform implements ExecutionPlatform {
                             for (ErrorInfo errorInfo : entry.getValue()) {
                                 errorInfoSize ++;
                                 sb.append("\t");
-                                sb.append(errorInfo.toString());
+                                sb.append(errorInfo.get_error());
                                 sb.append("\n");
                             }
                         }

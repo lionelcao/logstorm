@@ -54,6 +54,18 @@ public class TestStormPipelineRunner {
             .submit();
     }
 
+
+    @Test
+    public void testStormKafkaPipelineTopologyBuilder() throws IOException, PipelineException {
+        PipelineContext.pipelineResource("/kafka-pipeline.txt")
+            .name("simple-kafka-stdout-pipeline")
+            .runner(StormPipelineRunner.class)
+            .deploy(LogStormConstants.DeployMode.LOCAL)
+            .submit();
+
+        Utils.sleep(Long.MAX_VALUE);
+    }
+
     @Test
     public void testStormInlinePipelineTopologyBuilder() throws PipelineException {
         PipelineContext.pipeline(

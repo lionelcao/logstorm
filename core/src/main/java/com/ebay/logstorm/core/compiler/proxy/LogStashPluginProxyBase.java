@@ -73,6 +73,7 @@ public abstract class LogStashPluginProxyBase extends LogStashPluginBase {
     public void register() {
         LOG.info("Registering '{}': {}",this.getUniqueName(),this.getProxy());
         this.getProxy().invokeRegister();
+        LOG.info("Registered '{}'",this.getUniqueName());
     }
 
     @Override
