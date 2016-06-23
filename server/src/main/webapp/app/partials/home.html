@@ -1,29 +1,50 @@
 <section class="content-header">
 	<h1>
 		Welcome to Streamy
-		<small><code>TODO: slogan sentence for Streamy?</code></small>
 	</h1>
-	<!--<ol class="breadcrumb">-->
-		<!--<li><a href="#"><i class="fa fa-dashboard"></i> Home</a></li>-->
-	<!--</ol>-->
 </section>
 
 <!-- Maybe it's about page instead of home page -->
 <section class="content">
-	<h1>About <small>What's Streamy</small></h1>
-	<div>
-		<code>TODO: Describe what's Streamy</code>
-	</div>
-	<h1>Usage <small>How to use Streamy</small></h1>
-	<div>
-		<code>TODO: Describe what's Streamy</code>
-	</div>
-	<h1>Use Case <small>Why to use Streamy</small></h1>
-	<div>
-		<code>TODO: Describe Streamy's use case</code>
-	</div>
-	<h1>Contributors<small>Who contributes to Streamy</small></h1>
-	<div>
-		<code>TODO: Describe about contributors</code>
+	<div class="row">
+		<div class="col-sm-4">
+			<div class="small-box bg-aqua">
+				<div class="inner">
+					<h3>Clusters</h3>
+
+					<p>{{clusterList.length}} Clusters</p>
+				</div>
+				<div class="icon">
+					<i class="fa fa-server"></i>
+				</div>
+				<a href="#/cluster" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="small-box bg-green">
+				<div class="inner">
+					<h3>Application</h3>
+
+					<p>{{applicationList.length}} Applications</p>
+				</div>
+				<div class="icon">
+					<i class="fa fa-random"></i>
+				</div>
+				<a href="#/application" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+			</div>
+		</div>
+		<div class="col-sm-4">
+			<div class="small-box bg-yellow">
+				<div class="inner">
+					<h3>Instance</h3>
+
+					<p>{{instanceList.length}} Instances</p>
+				</div>
+				<div class="icon">
+					<i class="fa fa-cube"></i>
+				</div>
+				<a href="#/application" class="small-box-footer">More info <i class="fa fa-arrow-circle-right"></i></a>
+			</div>
+		</div>
 	</div>
 </section>

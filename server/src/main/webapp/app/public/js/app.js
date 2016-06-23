@@ -15,6 +15,11 @@
 				controller: "homeCtrl"
 				//resolve: _resolve({featureCheck: true})
 			})
+			.state('about', {
+				url: "/about",
+				templateUrl: "partials/about.html?_=" + _TRS,
+				controller: "aboutCtrl"
+			})
 			.state('application', {
 				url: "/application",
 				templateUrl: "partials/application.html?_=" + _TRS,

@@ -19,8 +19,16 @@
 	// ==                       Controller                      ==
 	// ===========================================================
 	// ===========================================================
-	logStormControllers.controller('homeCtrl', function($scope, API, UI){});
+	logStormControllers.controller('aboutCtrl', function($scope, API, UI){});
 	logStormControllers.controller('configurationCtrl', function($scope, API, UI){});
+
+	logStormControllers.controller('homeCtrl', function($scope, API, UI){
+		$scope.clusterList = API.get("api/cluster");
+		$scope.applicationList = API.get("api/pipeline");
+		$scope.instanceList = API.get("api/pipeline/instance");
+
+		console.log($scope);
+	});
 
 	// ===========================================================
 	// =                         Cluster                         =
