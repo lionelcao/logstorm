@@ -31,7 +31,7 @@ public class PipelineEntity extends BaseEntity {
     @Column(unique = true,nullable = false)
     private String name;
 
-    @Column(nullable = false)
+    @Column(nullable = false, length = 10000)
     private String pipeline;
 
     @Column(nullable = true,length = 10000)
