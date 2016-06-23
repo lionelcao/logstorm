@@ -57,6 +57,9 @@ public class SparkPipelineRunner implements PipelineRunner {
         launcher.addAppArgs(pipeline.getContext().getPipeline());
         launcher.addAppArgs(pipeline.getContext().getPipelineName());
         launcher.addAppArgs(pipeline.getContext().getDeployMode().toString());
+        launcher.addAppArgs(pipeline.getContext().getInputParallelism() + "");
+        launcher.addAppArgs(pipeline.getContext().getFilterParallelism() + "");
+        launcher.addAppArgs(pipeline.getContext().getOutputParallelism() + "");
         //work around(for get driver pid)
         String uuid = UUID.randomUUID().toString();
         launcher.addAppArgs(uuid);
@@ -106,7 +109,9 @@ public class SparkPipelineRunner implements PipelineRunner {
         String pipeLine = args[0];
         String pipeLineName = args[1];
         String mode = args[2];
-
+        int intputParallelism = Integer.parseInt(args[3]);
+        int filterParallelism = Integer.parseInt(args[4]);
+        int outputParallelism = Integer.parseInt(args[5]);
         try {
             PipelineContext context = new PipelineContext(pipeLine);
             context.setDeployMode(mode);
@@ -121,7 +126,7 @@ public class SparkPipelineRunner implements PipelineRunner {
             JavaStreamingContext jsc = new JavaStreamingContext(conf, new Duration(5000));
             List<JavaDStream<byte[]>> streams = new ArrayList<>();
             for (InputPlugin inputPlugin : inputs) {
-                for (int i = 0; i < inputPlugin.getParallelism() + 1; i++) {
+                for (int i = 0; i < intputParallelism; i++) {
                     LogStashSparkReceiver receiver = new LogStashSparkReceiver(i, inputPlugin, context);
                     streams.add(jsc.receiverStream(receiver));
                 }
@@ -131,20 +136,20 @@ public class SparkPipelineRunner implements PipelineRunner {
             JavaDStream<byte[]> filterStream = stream;
             for (FilterPlugin filterPlugin : filters) {
                 filterStream = filterStream
-                        .repartition((int) filterPlugin.getParallelism() + 3)
+                        .repartition(filterParallelism)
                         .map(new FilterFunction(filterPlugin, context));
             }
 
             for (OutputPlugin output : outputs) {
                 filterStream
-                        .repartition((int) output.getParallelism() + 6)
+                        .repartition(outputParallelism)
                         .foreach(new ForEachFunction(output, context));
             }
 
             jsc.start();
             jsc.awaitTermination();
         } catch (Exception e) {
-            LOG.error("failed to run spark application");
+            LOG.error("failed to run spark application: ", e);
         }
     }
 }

@@ -57,6 +57,7 @@ public class SparkExecutionPlatform implements ExecutionPlatform {
     private void startPipeLine(final PipelineExecutionEntity entity) throws Exception {
         PipelineContext context = new PipelineContext(entity.getPipeline().getPipeline());
         context.setConfig(properties);
+        context.setConfig(entity.getPipeline().getProperties());
         context.setDeployMode(entity.getPipeline().getMode());
         context.setPipelineName(entity.getPipeline().getName());
         Pipeline pipeline = PipelineCompiler.compile(context);
