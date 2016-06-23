@@ -42,6 +42,13 @@
 		$scope.clusterMetaList = API.get("api/platform");
 		$scope.clusterMetaList._promise.then(function () {
 			$scope._type = ($scope.clusterMetaList[0] || {}).type;
+
+			$.each($scope.clusterMetaList, function (i, clusterMeta) {
+				$.each(clusterMeta.fields || [], function (i, field) {
+					var name = field.name;
+					$scope._properties[name] = $scope._properties[name] || field.value;
+				});
+			});
 		});
 
 		$scope._name = "";
@@ -54,22 +61,19 @@
 			}) || {};
 		};
 
-		var typeMapping = {
-			storm: "com.ebay.logstorm.server.platform.storm.StormExecutionPlatform",
-			spark: "com.ebay.logstorm.server.platform.spark.SparkExecutionPlatform"
-		};
-
 		$scope.create = function () {
-			$.each($scope.currentCluster().fields, function (i, field) {
+			var _clusterMeta = $scope.currentCluster();
+			var _properties = {};
+			$.each(_clusterMeta.fields || [], function (i, field) {
 				var name = field.name;
-				$scope._properties[name] = $scope._properties[name] || field.value;
+				_properties[name] = $scope._properties[name];
 			});
 
 			API.post("api/cluster", {
 				name: $scope._name,
 				type: $scope._type,
-				properties: $scope._properties,
-				adapterClass: typeMapping[$scope._type]
+				properties: _properties,
+				adapterClass: _clusterMeta.className
 			}).then(function () {
 				location.href = "#/cluster";
 			});
