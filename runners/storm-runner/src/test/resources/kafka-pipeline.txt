@@ -24,7 +24,7 @@ filter{
 
 output {
  kafka {
-	bootstrap_servers => "localhost:9092"
+	bootstrap_servers => "logstorm-3162.lvs01.dev.ebayc3.com:9092"
 	topic_id => "storm_output"
 	batch_size => 1
  }
