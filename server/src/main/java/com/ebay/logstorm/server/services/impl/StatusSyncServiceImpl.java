@@ -1,18 +1,20 @@
 package com.ebay.logstorm.server.services.impl;
 
 import com.ebay.logstorm.server.entities.PipelineEntity;
+import com.ebay.logstorm.server.entities.PipelineExecutionEntity;
 import com.ebay.logstorm.server.entities.PipelineExecutionStatus;
 import com.ebay.logstorm.server.services.PipelineEntityService;
 import com.ebay.logstorm.server.services.PipelineExecutionService;
 import com.ebay.logstorm.server.services.PipelineStatusSyncService;
-import org.apache.commons.lang3.exception.ExceptionUtils;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 import org.springframework.stereotype.Service;
 
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Licensed to the Apache Software Foundation (ASF) under one or more
@@ -49,24 +51,26 @@ public class StatusSyncServiceImpl implements PipelineStatusSyncService {
         LOG.info("Checking status of {} pipelines",allPipelineEntities.size());
         for (PipelineEntity pipelineEntity : allPipelineEntities) {
             if (pipelineEntity.getInstances() != null) {
-                pipelineEntity.getInstances().forEach((instance) ->{
-                    if(instance.getStatus() == PipelineExecutionStatus.STARTING) {
+                pipelineEntity.getInstances().forEach((instance) -> {
+                    if(instance.getStatus() == PipelineExecutionStatus.STARTING
+                            || instance.getStatus() == PipelineExecutionStatus.INITIALIZED
+                            || instance.getStatus() == PipelineExecutionStatus.STOPPED) {
                         LOG.info("Status of {} is {}, skip check status",instance.getName(),instance.getStatus());
                         return;
                     }
                     try {
-                        instance.setNeedUpdate(false);
-                        LOG.info("Checking status of instance '{}'", instance.getName());
+                        instance.requireUpdate(false);
+                        LOG.info("Checking status of instance '{}' (status: {})", instance.getName(),instance.getStatus());
                         pipelineEntity.getCluster().getPlatformInstance().status(instance);
                     } catch (Exception e) {
-                        LOG.error(ExceptionUtils.getStackTrace(e));
+                        LOG.error(e.getMessage(),e);
                         instance.setStatus(PipelineExecutionStatus.FAILED);
-                        instance.setDescription(ExceptionUtils.getMessage(e));
-                        instance.setNeedUpdate(true);
+                        instance.setDescription(e.getMessage());
+                        instance.requireUpdate(true);
                     } finally {
-                        if (instance.isNeedUpdate()) {
+                        if (instance.requireUpdate()) {
                             executionService.updateExecutionEntity(instance);
-                            LOG.info("Updated status of instance '{}'", instance.getName());
+                            LOG.info("Updated status of instance '{}' (status: {})", instance.getName(),instance.getStatus());
                         }
                     }
                 });

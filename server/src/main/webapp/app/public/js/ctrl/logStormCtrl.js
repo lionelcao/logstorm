@@ -104,12 +104,16 @@
 		$scope.startApplication = function (application) {
 			API.post("api/pipeline/start", {name: application.name}).then(function () {
 				location.reload();
+			},function(res){
+				console.error(res);
 			});
 		};
 
 		$scope.stopApplication = function (application) {
 			API.post("api/pipeline/stop", {name: application.name}).then(function () {
 				location.reload();
+			},function(res){
+				console.error(res);
 			});
 		};
 
@@ -118,6 +122,8 @@
 				API.delete("api/pipeline", application.uuid).then(function () {
 					holder.closeFunc();
 					location.reload();
+				},function(res){
+					console.error(res);
 				});
 			});
 		};

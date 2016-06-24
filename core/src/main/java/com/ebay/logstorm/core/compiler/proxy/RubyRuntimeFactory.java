@@ -31,12 +31,10 @@ import static com.ebay.logstorm.core.compiler.proxy.LogStashProxyConstants.*;
 
 public class RubyRuntimeFactory {
     private final static Logger LOG = LoggerFactory.getLogger(RubyRuntimeFactory.class);
-    public static Ruby getSingletonRuntime(){
-        Ruby runtime = Ruby.getThreadLocalRuntime();
+    private static Ruby runtime;
+    public synchronized static Ruby getSingletonRuntime(){
         if (runtime == null) {
-//            synchronized (RubyRuntimeFactory.class) {
             runtime = Ruby.getGlobalRuntime();
-            Ruby.setThreadLocalRuntime(runtime);
             LOG.info("Initializing ruby runtime: " + runtime);
             String rubyGemHome = String.format("%s/vendor/bundle/jruby/%s", LOGSTASH_HOME, JRUBY_VERSION);
             String bootstrap = "";
@@ -56,7 +54,6 @@ public class RubyRuntimeFactory {
                 }
             });
             LOG.info("Initialized ruby runtime: " + runtime);
-//            }
         }
         return runtime;
     }

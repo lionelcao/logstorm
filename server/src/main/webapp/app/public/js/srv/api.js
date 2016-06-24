@@ -12,14 +12,13 @@
 				var list = [];
 				list._promise = $http.get(host + url).then(function (res) {
 					console.log(res);
-					if(!res.data.success) {
-						console.error(res.data);
-						alert(res.data.message);
-					}
 					var result = res.data;
 					list.splice(0);
 					Array.prototype.push.apply(list, result.data);
 					return result;
+				},function(res){
+					console.error(res);
+					alert(res.data.message);
 				});
 				return list;
 			},

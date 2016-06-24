@@ -110,7 +110,7 @@ public class StormExecutionPlatform implements ExecutionPlatform {
         } else {
             Nimbus.Client client = getStormClient(entity);
             client.killTopology(entity.getName());
-            entity.setDescription("Stopped");
+            entity.setDescription("Killing "+entity.getName());
             entity.setStatus(PipelineExecutionStatus.STOPPING);
             entity.setProperty("topology.status", "KILLING");
         }
@@ -121,7 +121,7 @@ public class StormExecutionPlatform implements ExecutionPlatform {
     @Override
     public synchronized void status(final PipelineExecutionEntity entity) throws Exception {
         String stormUIUrl= (String) entity.getPipeline().getCluster().getProperties().get(STORM_URL);
-        entity.setNeedUpdate(true);
+        entity.requireUpdate(true);
         if (LogStormConstants.DeployMode.LOCAL.equals(entity.getPipeline().getMode())) {
             if(!ExecutionManager.getInstance().contains(entity.getName())){
                 LOG.info("Pipeline instance '{}' is not ready yet",entity.getName());

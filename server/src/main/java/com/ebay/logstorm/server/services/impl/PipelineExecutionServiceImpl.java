@@ -17,8 +17,12 @@ import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
+//import org.springframework.transaction.annotation.Transactional;
+//import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
+import java.util.Collection;
+import java.util.Collections;
 import java.util.List;
 import java.util.concurrent.ExecutionException;
 
@@ -57,29 +61,35 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
         Preconditions.checkNotNull(pipeline.getCluster(),"cluster is null: "+ pipeline);
         Preconditions.checkNotNull(pipeline.getCluster().getPlatformInstance(),"platform instance is null: "+pipeline);
 
-        if(pipeline.getInstances()!=null){
-            pipeline.getInstances().forEach(this::removeExecutionEntity);
-            pipeline.getInstances().clear();
+        if(pipeline.getInstances()!=null && pipeline.getInstances().size() > 0){
+            Collection<PipelineExecutionEntity> instances = pipeline.getInstances();
+            pipeline.setInstances(Collections.emptyList());
+            entityService.updatePipeline(pipeline);
+            instances.forEach(this::removeExecutionEntity);
         }
 
-//        if(pipeline.getInstances() == null || pipeline.getInstances().size() == 0) {
-        LOG.info("{} has not been deployed yet, deploying now", pipeline);
-        List<PipelineExecutionEntity> executors = new ArrayList<>(pipeline.getParallelism());
-        for(int i =0;i<pipeline.getParallelism();i++) {
-            PipelineExecutionEntity instance = new PipelineExecutionEntity();
-            instance.setNumber(i);
-            instance.setName(String.format("%s_%s",pipeline.getName(),instance.getNumber()));
-            instance.setPipeline(pipeline);
-            executors.add(this.createExecutionEntity(instance));
+        if(pipeline.getInstances() == null || pipeline.getInstances().size() == 0) {
+            LOG.info("{} has not been deployed yet, deploying now", pipeline);
+            List<PipelineExecutionEntity> executors = new ArrayList<>(pipeline.getParallelism());
+            for(int i =0;i<pipeline.getParallelism();i++) {
+                PipelineExecutionEntity instance = new PipelineExecutionEntity();
+                instance.setNumber(i);
+                instance.setName(String.format("%s_%s",pipeline.getName(),instance.getNumber()));
+                instance.setPipeline(pipeline);
+                executors.add(this.createExecutionEntity(instance));
+            }
+            pipeline.setInstances(executors);
+            entityService.updatePipeline(pipeline);
+            LOG.info("Initialized {} instances for pipeline {}", executors.size(),pipeline);
         }
-        pipeline.setInstances(executors);
-        entityService.updatePipeline(pipeline);
-        LOG.info("Initialized {} executors for pipeline {}", executors.size(),pipeline);
-//        }
     }
 
     @Override
     public PipelineEntity start(PipelineEntity pipeline) throws Exception {
+        if(!PipelineExecutionStatus.isReadyToStart(pipeline.getStatus())){
+            throw new RuntimeException(pipeline.getName()+" is not ready to start ("+pipeline.getStatus()+")");
+        }
+
         checkInitExecutionContext(pipeline);
         for(PipelineExecutionEntity executor: pipeline.getInstances()){
             boolean readyToStart = PipelineExecutionStatus.isReadyToStart(executor.getStatus());
@@ -99,7 +109,7 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
                 executor.setDescription(ExceptionUtils.getMessage(ex));
                 updateExecutionEntity(executor);
                 LOG.error(ex.getMessage(), ex);
-                throw new RuntimeException(ex);
+//                throw new RuntimeException(ex);
             }
         })).forEach((future -> {
             try {
@@ -119,29 +129,28 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
     }
 
     @Override
-    @Transactional
+//    @Transactional
     public PipelineEntity stop(PipelineEntity pipeline) {
         LOG.info("Stopping {} instances of {}",pipeline.getInstances().size(),pipeline.getName());
         pipeline.getInstances().stream().map((instance)-> ExecutionManager.getInstance().submit(()->{
             if(PipelineExecutionStatus.isReadyToStop(instance.getStatus())) {
                 try {
+                    LOG.info("{} changed status from {} to {}", instance.getName(), instance.getStatus(), PipelineExecutionStatus.STOPPING);
                     instance.setStatus(PipelineExecutionStatus.STOPPING);
                     updateExecutionEntity(instance);
-                    LOG.info("{} changed status from {} to {}",instance.getName(),instance.getStatus(),PipelineExecutionStatus.STOPPING);
                     pipeline.getCluster().getPlatformInstance().stop(instance);
-                    instance.setStatus(PipelineExecutionStatus.STOPPED);
                     updateExecutionEntity(instance);
-                    LOG.info("{} changed status from {} to {}",instance.getName(),instance.getStatus(),PipelineExecutionStatus.STOPPED);
                 } catch (Throwable e) {
                     LOG.error(e.getMessage(), e);
-                    LOG.info("{} changed status from {} to {}",instance.getName(),instance.getStatus(),PipelineExecutionStatus.FAILED);
+                    LOG.info("{} changed status from {} to {}", instance.getName(), instance.getStatus(), PipelineExecutionStatus.FAILED);
                     instance.setStatus(PipelineExecutionStatus.FAILED);
                     instance.setDescription(ExceptionUtils.getMessage(e));
                     updateExecutionEntity(instance);
                     throw new RuntimeException(e);
                 }
+            } else {
+                throw new RuntimeException(instance.getName()+" is not ready to stop");
             }
-            removeExecutionEntity(instance);
         })).forEach(future -> {
             try {
                 future.get();
@@ -150,7 +159,6 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
                 throw new RuntimeException(e);
             }
         });
-        pipeline.getInstances().clear();
         return pipeline;
     }
 
@@ -160,8 +168,10 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
     }
 
     @Override
-    public PipelineEntity restart(PipelineEntity instance) {
-        throw new RuntimeException("Not implemented yet");
+    public PipelineEntity restart(PipelineEntity instance) throws Exception {
+        stop(instance);
+        start(instance);
+        return instance;
     }
 
     @Override
@@ -176,17 +186,21 @@ public class PipelineExecutionServiceImpl implements PipelineExecutionService {
         return executionRespository.save(executionEntity);
     }
 
-
     @Override
     @Transactional
     public Integer removeExecutionEntity(PipelineExecutionEntity executionEntity) {
         LOG.info("Removing {}",executionEntity.getName());
-        return executionRespository.deleteByUuid(executionEntity.getUuid());
+        return executionRespository.delete(executionEntity);
     }
 
     @Override
     @Transactional
     public PipelineExecutionEntity createExecutionEntity(PipelineExecutionEntity executionEntity) {
+        executionEntity.ensureDefault();
+        return executionRespository.save(executionEntity);
+    }
+
+    public PipelineExecutionEntity forceCreateExecutionEntity(PipelineExecutionEntity executionEntity) {
         executionEntity.ensureDefault();
         return executionRespository.save(executionEntity);
     }

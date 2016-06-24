@@ -16,7 +16,7 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
-import org.springframework.transaction.annotation.Transactional;
+//import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.Collection;
@@ -50,7 +50,7 @@ public class PipelineController extends BaseController{
     private PipelineExecutionService executionService;
 
     @RequestMapping(method= RequestMethod.GET)
-    @Transactional(readOnly = true)
+//    @Transactional(readOnly = true)
     public @ResponseBody
     ResponseEntity<RestResponse<List<PipelineEntity>>> listPipelines(
             @RequestParam(required = false) String uuid,
@@ -63,7 +63,7 @@ public class PipelineController extends BaseController{
     }
 
     @RequestMapping(path = "/instance",method= RequestMethod.GET)
-    @Transactional(readOnly = true)
+//    @Transactional(readOnly = true)
     public @ResponseBody
     ResponseEntity<RestResponse<List<PipelineExecutionEntity>>> listAllPipelineInstances(
             @PageableDefault(value = 50) Pageable pageable) {
@@ -83,7 +83,7 @@ public class PipelineController extends BaseController{
     }
 
     @RequestMapping(method= RequestMethod.DELETE)
-    @Transactional
+//    @Transactional
     public @ResponseBody
     ResponseEntity<RestResponse<Integer>> deletePipeline(@RequestBody PipelineEntity pipelineEntity) {
         return RestResponse
@@ -97,7 +97,7 @@ public class PipelineController extends BaseController{
     }
 
     @RequestMapping(path="/{uuid}", method= RequestMethod.DELETE)
-    @Transactional
+//    @Transactional
     public @ResponseBody
     ResponseEntity<RestResponse<Integer>> deletePipelineByUuid(@PathVariable String uuid) {
         return RestResponse
@@ -112,21 +112,21 @@ public class PipelineController extends BaseController{
     }
 
     @RequestMapping(path = "/{uuidOrName}",method= RequestMethod.GET)
-    @Transactional(readOnly = true)
+//    @Transactional(readOnly = true)
     public @ResponseBody
     ResponseEntity<RestResponse<PipelineEntity>> getPipeline(@PathVariable String uuidOrName) {
         return RestResponse.async(()-> entityService.getPipelineByUuidOrNameOrThrow(uuidOrName, uuidOrName)).get();
     }
 
     @RequestMapping(path = "/{uuidOrName}/compiled",method= RequestMethod.GET)
-    @Transactional(readOnly = true)
+//    @Transactional(readOnly = true)
     public @ResponseBody
     ResponseEntity<RestResponse<Pipeline>> getCompiledPipeline(@PathVariable String uuidOrName) {
         return RestResponse.async(()-> PipelineCompiler.compileConfigString(entityService.getPipelineByUuidOrNameOrThrow(uuidOrName, uuidOrName).getPipeline())).get();
     }
 
     @RequestMapping(path = "/{uuidOrName}/instance",method= RequestMethod.GET)
-    @Transactional(readOnly = true)
+//    @Transactional(readOnly = true)
     public @ResponseBody
     ResponseEntity<RestResponse<Collection<PipelineExecutionEntity>>> getPipelineExecution(@PathVariable String uuidOrName) {
         return RestResponse.async(()-> entityService.getPipelineByUuidOrNameOrThrow(uuidOrName,uuidOrName).getInstances()).get();

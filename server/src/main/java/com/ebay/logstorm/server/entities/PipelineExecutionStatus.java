@@ -18,7 +18,7 @@ package com.ebay.logstorm.server.entities;
  */
 public enum PipelineExecutionStatus {
     UNKNOWN,
-    UNDEPLOYED,
+    INITIALIZED,
     STARTING, RUNNING,
     STOPPING, STOPPED,
     RESCALING,
@@ -26,7 +26,7 @@ public enum PipelineExecutionStatus {
     FAILED;
 
     public static boolean isReadyToStart(PipelineExecutionStatus status){
-        return status.equals(UNDEPLOYED) ||
+        return status.equals(INITIALIZED) ||
                 status.equals(STOPPED) ||
                 status.equals(FAILED);
     }

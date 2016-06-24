@@ -37,7 +37,7 @@ import javax.servlet.ServletContext;
  * limitations under the License.
  */
 @ComponentScan({"com.ebay.logstorm"})
-@EnableTransactionManagement
+//@EnableTransactionManagement()
 @SpringBootApplication
 public class LogStormServer  extends SpringBootServletInitializer {
     private final static Logger LOG = LoggerFactory.getLogger(LogStormServer.class);
@@ -48,9 +48,7 @@ public class LogStormServer  extends SpringBootServletInitializer {
     @Bean
     public ServletContextInitializer servletContextInitializer() {
         return (ServletContext servletContext) -> {
-            Thread thread = new Thread(RubyRuntimeFactory::getSingletonRuntime);
-            thread.setDaemon(true);
-            thread.start();
+            RubyRuntimeFactory.getSingletonRuntime();
             ExecutionManager.getInstance().submit(PipelineStatusChecker.WORKER_NAME,new PipelineStatusChecker(statusSyncService));
         };
     }

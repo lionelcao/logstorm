@@ -49,10 +49,11 @@ public interface PipelineExecutionService {
      * @param instance
      */
     PipelineEntity rescale(PipelineEntity instance);
-    PipelineEntity restart(PipelineEntity instance);
+    PipelineEntity restart(PipelineEntity instance) throws Exception;
     PipelineEntity restart(String uuid) throws Exception;
 
     PipelineExecutionEntity updateExecutionEntity(PipelineExecutionEntity executionEntity);
+    PipelineExecutionEntity forceCreateExecutionEntity(PipelineExecutionEntity executionEntity);
     PipelineExecutionEntity createExecutionEntity(PipelineExecutionEntity executionEntity);
 
     Page<PipelineExecutionEntity> searchExecutionEntities(Pageable pageable);

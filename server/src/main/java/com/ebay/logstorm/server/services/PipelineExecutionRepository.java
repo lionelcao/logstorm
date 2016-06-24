@@ -23,19 +23,9 @@ import org.springframework.transaction.annotation.Transactional;
  * See the License for the specific language governing permissions and
  * limitations under the License.
  */
-@Transactional(readOnly = true)
 public interface PipelineExecutionRepository extends Repository<PipelineExecutionEntity, String> {
     Page<PipelineExecutionEntity> findAll(Pageable pageable);
 
-    @Modifying
-    @Transactional
     PipelineExecutionEntity save(PipelineExecutionEntity pipelineExecutionEntity);
-
-    @Modifying
-    @Transactional
-    Integer deleteByUuid(String uuid);
-
-    @Modifying
-    @Transactional
-    Integer deleteByName(String name);
+    Integer delete(PipelineExecutionEntity pipelineExecutionEntity);
 }

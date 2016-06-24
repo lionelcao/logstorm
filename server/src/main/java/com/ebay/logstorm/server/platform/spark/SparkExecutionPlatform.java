@@ -105,7 +105,7 @@ public class SparkExecutionPlatform implements ExecutionPlatform {
             return;
         }
 
-        entity.setNeedUpdate(true);
+        entity.requireUpdate(true);
 
         int beginPort = MIN_REST_PORT;
         while (beginPort++ < MAX_REST_PORT) {

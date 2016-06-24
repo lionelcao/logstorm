@@ -95,7 +95,7 @@ public class PipelineEntityServiceImpl implements PipelineEntityService {
                 }
             }
         }
-        return PipelineExecutionStatus.UNDEPLOYED;
+        return PipelineExecutionStatus.INITIALIZED;
     }
 
     @Override

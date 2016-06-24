@@ -55,11 +55,11 @@ public class PipelineExecutionEntity extends BaseEntity {
     @Column(length = 100000)
     private String description;
 
-    public boolean isNeedUpdate() {
+    public boolean requireUpdate() {
         return needUpdate;
     }
 
-    public void setNeedUpdate(boolean needUpdate) {
+    public void requireUpdate(boolean needUpdate) {
         this.needUpdate = needUpdate;
     }
 
@@ -96,7 +96,7 @@ public class PipelineExecutionEntity extends BaseEntity {
 
     @Override
     public void ensureDefault() {
-        this.setStatus(PipelineExecutionStatus.UNDEPLOYED);
+        this.setStatus(PipelineExecutionStatus.INITIALIZED);
         this.setProperties(new Properties());
         if(this.createdTimestamp == 0) this.updateCreatedTimestamp();
         if(this.modifiedTimestamp == 0) this.updateModifiedTimestamp();
