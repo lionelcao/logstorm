@@ -38,30 +38,30 @@ public class StormSourceCollector implements Collector {
     }
 
     public void collect(Event event) {
-        synchronized (queue) {
+//        synchronized (queue) {
+        try {
+            queue.put(event);
+            if(queue.size() >=  batchSize){
+                flush();
+            }
+        } catch (InterruptedException e) {
+            throw new RuntimeException(e);
+        }
+//        }
+    }
+
+    public void flush(){
+//        synchronized (queue){
+        int count = 0;
+        while(count < batchSize && !queue.isEmpty()){
             try {
-                queue.put(event);
-                if(queue.size() >=  batchSize){
-                    flush();
-                }
+                Event event  = queue.take();
+                collector.emit(event.getStreamId(), Arrays.<Object>asList(event.getPartitionKey(), this.serializer.serialize(event)));
+                count ++;
             } catch (InterruptedException e) {
                 throw new RuntimeException(e);
             }
         }
-    }
-
-    public void flush(){
-        synchronized (queue){
-            int count = 0;
-            while(count < batchSize && !queue.isEmpty()){
-                try {
-                    Event event  = queue.take();
-                    collector.emit(event.getStreamId(), Arrays.<Object>asList(event.getPartitionKey(), this.serializer.serialize(event)));
-                    count ++;
-                } catch (InterruptedException e) {
-                    throw new RuntimeException(e);
-                }
-            }
-        }
+//        }
     }
 }

@@ -7,6 +7,7 @@ import backtype.storm.topology.base.BaseRichSpout;
 import backtype.storm.tuple.Fields;
 import com.ebay.logstorm.core.PipelineContext;
 import com.ebay.logstorm.core.compiler.InputPlugin;
+import com.ebay.logstorm.core.event.Collector;
 import com.ebay.logstorm.core.serializer.Serializer;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
@@ -38,6 +39,7 @@ public class LogStashInputSpout extends BaseRichSpout {
     private StormSourceCollector collector;
 
     private final static Logger LOG = LoggerFactory.getLogger(LogStashInputSpout.class);
+    private Thread delegateThread;
 
     public LogStashInputSpout(InputPlugin logStashPlugin, PipelineContext config){
         this.logStashPlugin = logStashPlugin;
@@ -57,12 +59,23 @@ public class LogStashInputSpout extends BaseRichSpout {
         } catch (Exception e) {
             LOG.error("Failed to initialize",e);
         }
+
         try {
             this.logStashPlugin.register();
         } catch (Exception e) {
             LOG.error("Failed to register",e);
         }
-        this.logStashPlugin.run(this.collector);
+
+        this.delegateThread = new Thread(){
+            @Override
+            public void run() {
+                LogStashInputSpout.this.logStashPlugin.run(LogStashInputSpout.this.collector);
+            }
+        };
+
+        this.delegateThread.setName(this.logStashPlugin.getUniqueName()+"_delegate");
+        this.delegateThread.setDaemon(true);
+        this.delegateThread.start();
     }
 
     public void nextTuple() {
@@ -73,6 +86,7 @@ public class LogStashInputSpout extends BaseRichSpout {
     public void close() {
         try {
             this.logStashPlugin.close();
+            if(this.delegateThread.isAlive()) this.delegateThread.interrupt();
         } catch (Exception e) {
             e.printStackTrace();
         }finally {

@@ -10,6 +10,8 @@ import com.ebay.logstorm.core.PipelineContext;
 import com.ebay.logstorm.core.compiler.OutputPlugin;
 import com.ebay.logstorm.core.event.Event;
 import com.ebay.logstorm.core.serializer.Serializer;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 import java.util.Map;
 
@@ -33,6 +35,7 @@ public class LogStashOutputBolt extends BaseRichBolt{
 
     private final OutputPlugin logStashPlugin;
     private final Serializer serializer;
+    private final static Logger LOG = LoggerFactory.getLogger(LogStashOutputBolt.class);
 
     public LogStashOutputBolt(OutputPlugin logStashFilterPlugin, PipelineContext context){
         this.logStashPlugin = logStashFilterPlugin;
@@ -44,7 +47,7 @@ public class LogStashOutputBolt extends BaseRichBolt{
             logStashPlugin.initialize();
             logStashPlugin.register();
         } catch (Exception e) {
-            e.printStackTrace();
+            LOG.error(e.getMessage(),e);
         }
     }
 
