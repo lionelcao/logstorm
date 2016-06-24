@@ -52,18 +52,24 @@ public class StatusSyncServiceImpl implements PipelineStatusSyncService {
         for (PipelineEntity pipelineEntity : allPipelineEntities) {
             if (pipelineEntity.getInstances() != null) {
                 pipelineEntity.getInstances().forEach((instance) -> {
+                    PipelineExecutionStatus oldStatus = instance.getStatus();
                     if(instance.getStatus() == PipelineExecutionStatus.STARTING
                             || instance.getStatus() == PipelineExecutionStatus.INITIALIZED
                             || instance.getStatus() == PipelineExecutionStatus.STOPPED) {
-                        LOG.info("Status of {} is {}, skip check status",instance.getName(),instance.getStatus());
+                        LOG.debug("Status of {} is {}, skip check status",instance.getName(),instance.getStatus());
                         return;
                     }
                     try {
                         instance.requireUpdate(false);
-                        LOG.info("Checking status of instance '{}' (status: {})", instance.getName(),instance.getStatus());
+                        LOG.debug("Checking status of instance '{}' (current: {})", instance.getName(),instance.getStatus());
                         pipelineEntity.getCluster().getPlatformInstance().status(instance);
+                        PipelineExecutionStatus newStatus = instance.getStatus();
+                        if(newStatus != oldStatus){
+                            LOG.info("{} status changed to {}, was {}",instance.getName(),newStatus, oldStatus);
+                        }
                     } catch (Exception e) {
                         LOG.error(e.getMessage(),e);
+                        LOG.info("{} status changed to {}, was {}",instance.getName(),PipelineExecutionStatus.FAILED, oldStatus);
                         instance.setStatus(PipelineExecutionStatus.FAILED);
                         instance.setDescription(e.getMessage());
                         instance.requireUpdate(true);
@@ -75,7 +81,7 @@ public class StatusSyncServiceImpl implements PipelineStatusSyncService {
                     }
                 });
             } else {
-                LOG.info("'{}'  has not been deployed yet, skipped status checking",pipelineEntity.getName());
+                LOG.info("'{}' is not initialized yet, skip status checking",pipelineEntity.getName());
             }
         }
         LOG.info("Updated status of {} pipelines",allPipelineEntities.size());
