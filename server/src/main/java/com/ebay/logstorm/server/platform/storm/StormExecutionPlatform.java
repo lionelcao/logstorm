@@ -179,7 +179,7 @@ public class StormExecutionPlatform implements ExecutionPlatform {
                     entity.setStatus(ExecutionManager.getTopologyStatus(topologyInfo.get_status()));
                 }
             }catch (NotAliveException ex){
-                LOG.error("{} not alive",entity.getName(),ex);
+                LOG.info("{} not alive, change status as STOPPED",entity.getName(),ex);
                 entity.setStatus(PipelineExecutionStatus.STOPPED);
                 entity.setProperty("topology.status","NOT_ALIVE");
                 entity.setDescription(ex.getMessage());

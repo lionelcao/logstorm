@@ -76,7 +76,7 @@ public class StatusSyncServiceImpl implements PipelineStatusSyncService {
                     } finally {
                         if (instance.requireUpdate()) {
                             executionService.updateExecutionEntity(instance);
-                            LOG.info("Updated status of instance '{}' (status: {})", instance.getName(),instance.getStatus());
+                            LOG.debug("Updated status of instance '{}' as {}", instance.getName(),instance.getStatus());
                         }
                     }
                 });
