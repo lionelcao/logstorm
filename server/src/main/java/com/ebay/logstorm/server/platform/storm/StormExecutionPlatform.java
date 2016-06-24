@@ -59,7 +59,7 @@ public class StormExecutionPlatform implements ExecutionPlatform {
     }
 
     @Override
-    public void start(final PipelineExecutionEntity entity) throws Exception {
+    public synchronized void start(final PipelineExecutionEntity entity) throws Exception {
         PipelineContext context = new PipelineContext(entity.getPipeline().getPipeline());
         context.setConfig(ConfigFactory.parseProperties(entity.getPipeline().getCluster().getProperties()).withFallback(ConfigFactory.parseProperties(entity.getPipeline().getProperties())));
         context.setDeployMode(entity.getPipeline().getMode());
@@ -101,7 +101,7 @@ public class StormExecutionPlatform implements ExecutionPlatform {
     }
 
     @Override
-    public void stop(final PipelineExecutionEntity entity) throws Exception {
+    public synchronized void stop(final PipelineExecutionEntity entity) throws Exception {
         if(entity.getPipeline().getMode().equals(LogStormConstants.DeployMode.LOCAL)) {
             ExecutionManager.getInstance().stop(entity.getName());
             entity.setDescription("Stopped");
@@ -119,7 +119,7 @@ public class StormExecutionPlatform implements ExecutionPlatform {
     private final static String topology_id_key = "topology.id";
 
     @Override
-    public void status(final PipelineExecutionEntity entity) throws Exception {
+    public synchronized void status(final PipelineExecutionEntity entity) throws Exception {
         String stormUIUrl= (String) entity.getPipeline().getCluster().getProperties().get(STORM_URL);
         entity.setNeedUpdate(true);
         if (LogStormConstants.DeployMode.LOCAL.equals(entity.getPipeline().getMode())) {

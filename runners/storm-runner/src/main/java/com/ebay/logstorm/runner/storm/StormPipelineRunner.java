@@ -77,7 +77,7 @@ public class StormPipelineRunner implements PipelineRunner {
             builder.setBolt(output.getUniqueName(),outputBolt,pipeline.getContext().getOutputParallelism()).fieldsGrouping(Constants.STORM_FILTER_BOLT_NAME, new Fields(Constants.EVENT_KEY_FIELD));
         }
 
-        LOG.info("Submitting topology '{}': {}",context.getPipelineName(),pipeline);
+        LOG.debug("Submitting topology '{}': {}",context.getPipelineName(),pipeline);
         if(pipeline.getContext().getDeployMode() == LogStormConstants.DeployMode.LOCAL) {
             LOG.info("Submitting topology '{}': {} in local mode",context.getPipelineName(),pipeline);
             LocalCluster cluster = new LocalCluster();
