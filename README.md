@@ -53,4 +53,4 @@ Code Style
 Contact
 -------
 
-* [@hchen9](https://github.corp.ebay.com/hchen9) (hchen9@ebay.com)
+* [@haoch](https://github.com/haoch) (hao at apache dot org)
