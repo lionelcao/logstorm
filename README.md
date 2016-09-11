@@ -22,7 +22,7 @@ Development
 
 * Build with source code
 
-		git clone git@github.corp.ebay.com:hchen9/logstorm.git
+		git clone git@github.com:haoch/logstorm.git
         cd logstorm
         mvn install
 
